@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d581065e-444c-4a4a-9ad2-ed34200d272b" name="Changes" comment="Finalize all except reg success" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="TypeScript File" />
+        <option value="TypeScript JSX File" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;dzschnd&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/dzschnd/eventess-front.git&quot;,
+    &quot;accountId&quot;: &quot;07cbef26-9901-4cd7-993e-f418edbea50b&quot;
+  }
+}</component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
+  <component name="ProjectId" id="2mZHStc5CAnv9WjpL5A8btIwHrK" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Jest.date value 2 iso should be correct.executor&quot;: &quot;Run&quot;,
+    &quot;Jest.renders learn react link.executor&quot;: &quot;Run&quot;,
+    &quot;Playwright.should register a new user via auth popup.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/junayd/Desktop/Work/eventess/eventess-front/src/features/Auth/pages&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs.jest.jest_package&quot;: &quot;/home/junayd/Desktop/work-projects/eventess-front/node_modules/react-scripts&quot;,
+    &quot;nodejs_interpreter_path&quot;: &quot;node&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;npm.lint.executor&quot;: &quot;Run&quot;,
+    &quot;npm.npm start.executor&quot;: &quot;Run&quot;,
+    &quot;prettierjs.PrettierConfiguration.Package&quot;: &quot;/home/junayd/Desktop/Work/eventess/eventess-front/node_modules/prettier&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
+    &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;fileTemplates&quot;,
+    &quot;ts.external.directory.path&quot;: &quot;/home/junayd/Desktop/Work/eventess/eventess-front/node_modules/typescript/lib&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/features/Auth/pages" />
+      <recent name="$PROJECT_DIR$/src/assets/images/templates/minimalism" />
+      <recent name="$PROJECT_DIR$/src/assets/images/templates" />
+      <recent name="$PROJECT_DIR$/src/assets/svg/templates/minimalism" />
+      <recent name="$PROJECT_DIR$/src/assets/fonts/mak" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/features/Auth/pages/old" />
+      <recent name="$PROJECT_DIR$/src/features/Templates" />
+      <recent name="$PROJECT_DIR$/src/assets/images/templates/minimalism" />
+      <recent name="$PROJECT_DIR$/src/assets/images/home/invitationPreview" />
+      <recent name="$PROJECT_DIR$/src/assets/images/home" />
+    </key>
+  </component>
+  <component name="RunManager" selected="npm.npm start">
+    <configuration name="date value 2 iso should be correct" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="SUITE" />
+      <test-file value="$PROJECT_DIR$/src/api/utils/dateUtils.test.ts" />
+      <test-names>
+        <test-name value="date value 2 iso should be correct" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="renders learn react link" type="JavaScriptTestRunnerJest" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <jest-package value="$PROJECT_DIR$/node_modules/react-scripts" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/src/App.test.tsx" />
+      <test-names>
+        <test-name value="renders learn react link" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="should register a new user via auth popup" type="JavaScriptTestRunnerPlaywright" temporary="true" nameIsGenerated="true">
+      <node-interpreter value="project" />
+      <playwright-package value="$PROJECT_DIR$/node_modules/@playwright/test" />
+      <working-dir value="$PROJECT_DIR$" />
+      <envs />
+      <scope-kind value="TEST" />
+      <test-file value="$PROJECT_DIR$/test/e2e/auth/register.spec.ts" />
+      <test-names>
+        <test-name value="should register a new user via auth popup" />
+      </test-names>
+      <method v="2" />
+    </configuration>
+    <configuration name="Debug Application" type="JavascriptDebugType" uri="http://localhost:3000">
+      <method v="2" />
+    </configuration>
+    <configuration name="lint" type="js.build_tools.npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="lint" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <configuration name="npm start" type="js.build_tools.npm">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="start" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Playwright.should register a new user via auth popup" />
+        <item itemvalue="npm.lint" />
+        <item itemvalue="Jest.date value 2 iso should be correct" />
+        <item itemvalue="Jest.renders learn react link" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-bf35d07a577b-intellij.indexing.shared.core-IU-252.23892.409" />
+        <option value="bundled-js-predefined-d6986cc7102b-e03c56caf84a-JavaScript-IU-252.23892.409" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d581065e-444c-4a4a-9ad2-ed34200d272b" name="Changes" comment="" />
+      <created>1727277182451</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1727277182451</updated>
+      <workItem from="1727277184989" duration="3033000" />
+      <workItem from="1729805675281" duration="46000" />
+      <workItem from="1729815167561" duration="13000" />
+      <workItem from="1730477113591" duration="4447000" />
+      <workItem from="1730488005399" duration="709000" />
+      <workItem from="1730489462026" duration="61000" />
+      <workItem from="1730635726755" duration="23000" />
+      <workItem from="1730645714527" duration="30383000" />
+      <workItem from="1730784889617" duration="4930000" />
+      <workItem from="1730824731264" duration="115000" />
+      <workItem from="1730921754550" duration="12960000" />
+      <workItem from="1730978792889" duration="3859000" />
+      <workItem from="1730992164297" duration="6415000" />
+      <workItem from="1731005314740" duration="3640000" />
+      <workItem from="1731060348818" duration="1650000" />
+      <workItem from="1731075715462" duration="4812000" />
+      <workItem from="1731108258444" duration="128000" />
+      <workItem from="1731287321347" duration="6552000" />
+      <workItem from="1731298989378" duration="3341000" />
+      <workItem from="1731364806173" duration="239000" />
+      <workItem from="1731377264930" duration="7919000" />
+      <workItem from="1731386364468" duration="151000" />
+      <workItem from="1731429070763" duration="11713000" />
+      <workItem from="1731444550011" duration="7655000" />
+      <workItem from="1731453357827" duration="78000" />
+      <workItem from="1731573782963" duration="31000" />
+      <workItem from="1731578042659" duration="6270000" />
+      <workItem from="1731679043894" duration="6870000" />
+      <workItem from="1731905137510" duration="16867000" />
+      <workItem from="1731927125694" duration="1361000" />
+      <workItem from="1731955305409" duration="356000" />
+      <workItem from="1732006119380" duration="13461000" />
+      <workItem from="1732052799156" duration="1121000" />
+      <workItem from="1732060119162" duration="1954000" />
+      <workItem from="1732074653642" duration="5570000" />
+      <workItem from="1732103687530" duration="52000" />
+      <workItem from="1732180361986" duration="10247000" />
+      <workItem from="1732353149401" duration="58000" />
+      <workItem from="1732514151352" duration="8198000" />
+      <workItem from="1732522475707" duration="275000" />
+      <workItem from="1732531905731" duration="27000" />
+      <workItem from="1735481637905" duration="6054000" />
+      <workItem from="1735918641097" duration="3621000" />
+      <workItem from="1735925567314" duration="118000" />
+      <workItem from="1735925688730" duration="149000" />
+      <workItem from="1735925838560" duration="8848000" />
+      <workItem from="1735949555517" duration="4822000" />
+      <workItem from="1736026683750" duration="207000" />
+      <workItem from="1736028203207" duration="8300000" />
+      <workItem from="1736077214117" duration="14869000" />
+      <workItem from="1736096121808" duration="637000" />
+      <workItem from="1736098775983" duration="4866000" />
+      <workItem from="1736126553446" duration="9263000" />
+      <workItem from="1736168216780" duration="15167000" />
+      <workItem from="1736296854646" duration="12363000" />
+      <workItem from="1736806864158" duration="6550000" />
+      <workItem from="1736930989709" duration="8484000" />
+      <workItem from="1736961765171" duration="7852000" />
+      <workItem from="1737048581726" duration="6652000" />
+      <workItem from="1737055926668" duration="1403000" />
+      <workItem from="1737060142786" duration="5671000" />
+      <workItem from="1737066241500" duration="19000" />
+      <workItem from="1737066896545" duration="115000" />
+      <workItem from="1737073857082" duration="6122000" />
+      <workItem from="1737083940189" duration="3023000" />
+      <workItem from="1737356482960" duration="19098000" />
+      <workItem from="1737580417575" duration="37190000" />
+      <workItem from="1737776446541" duration="8399000" />
+      <workItem from="1737864593181" duration="14760000" />
+      <workItem from="1738246186671" duration="6686000" />
+      <workItem from="1738389859784" duration="6996000" />
+      <workItem from="1738415869339" duration="3932000" />
+      <workItem from="1738745895725" duration="30026000" />
+      <workItem from="1739008844774" duration="15291000" />
+      <workItem from="1739094359242" duration="59489000" />
+      <workItem from="1739320938576" duration="22941000" />
+      <workItem from="1739964235738" duration="2263000" />
+      <workItem from="1740158309454" duration="7750000" />
+      <workItem from="1740231552145" duration="2103000" />
+      <workItem from="1740681132515" duration="15010000" />
+      <workItem from="1740754412254" duration="1651000" />
+      <workItem from="1740842065582" duration="550000" />
+      <workItem from="1740847625282" duration="4403000" />
+      <workItem from="1741814976650" duration="18899000" />
+      <workItem from="1742002547463" duration="35473000" />
+      <workItem from="1742256850068" duration="8323000" />
+      <workItem from="1742642235455" duration="4396000" />
+      <workItem from="1742652935641" duration="1855000" />
+      <workItem from="1742821549467" duration="17884000" />
+      <workItem from="1743006097061" duration="8530000" />
+      <workItem from="1743274684381" duration="7236000" />
+      <workItem from="1743359406022" duration="1646000" />
+      <workItem from="1743365192159" duration="5505000" />
+      <workItem from="1743509271500" duration="18019000" />
+      <workItem from="1743763923643" duration="4831000" />
+      <workItem from="1744054017177" duration="1029000" />
+      <workItem from="1744213434303" duration="2053000" />
+      <workItem from="1744449757977" duration="39000" />
+      <workItem from="1744718874162" duration="15054000" />
+      <workItem from="1744796095889" duration="17356000" />
+      <workItem from="1744975772129" duration="2572000" />
+      <workItem from="1745095720312" duration="7823000" />
+      <workItem from="1745263934663" duration="8809000" />
+      <workItem from="1745308772378" duration="10574000" />
+      <workItem from="1745327730696" duration="632000" />
+      <workItem from="1745340606546" duration="1210000" />
+      <workItem from="1745409944817" duration="32314000" />
+      <workItem from="1745485403564" duration="3088000" />
+      <workItem from="1745489104357" duration="22048000" />
+      <workItem from="1745736414870" duration="3390000" />
+      <workItem from="1745739900466" duration="780000" />
+      <workItem from="1745949980425" duration="12310000" />
+      <workItem from="1746088342256" duration="6987000" />
+      <workItem from="1746095369304" duration="6689000" />
+      <workItem from="1746620318333" duration="8829000" />
+      <workItem from="1749049547092" duration="3131000" />
+      <workItem from="1750266713768" duration="1615000" />
+      <workItem from="1750347107776" duration="3309000" />
+      <workItem from="1750350426169" duration="285000" />
+      <workItem from="1750350716957" duration="20449000" />
+      <workItem from="1750379366882" duration="9777000" />
+      <workItem from="1750588863159" duration="5601000" />
+      <workItem from="1750673255855" duration="1917000" />
+      <workItem from="1750762567228" duration="38000" />
+      <workItem from="1750849782748" duration="32000" />
+      <workItem from="1750854230156" duration="541000" />
+      <workItem from="1750859374110" duration="604000" />
+      <workItem from="1751541725335" duration="4960000" />
+      <workItem from="1751557224341" duration="4570000" />
+      <workItem from="1751576466980" duration="4086000" />
+      <workItem from="1751581681934" duration="7379000" />
+      <workItem from="1751644128338" duration="23603000" />
+      <workItem from="1751670135247" duration="2736000" />
+      <workItem from="1751752093583" duration="10738000" />
+      <workItem from="1751801196921" duration="181000" />
+      <workItem from="1751826469772" duration="124000" />
+      <workItem from="1752101807097" duration="7842000" />
+      <workItem from="1752451806356" duration="422000" />
+      <workItem from="1754512703288" duration="30000" />
+      <workItem from="1754513441448" duration="639000" />
+      <workItem from="1754830505371" duration="1261000" />
+      <workItem from="1755703241494" duration="19000" />
+    </task>
+    <task id="LOCAL-00001" summary="Initial commit: added config + some html/styles">
+      <option name="closed" value="true" />
+      <created>1731292120323</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1731292120323</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Fixed profile pages layout">
+      <option name="closed" value="true" />
+      <created>1731301395139</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1731301395139</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Fixed footer overflow + finished profile pages">
+      <option name="closed" value="true" />
+      <created>1731386376114</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1731386376114</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Added names constructor page (mobile)">
+      <option name="closed" value="true" />
+      <created>1731440928811</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1731440928811</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Added names constructor page desktop adaptation">
+      <option name="closed" value="true" />
+      <created>1731452146912</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1731452146913</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Added api call to service layer">
+      <option name="closed" value="true" />
+      <created>1731686266809</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1731686266809</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Added constructor layouts and api calls">
+      <option name="closed" value="true" />
+      <created>1731922519966</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1731922519966</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Added constructor layouts and api calls">
+      <option name="closed" value="true" />
+      <created>1731955339812</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1731955339812</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Added program, dresscode and wishes forms">
+      <option name="closed" value="true" />
+      <created>1732019740792</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1732019740792</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Fixed constructor layout">
+      <option name="closed" value="true" />
+      <created>1732062070881</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1732062070881</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Added guest form to constructor">
+      <option name="closed" value="true" />
+      <created>1732080153882</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1732080153883</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Added basic custom date picker to constructor">
+      <option name="closed" value="true" />
+      <created>1732190443981</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1732190443982</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Added question type select customization to guest from constructor + finished date picker">
+      <option name="closed" value="true" />
+      <created>1732522553958</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1732522553958</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Add redux config + most of auth logic">
+      <option name="closed" value="true" />
+      <created>1736041015664</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1736041015664</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Finish auth logic (with come unnecessary redux state for now)">
+      <option name="closed" value="true" />
+      <created>1736135801402</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1736135801402</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Fixed profile layout">
+      <option name="closed" value="true" />
+      <created>1740232316113</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1740232316113</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Fixed minor bugs">
+      <option name="closed" value="true" />
+      <created>1740690227153</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1740690227153</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Finished iteration 0">
+      <option name="closed" value="true" />
+      <created>1743593080778</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1743593080778</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Changed pnpm to npm">
+      <option name="closed" value="true" />
+      <created>1743765424882</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1743765424882</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Added environment for backend api">
+      <option name="closed" value="true" />
+      <created>1743766676861</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1743766676861</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Finished mobile version of home page sections">
+      <option name="closed" value="true" />
+      <created>1744816561328</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1744816561328</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Finished mobile version of home page sections">
+      <option name="closed" value="true" />
+      <created>1744818682420</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1744818682420</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Added Nezhnost template, almost finished catalog version">
+      <option name="closed" value="true" />
+      <created>1745103393146</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1745103393146</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Finished Nezhnost template (catalog version)">
+      <option name="closed" value="true" />
+      <created>1745273577893</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1745273577893</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Finished preview logic">
+      <option name="closed" value="true" />
+      <created>1745447208284</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1745447208284</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Almost finished home page adaptation (Logo scaling logic + mobile menu left)">
+      <option name="closed" value="true" />
+      <created>1745527216915</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1745527216915</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Added create draft logic to header button">
+      <option name="closed" value="true" />
+      <created>1745527734950</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1745527734950</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Finished home page">
+      <option name="closed" value="true" />
+      <created>1745957833656</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1745957833656</updated>
+    </task>
+    <task id="LOCAL-00029" summary="Added Blog page &amp; made adjustments to home page">
+      <option name="closed" value="true" />
+      <created>1745964072674</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1745964072674</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Added image carousel for invitation preview at home page">
+      <option name="closed" value="true" />
+      <created>1746094137322</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1746094137322</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Added catalog page design, removed some unused imports/props">
+      <option name="closed" value="true" />
+      <created>1746095695491</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1746095695491</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Added custom loader, fixed invitation preview bug">
+      <option name="closed" value="true" />
+      <created>1746100747062</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1746100747062</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Added hook for creating default drafts">
+      <option name="closed" value="true" />
+      <created>1746102041188</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1746102041188</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Added pink vibe + hid login page for now">
+      <option name="closed" value="true" />
+      <created>1749083957485</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1749083957485</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Added new auth design">
+      <option name="closed" value="true" />
+      <created>1751760925669</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1751760925669</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Set up initial e2e test">
+      <option name="closed" value="true" />
+      <created>1751801225945</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1751801225945</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Finalize all except reg success">
+      <option name="closed" value="true" />
+      <created>1752110066205</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1752110066205</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added basic custom date picker to constructor" />
+    <MESSAGE value="Added question type select customization to guest from constructor + finished date picker" />
+    <MESSAGE value="Add redux config + most of auth logic" />
+    <MESSAGE value="Finish auth logic (with come unnecessary redux state for now)" />
+    <MESSAGE value="Fixed profile layout" />
+    <MESSAGE value="Fixed minor bugs" />
+    <MESSAGE value="Finished iteration 0" />
+    <MESSAGE value="Changed pnpm to npm" />
+    <MESSAGE value="Added environment for backend api" />
+    <MESSAGE value="Finished mobile version of home page sections" />
+    <MESSAGE value="Added Nezhnost template, almost finished catalog version" />
+    <MESSAGE value="Finished Nezhnost template (catalog version)" />
+    <MESSAGE value="Finished preview logic" />
+    <MESSAGE value="Almost finished home page adaptation (Logo scaling logic + mobile menu left)" />
+    <MESSAGE value="Added create draft logic to header button" />
+    <MESSAGE value="Finished home page" />
+    <MESSAGE value="Added Blog page &amp; made adjustments to home page" />
+    <MESSAGE value="Added image carousel for invitation preview at home page" />
+    <MESSAGE value="Added catalog page design, removed some unused imports/props" />
+    <MESSAGE value="Added custom loader, fixed invitation preview bug" />
+    <MESSAGE value="Added hook for creating default drafts" />
+    <MESSAGE value="Added pink vibe + hid login page for now" />
+    <MESSAGE value="Added new auth design" />
+    <MESSAGE value="Set up initial e2e test" />
+    <MESSAGE value="Finalize all except reg success" />
+    <option name="LAST_COMMIT_MESSAGE" value="Finalize all except reg success" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

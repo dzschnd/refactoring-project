@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset
+        xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+>
+    <url><loc>https://eventess.wedding/</loc></url>
+
+    <url><loc>https://eventess.wedding/login</loc></url>
+    <url><loc>https://eventess.wedding/register</loc></url>
+    <url><loc>https://eventess.wedding/register/email-verification</loc></url>
+    <url><loc>https://eventess.wedding/register/success</loc></url>
+    <url><loc>https://eventess.wedding/forgot-password</loc></url>
+    <url><loc>https://eventess.wedding/forgot-password/email-verification</loc></url>
+    <url><loc>https://eventess.wedding/reset-password</loc></url>
+    <url><loc>https://eventess.wedding/reset-password/success</loc></url>
+
+    <url><loc>https://eventess.wedding/profile</loc></url>
+    <url><loc>https://eventess.wedding/profile/drafts</loc></url>
+    <url><loc>https://eventess.wedding/profile/invitations</loc></url>
+    <url><loc>https://eventess.wedding/profile/guest-answers</loc></url>
+
+    <url><loc>https://eventess.wedding/catalog</loc></url>
+
+    <url><loc>https://eventess.wedding/constructor/names</loc></url>
+    <url><loc>https://eventess.wedding/constructor/date</loc></url>
+    <url><loc>https://eventess.wedding/constructor/place</loc></url>
+    <url><loc>https://eventess.wedding/constructor/program</loc></url>
+    <url><loc>https://eventess.wedding/constructor/dresscode</loc></url>
+    <url><loc>https://eventess.wedding/constructor/wishes</loc></url>
+    <url><loc>https://eventess.wedding/constructor/guest-form</loc></url>
+    <url><loc>https://eventess.wedding/constructor/preview</loc></url>
+
+    <url><loc>https://eventess.wedding/blog</loc></url>
+
+    <url><loc>https://eventess.wedding/templates/test</loc></url>
+    <url><loc>https://eventess.wedding/templates/red-velvet</loc></url>
+    <url><loc>https://eventess.wedding/templates/nezhnost</loc></url>
+    <url><loc>https://eventess.wedding/templates/pinkVibe</loc></url>
+
+    <!-- Dynamic route - not listed statically -->
+    <!-- <url><loc>https://eventess.wedding/invitations/:id</loc></url> -->
+
+    <url><loc>https://eventess.wedding/404</loc></url>
+</urlset>

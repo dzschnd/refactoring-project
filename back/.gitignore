@@ -1,0 +1,7 @@
+# .gitignore
+.env
+node_modules/
+.idea/
+package-lock.json
+pnpm-lock.yaml
+src/config/db.sql

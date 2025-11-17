@@ -1,0 +1,9 @@
+export const SERVER_ERROR = "Что-то пошло не так. Пожалуйста, зайдите позже";
+export const EMAIL_TAKEN = "Эта почта уже занята";
+export const INVALID_CREDENTIALS = "Неверные почта или пароль";
+export const WRONG_PASSWORD = "Неверный пароль";
+export const USER_NOT_FOUND = "Пользователь не найден";
+export const INVALID_OTP_TRY_REPEAT = "Код не подошёл. Попробуйте ещё раз";
+export const OTP_EXPIRED = "Этот код уже не действует :С";
+export const INVALID_OTP = "Код введен неверно";
+export const GUEST_FORM_EMPTY = "Пожалуйста, заполните поле";

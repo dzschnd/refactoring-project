@@ -1,0 +1,125 @@
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: ["./src/**/*.{js,jsx,ts,tsx}", "./src/index.css"],
+  theme: {
+    screens: {
+      sm: "760px",
+      md: "1279px",
+    },
+    fontFamily: {
+      primary: ["Open Sans", "sans-serif"],
+      "primary-condensed": ["Open Sans Condensed", "sans-serif"],
+      "playfair-display": ["Playfair Display", "sans-serif"],
+
+      montserrat: ["Montserrat", "sans-serif"],
+      playfair: ["Playfair", "serif"],
+
+      "nezhnost--primary": ["Cormorant", "serif"],
+      "nezhnost--secondary": ["Raleway", "sans-serif"],
+      "nezhnost--tertiary": ["Novelist", "sans-serif"],
+
+      "pink-vibe--primary": ["Playfair", "serif"],
+      "pink-vibe--secondary": ["Raleway", "sans-serif"],
+
+      "minimalism--primary": ["Mak", "serif"],
+      "minimalism--secondary": ["Inter", "sans-serif"],
+      "minimalism--tertiary": ["Raleway", "sans-serif"],
+    },
+    fontSize: {
+      200: "12px",
+      300: "14px",
+      400: "16px",
+      500: "18px",
+      600: "20px",
+      700: "22px",
+      800: "24px",
+      900: "32px",
+      950: "36px",
+      1000: "48px",
+      1100: "56px",
+      1200: "64px",
+      1500: "96px",
+    },
+    extend: {
+      backgroundImage: {
+        checkmark: "url('assetsOld/formIcons/checkmark.svg')",
+      },
+      colors: {
+        white: "#FFFFFF",
+        "neutral-100": "#F8F4EB",
+        "neutral-500--opaque": "#76767666",
+        black: "#000000",
+        "black--opaque": "#00000066",
+        "primary-50": "#FFEDED",
+        "primary-100": "#C68888",
+        primary: "#A10F04",
+        "primary-700": "#890900",
+
+        "pink-vibe--primary": "#EB64A7",
+        "pink-vibe--secondary": "#FFE2F0",
+        "pink-vibe-neutral-100": "#FFFFFF",
+
+        "minimalism--primary": "#383838",
+        "minimalism--secondary": "#FAEFF3",
+        "minimalism--tertiary": "#525252",
+
+        "blue-400": "#6DAFFF",
+        "red-100": "#FFEBEA",
+        "red-500": "#FF3B30",
+        "red-600": "#CC231A",
+        "red-700": "#821415",
+        "red-error": "#821415",
+        "green-50": "#A2FDDB40",
+        "green-100": "#E7FAE8",
+        beige: "#F1F0EC",
+        "grey-50": "#F2F4F5",
+        "grey-75": "#E8E8E8",
+        "grey-100": "#CFD3D4",
+        "grey-200": "#ACACAD",
+        "grey-300": "#848484",
+        "grey-400": "#5E6366",
+        "grey-500": "#383838",
+        "grey-700--opaque": "#00000066",
+      },
+      borderRadius: {
+        DEFAULT: "0px",
+        8: "8px",
+        9: "9px",
+        10: "10px",
+        20: "20px",
+        30: "30px",
+        42: "42px",
+        full: "calc(infinity * 1px)",
+      },
+      boxShadow: {
+        custom: "-5px -1px 7.8px #5151511A",
+        "color-preview": "0px 2px 9.3px 0px #40392D14",
+        form: "2px 0px 8px 0px #563F3A0F",
+        "form-footer": "0px -2px 8px 0px #563F3A0F",
+        header: "0px 0px 15px 0px #563F3A26",
+        "toggle-ball": "0px 3px 5px 0px #563F3A0D, 0px -3px 5px 0px #563F3A0D",
+        footer: "0 -2px 18.8px #28262A1A",
+        "dresscode-item": "0px 2px 9.3px 0px #40392D14",
+        tooltip: "0px 4px 10px 0px #8998C166",
+      },
+      transitionProperty: {
+        height: "height",
+      },
+      keyframes: {
+        "caret-blink": {
+          "0%,70%,100%": { opacity: "1" },
+          "20%,50%": { opacity: "0" },
+        },
+        marquee: {
+          "0%": { transform: "translateX(0%)" },
+          "100%": { transform: "translateX(-100%)" },
+        },
+      },
+      animation: {
+        "caret-blink": "caret-blink 1.2s ease-out infinite",
+        marquee: "marquee 30s linear infinite",
+      },
+    },
+  },
+  plugins: ["prettier-plugin-tailwindcss"],
+};
