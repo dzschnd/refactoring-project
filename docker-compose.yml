@@ -1,16 +1,61 @@
 services:
-  db:
-    build:
-      context: .
-      dockerfile: Dockerfile
+  traefik:
+    image: traefik:v2.11
+    command:
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--api.insecure=true"
     ports:
-      - "5432:5432"
+      - "80:80"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+
+  db:
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: eventess
       POSTGRES_USER: eventess
       POSTGRES_PASSWORD: eventess
     volumes:
       - db_data:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: ./back
+      dockerfile: Dockerfile
+    env_file:
+      - ./back/.env
+    environment:
+      DATABASE_URL: postgresql://eventess:eventess@db:5432/eventess?schema=public
+      DB_HOST: db
+      CLIENT_DOMAIN: http://localhost
+      COOKIE_SECURE: "false"
+    depends_on:
+      - db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.api.rule=PathPrefix(`/api`)"
+      - "traefik.http.routers.api.entrypoints=web"
+      - "traefik.http.routers.api.priority=100"
+      - "traefik.http.routers.api.middlewares=api-stripprefix"
+      - "traefik.http.middlewares.api-stripprefix.stripprefix.prefixes=/api"
+      - "traefik.http.services.api.loadbalancer.server.port=4000"
+
+  frontend:
+    build:
+      context: ./front
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_SERVER_DOMAIN: /api
+    depends_on:
+      - backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.rule=PathPrefix(`/`)"
+      - "traefik.http.routers.front.entrypoints=web"
+      - "traefik.http.services.front.loadbalancer.server.port=80"
 
 volumes:
   db_data:
