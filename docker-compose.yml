@@ -1,0 +1,16 @@
+services:
+  db:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: eventess
+      POSTGRES_USER: eventess
+      POSTGRES_PASSWORD: eventess
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  db_data:
