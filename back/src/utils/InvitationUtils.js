@@ -1,21 +1,35 @@
-import {getInvitationDetailsQuery} from "../queries/InvitationQueries.js";
+import prisma from "../config/prisma.js";
 
-export const getInvitationDetails = async (invitationId, isPublished, client) => {
-    const result = await getInvitationDetailsQuery(invitationId, isPublished, client);
-    if (result.length === 0) {
+export const getInvitationDetails = async (invitationId, isPublished, client = prisma) => {
+    const id = Number(invitationId);
+    const invitation = await client.invitation.findFirst({
+        where: { id: id, isPublished: isPublished },
+        include: {
+            template: true,
+            place: true,
+            invitationColors: {
+                include: { color: true },
+                orderBy: { position: "asc" }
+            },
+            planItems: { orderBy: { position: "asc" } },
+            wishes: { orderBy: { position: "asc" } },
+            questions: { orderBy: { position: "asc" } },
+            answers: { orderBy: { position: "asc" } }
+        }
+    });
+
+    if (!invitation) {
         return null;
     }
 
-    const invitationData = result[0];
+    const formattedPlace = invitation.place ? {
+        address: invitation.place.address,
+        link: invitation.place.link,
+        placeImage: invitation.place.placeImage
+    } : null;
 
-    const formattedPlace = invitationData.place ? {
-            address: invitationData.place.address,
-            link: invitationData.place.link,
-            placeImage: invitationData.place.place_image
-        } : null;
-
-    const formattedPlanItems = invitationData.plan_items ? invitationData.plan_items.map(item => {
-        const [hours, minutes] = item.event_time.split(':');
+    const formattedPlanItems = invitation.planItems.length > 0 ? invitation.planItems.map(item => {
+        const [hours, minutes] = item.eventTime.split(":");
         return {
             position: item.position,
             description: item.description,
@@ -23,35 +37,49 @@ export const getInvitationDetails = async (invitationId, isPublished, client) =>
         };
     }) : null;
 
-    const formattedColors = invitationData.colors ? invitationData.colors.map(color => {
+    const formattedColors = invitation.invitationColors.length > 0 ? invitation.invitationColors.map(ic => {
         return {
-            position: color.position,
-            colorCode: color.color_code
+            position: ic.position,
+            colorCode: ic.color.colorCode
         };
     }) : null;
 
-    const formattedAnswers = invitationData.answers ? invitationData.answers.map(answer => {
+    const questions = invitation.questions.length > 0 ? invitation.questions.map(question => {
+        return {
+            id: question.id,
+            question: question.question,
+            position: question.position,
+            type: question.type
+        };
+    }) : null;
+
+    const formattedAnswers = invitation.answers.length > 0 ? invitation.answers.map(answer => {
+        const question = invitation.questions.find((q) => q.id === answer.questionId);
         return {
             position: answer.position,
             answer: answer.answer,
-            questionPosition: answer.question_position
+            questionPosition: question ? question.position : null
         };
     }) : null;
 
+    const eventDate = invitation.eventDate
+        ? invitation.eventDate.toISOString().split("T")[0]
+        : null;
+
     return {
-        id: invitationData.id,
-        firstPartnerName: invitationData.partner_1_name,
-        secondPartnerName: invitationData.partner_2_name,
-        coupleImage: invitationData.couple_image,
-        authorId: invitationData.author_id,
-        templateName: invitationData.template_name,
-        eventDate: invitationData.event_date,
-        isPublished: invitationData.is_published,
-        colors: invitationData.colors.length === 0 ? null : formattedColors,
+        id: invitation.id,
+        firstPartnerName: invitation.partner1Name,
+        secondPartnerName: invitation.partner2Name,
+        coupleImage: invitation.coupleImage,
+        authorId: invitation.authorId,
+        templateName: invitation.template.name,
+        eventDate: eventDate,
+        isPublished: invitation.isPublished,
+        colors: formattedColors,
         place: formattedPlace,
-        planItems: invitationData.plan_items.length === 0 ? null : formattedPlanItems,
-        wishes: invitationData.wishes.length === 0 ? null : invitationData.wishes,
-        questions: invitationData.questions.length === 0 ? null : invitationData.questions,
-        answers: invitationData.answers.length === 0 ? null : formattedAnswers,
+        planItems: formattedPlanItems,
+        wishes: invitation.wishes.length === 0 ? null : invitation.wishes,
+        questions: questions,
+        answers: formattedAnswers,
     };
 };

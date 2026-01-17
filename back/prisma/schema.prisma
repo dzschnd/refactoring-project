@@ -1,0 +1,189 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum QuestionType {
+  TEXT
+  SELECT
+  CHECKBOX
+}
+
+model User {
+  id           Int                 @id @default(autoincrement())
+  email        String              @unique
+  password     String?
+  name         String?
+  verified     Boolean             @default(false)
+  invitations  Invitation[]        @relation("UserInvitations")
+  refreshToken RefreshToken[]
+  emailOtps    EmailVerificationOtp[]
+
+  @@map("users")
+}
+
+model RefreshToken {
+  id        Int      @id @default(autoincrement())
+  token     String
+  expiresAt DateTime @map("expires_at")
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("refresh_tokens")
+}
+
+model EmailVerificationOtp {
+  id        Int      @id @default(autoincrement())
+  otp       String
+  expiresAt DateTime @map("expires_at")
+  userId    Int      @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@map("email_verification_otps")
+}
+
+model Template {
+  id          Int          @id @default(autoincrement())
+  name        String       @unique
+  invitations Invitation[]
+
+  @@map("templates")
+}
+
+model Place {
+  id         Int          @id @default(autoincrement())
+  address    String?
+  placeImage String?      @map("place_image")
+  link       String?
+  invitations Invitation[]
+
+  @@map("places")
+}
+
+model Invitation {
+  id            Int              @id @default(autoincrement())
+  partner1Name  String?          @map("partner_1_name")
+  partner2Name  String?          @map("partner_2_name")
+  coupleImage   String?          @map("couple_image")
+  eventDate     DateTime?        @db.Date @map("event_date")
+  isPublished   Boolean          @default(false) @map("is_published")
+  createdAt     DateTime         @default(now()) @map("created_at")
+  authorId      Int              @map("author_id")
+  templateId    Int              @map("template_id")
+  placeId       Int?             @map("place_id")
+
+  author        User             @relation("UserInvitations", fields: [authorId], references: [id])
+  template      Template         @relation(fields: [templateId], references: [id])
+  place         Place?           @relation(fields: [placeId], references: [id])
+  invitationColors InvitationColor[]
+  planItems     PlanItem[]
+  wishes        Wish[]
+  questions     FormQuestion[]
+  answers       FormAnswer[]
+  guestAnswers  GuestAnswer[]
+
+  @@index([authorId])
+  @@index([templateId])
+  @@index([placeId])
+  @@map("invitations")
+}
+
+model Color {
+  id             Int               @id @default(autoincrement())
+  colorCode      String            @unique @map("color_code")
+  invitationColors InvitationColor[]
+
+  @@map("colors")
+}
+
+model InvitationColor {
+  id           Int        @id @default(autoincrement())
+  invitationId Int        @map("invitation_id")
+  colorId      Int        @map("color_id")
+  position     Int
+  invitation   Invitation @relation(fields: [invitationId], references: [id])
+  color        Color      @relation(fields: [colorId], references: [id])
+
+  @@index([invitationId])
+  @@index([colorId])
+  @@unique([invitationId, position])
+  @@map("invitation_colors")
+}
+
+model PlanItem {
+  id           Int        @id @default(autoincrement())
+  eventTime    String     @map("event_time")
+  description  String
+  position     Int
+  invitationId Int        @map("invitation_id")
+  invitation   Invitation @relation(fields: [invitationId], references: [id])
+
+  @@index([invitationId])
+  @@unique([invitationId, position])
+  @@map("plan_items")
+}
+
+model Wish {
+  id           Int        @id @default(autoincrement())
+  wish         String
+  position     Int
+  invitationId Int        @map("invitation_id")
+  invitation   Invitation @relation(fields: [invitationId], references: [id])
+
+  @@index([invitationId])
+  @@unique([invitationId, position])
+  @@map("wishes")
+}
+
+model FormQuestion {
+  id           Int           @id @default(autoincrement())
+  question     String
+  type         QuestionType
+  position     Int
+  invitationId Int           @map("invitation_id")
+  invitation   Invitation    @relation(fields: [invitationId], references: [id])
+  answers      FormAnswer[]
+  guestAnswers GuestAnswer[]
+
+  @@index([invitationId])
+  @@unique([invitationId, position])
+  @@map("form_questions")
+}
+
+model FormAnswer {
+  id           Int         @id @default(autoincrement())
+  answer       String
+  position     Int
+  questionId   Int         @map("question_id")
+  invitationId Int         @map("invitation_id")
+  question     FormQuestion @relation(fields: [questionId], references: [id])
+  invitation   Invitation  @relation(fields: [invitationId], references: [id])
+
+  @@index([questionId])
+  @@index([invitationId])
+  @@unique([questionId, position])
+  @@map("form_answers")
+}
+
+model GuestAnswer {
+  id           Int         @id @default(autoincrement())
+  guestId      String      @map("guest_id")
+  guestName    String      @map("guest_name")
+  isComing     Boolean     @map("is_coming")
+  answer       String
+  invitationId Int         @map("invitation_id")
+  questionId   Int         @map("question_id")
+  invitation   Invitation  @relation(fields: [invitationId], references: [id])
+  question     FormQuestion @relation(fields: [questionId], references: [id])
+
+  @@index([invitationId])
+  @@index([questionId])
+  @@index([guestId])
+  @@map("guest_answers")
+}

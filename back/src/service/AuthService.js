@@ -1,25 +1,27 @@
 import bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
-import {
-    beginTransaction,
-    commitTransaction,
-    connectClient,
-    releaseClient,
-    rollbackTransaction
-} from "../queries/CommonQueries.js";
+import prisma from "../config/prisma.js";
 import {
     createOtpQuery,
-    createRefreshTokenQuery, createUserQuery, deleteOtpQuery, getOtpQuery,
+    createRefreshTokenQuery,
+    createUserQuery,
+    deleteOtpQuery,
+    getOtpQuery,
     getRefreshTokenQuery,
-    getUserByEmailQuery, getUserQuery,
-    updateRefreshTokenQuery, updateUserByEmailQuery, updateUserByPasswordQuery, activateUserQuery, updateUserByNameQuery
+    getUserByEmailQuery,
+    getUserQuery,
+    updateRefreshTokenQuery,
+    updateUserByEmailQuery,
+    updateUserByPasswordQuery,
+    activateUserQuery,
+    updateUserByNameQuery
 } from "../queries/AuthQueries.js";
 import {signAccessToken, signRefreshToken} from "../utils/TokenUtils.js";
 import {getCurrentTime, getExpirationTimeMinutes} from "../utils/TimeUtils.js";
 import {errorResponse} from "../utils/errorUtils.js";
-import * as nodemailer from 'nodemailer';
-import * as fs from 'fs';
-import * as path from 'path';
+import * as nodemailer from "nodemailer";
+import * as fs from "fs";
+import * as path from "path";
 import {EMAIL_NOT_AVAILABLE} from "../messages/messages.js";
 
 dotenv.config();
@@ -27,10 +29,10 @@ export const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toS
 
 export const sendVerificationEmail = async (email, otp) => {
     const __dirname = path.resolve();
-    const filePath = path.join(__dirname, '/src/templates/emailTemplate.html');
-    const htmlContent = fs.readFileSync(filePath, 'utf-8').toString().replace('{{otp}}', otp);
+    const filePath = path.join(__dirname, "/src/templates/emailTemplate.html");
+    const htmlContent = fs.readFileSync(filePath, "utf-8").toString().replace("{{otp}}", otp);
     const transporter = nodemailer.createTransport({
-        service: 'gmail',
+        service: "gmail",
         auth: {
             user: process.env.EMAIL,
             pass: process.env.EMAIL_PASS,
@@ -39,14 +41,14 @@ export const sendVerificationEmail = async (email, otp) => {
     const mailOptions = {
         from: process.env.EMAIL_FROM,
         to: email,
-        subject: 'Ваш код верификации',
+        subject: "Ваш код верификации",
         html: htmlContent,
     };
 
     await transporter.sendMail(mailOptions);
 };
 
-export const createAndSendOtp = async (userId, email, client) => {
+export const createAndSendOtp = async (userId, email, client = prisma) => {
     await deleteOtpQuery(userId, client);
 
     const otp = generateOTP();
@@ -55,438 +57,341 @@ export const createAndSendOtp = async (userId, email, client) => {
     await createOtpQuery(otp, userId, expiresAt, client);
     await sendVerificationEmail(email, otp);
 
-    return { message: 'Otp sent successfully' };
+    return { message: "Otp sent successfully" };
 }
 
 export const requestOtp = async (email) => {
-    let client;
     try {
-        client = await connectClient();
+        return await prisma.$transaction(async (tx) => {
+            const user = await getUserByEmailQuery(email, tx);
 
-        await beginTransaction(client);
+            if (user.length === 0) {
+                return errorResponse("User not found");
+            }
 
-        const user = await getUserByEmailQuery(email, client);
+            await createAndSendOtp(user[0].id, email, tx);
 
-        if (user.length === 0) {
-            return errorResponse('User not found');
-        }
-
-        await createAndSendOtp(user[0].id, email, client);
-
-        await commitTransaction(client);
-        return { message: 'Otp sent successfully' };
+            return { message: "Otp sent successfully" };
+        });
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to send otp: ' + error.message);
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to send otp: " + error.message);
     }
 }
 
 export const register = async (email, password) => {
-    let client;
     try {
-        client = await connectClient();
-        await beginTransaction(client);
+        return await prisma.$transaction(async (tx) => {
+            const user = await getUserByEmailQuery(email, tx);
+            const isUserExists = user.length > 0;
 
-        const user = await getUserByEmailQuery(email, client);
-        const isUserExists = user.length > 0;
+            if (isUserExists) {
+                const existingUser = user[0];
 
-        if (isUserExists) {
-            const existingUser = user[0]
+                if (existingUser.verified) {
+                    return errorResponse(EMAIL_NOT_AVAILABLE);
+                }
 
-            if (existingUser.verified) {
-                return errorResponse(EMAIL_NOT_AVAILABLE);
+                const checkPasswordResponse = await checkPassword(existingUser, password, tx);
+                if (checkPasswordResponse.error) {
+                    return errorResponse(EMAIL_NOT_AVAILABLE);
+                }
+                await createAndSendOtp(existingUser.id, existingUser.email, tx);
+                const { password: _, ...existingUserWithoutPassword } = existingUser;
+                return { ...existingUserWithoutPassword };
             }
 
-            const checkPasswordResponse = await checkPassword(existingUser, password);
-            if (checkPasswordResponse.error) {
-                return errorResponse(EMAIL_NOT_AVAILABLE);
-            }
-            await createAndSendOtp(existingUser.id, existingUser.email, client);
-            await commitTransaction(client);
-            return { ...existingUser };
-
-        }
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-        const newUser = await createUserQuery(email, hashedPassword, client);
-        const { password: _, ...newUserWithoutPassword } = newUser[0];
-        await createAndSendOtp(newUser[0].id, newUser[0].email, client);
-        await commitTransaction(client);
-        return { ...newUserWithoutPassword };
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            const newUser = await createUserQuery(email, hashedPassword, tx);
+            const { password: _, ...newUserWithoutPassword } = newUser[0];
+            await createAndSendOtp(newUser[0].id, newUser[0].email, tx);
+            return { ...newUserWithoutPassword };
+        });
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to register user: ' + error.message);
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to register user: " + error.message);
     }
 };
 
 export const refreshTokens = async (refreshToken, user) => {
-    let client;
     try {
-        client = await connectClient();
-        await beginTransaction(client);
+        return await prisma.$transaction(async (tx) => {
+            const existingTokens = await getRefreshTokenQuery(refreshToken, user.id, tx);
 
-        const existingTokens = await getRefreshTokenQuery(refreshToken, user.id, client);
+            if (existingTokens.length === 0)
+                return errorResponse("Invalid refresh token");
 
-        if (existingTokens.length === 0)
-            return errorResponse('Invalid refresh token');
+            if (existingTokens.filter((token) => new Date(token.expiresAt) > new Date()).length === 0) {
+                return errorResponse("Refresh token expired");
+            }
+            const currentTime = getCurrentTime();
+            await updateRefreshTokenQuery(currentTime, user.id, tx);
 
-        if (existingTokens.filter((token) => new Date(token.expires_at) > new Date()).length === 0) {
-            return errorResponse('Refresh token expired');
-        }
-        const currentTime = getCurrentTime();
-        await updateRefreshTokenQuery(currentTime, user.id, client);
+            const accessToken = signAccessToken(user);
+            const { refreshToken: newRefreshToken, expiresAt: newExpiresAt } = signRefreshToken(user);
 
-        const accessToken = signAccessToken(user);
-        const { refreshToken: newRefreshToken, expiresAt: newExpiresAt } = signRefreshToken(user);
+            await createRefreshTokenQuery(newRefreshToken, user.id, newExpiresAt, tx);
 
-        await createRefreshTokenQuery(newRefreshToken, user.id, newExpiresAt, client);
-
-        await commitTransaction(client);
-
-        return { accessToken: accessToken, refreshToken: newRefreshToken };
+            return { accessToken: accessToken, refreshToken: newRefreshToken };
+        });
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to refresh tokens');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to refresh tokens");
     }
 };
 
 export const requestResetPassword = async (email) => {
-    let client;
     try {
-        client = await connectClient();
+        return await prisma.$transaction(async (tx) => {
+            const user = await getUserByEmailQuery(email, tx);
 
-        const user = await getUserByEmailQuery(email, client);
+            if (user.length === 0) return errorResponse("User not found");
 
-        if (user.length === 0) return errorResponse('User not found');
+            await createAndSendOtp(user[0].id, user[0].email, tx);
 
-        await createAndSendOtp(user[0].id, user[0].email, client);
-
-        await commitTransaction(client);
-
-        return { message: 'Otp sent successfully', user: user[0] };
+            return { message: "Otp sent successfully", user: user[0] };
+        });
     } catch (error) {
-        return errorResponse('Failed to request password reset');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to request password reset");
     }
 };
 
 export const requestChangeEmail = async (email, newEmail) => {
-    let client;
     try {
-        client = await connectClient();
+        return await prisma.$transaction(async (tx) => {
+            const user = await getUserByEmailQuery(email, tx);
+            if (user.length === 0) return errorResponse("User not found");
 
-        const user = await getUserByEmailQuery(email, client);
-        if (user.length === 0) return errorResponse('User not found');
+            const userWithSameEmail = await getUserByEmailQuery(newEmail, tx);
+            if (userWithSameEmail.length > 0) return errorResponse("Email not available");
 
-        const userWithSameEmail = await getUserByEmailQuery(newEmail, client);
-        if (userWithSameEmail.length > 0) return errorResponse('Email not available');
+            await createAndSendOtp(user[0].id, newEmail, tx);
 
-        await createAndSendOtp(user[0].id, newEmail, client);
-
-        return { message: 'Otp sent successfully' };
+            return { message: "Otp sent successfully" };
+        });
     } catch (error) {
-        return errorResponse('Failed to request email change', error);
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to request email change", error);
     }
 };
 
 export const verifyEmail = async (email, otp) => {
-    let client;
     try {
-        client = await connectClient();
+        return await prisma.$transaction(async (tx) => {
+            const existingUsers = await getUserByEmailQuery(email, tx);
 
-        await beginTransaction(client);
+            if (existingUsers.length === 0)
+                return errorResponse("User not found");
 
-        const existingUsers = await getUserByEmailQuery(email, client);
+            const existingOtp = await getOtpQuery(otp, existingUsers[0].id, tx);
 
-        if (existingUsers.length === 0)
-            return errorResponse('User not found');
+            if (existingOtp.length === 0)
+                return errorResponse("OTP not found");
 
-        const existingOtp = await getOtpQuery(otp, existingUsers[0].id, client);
+            if (new Date() > new Date(existingOtp[0].expiresAt))
+                return errorResponse("OTP has expired");
 
-        if (existingOtp.length === 0)
-            return errorResponse('OTP not found');
+            if (!existingUsers[0].verified)
+                await activateUserQuery(existingUsers[0].id, tx);
 
-        if (new Date() > new Date(existingOtp[0].expires_at))
-            return errorResponse('OTP has expired');
+            await deleteOtpQuery(existingUsers[0].id, tx);
 
-        if (!existingUsers[0].verified)
-            await activateUserQuery(existingUsers[0].id, client);
-
-        await deleteOtpQuery(existingUsers[0].id, client);
-
-        await commitTransaction(client);
-
-        return existingUsers[0];
+            return existingUsers[0];
+        });
     } catch (error) {
-        return errorResponse('Failed to verify email');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to verify email");
     }
 };
 
 export const activateUser = async (user) => {
-    let client;
     try {
-        client = await connectClient();
+        return await prisma.$transaction(async (tx) => {
+            const existingUsers = await getUserQuery(user.id, tx);
 
-        await beginTransaction(client);
+            if (existingUsers.length === 0)
+                return errorResponse("User not found");
 
-        const existingUsers = await getUserQuery(user.id, client);
+            await deleteOtpQuery(user.id, tx);
 
-        if (existingUsers.length === 0)
-            return errorResponse('User not found');
+            const accessToken = signAccessToken(user);
+            const { refreshToken, expiresAt } = signRefreshToken(user);
 
-        await deleteOtpQuery(user.id, client);
+            await createRefreshTokenQuery(refreshToken, user.id, expiresAt, tx);
 
-        const accessToken = signAccessToken(user);
-        const { refreshToken, expiresAt } = signRefreshToken(user);
-
-        await createRefreshTokenQuery(refreshToken, user.id, expiresAt, client);
-
-        await commitTransaction(client);
-
-        return { accessToken: accessToken, refreshToken: refreshToken };
+            return { accessToken: accessToken, refreshToken: refreshToken };
+        });
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to activate user');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to activate user");
     }
 };
 
-export const checkPassword = async (user, password) => {
-    let isPasswordValid;
-    let client;
+export const checkPassword = async (user, password, client = prisma) => {
     try {
+        let isPasswordValid;
         if (!user.password) {
-            const client = await connectClient();
             const existingUser = await getUserByEmailQuery(user.email, client);
             if (existingUser.length === 0)
-                return errorResponse('Invalid credentials');
+                return errorResponse("Invalid credentials");
             isPasswordValid = await bcrypt.compare(password, existingUser[0].password);
         } else {
             isPasswordValid = await bcrypt.compare(password, user.password);
         }
 
         if (!isPasswordValid)
-            return errorResponse('Invalid credentials');
+            return errorResponse("Invalid credentials");
 
-        return {message: 'Password valid'};
+        return {message: "Password valid"};
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to check Password');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to check Password");
     }
 }
 
 export const login = async (email, password) => {
-    let client;
     try {
-        client = await connectClient();
-        await beginTransaction(client);
+        return await prisma.$transaction(async (tx) => {
+            const existingUser = await getUserByEmailQuery(email, tx);
 
-        const existingUser = await getUserByEmailQuery(email, client);
+            if (existingUser.length === 0)
+                return errorResponse("Invalid credentials");
 
-        if (existingUser.length === 0)
-            return errorResponse('Invalid credentials');
+            const checkPasswordResponse = await checkPassword(existingUser[0], password, tx);
 
-        const checkPasswordResponse = await checkPassword(existingUser[0], password);
+            if (checkPasswordResponse.error)
+                return errorResponse("Invalid credentials");
 
-        if (checkPasswordResponse.error)
-            return errorResponse('Invalid credentials');
+            const { password: _, ...userWithoutPassword } = existingUser[0];
 
-        const { password: _, ...userWithoutPassword } = existingUser[0];
+            if (!userWithoutPassword.verified) {
+                await createAndSendOtp(existingUser[0].id, existingUser[0].email, tx);
+                return errorResponse("User not verified");
+            }
 
-        if (!userWithoutPassword.verified) {
-            await createAndSendOtp(existingUser[0].id, existingUser[0].email, client);
-            return errorResponse('User not verified');
-        }
+            const currentTime = getCurrentTime();
+            await updateRefreshTokenQuery(currentTime, userWithoutPassword.id, tx);
 
-        const currentTime = getCurrentTime();
-        await updateRefreshTokenQuery(currentTime, userWithoutPassword.id, client);
+            const accessToken = signAccessToken(userWithoutPassword);
+            const { refreshToken, expiresAt } = signRefreshToken(userWithoutPassword);
 
-        const accessToken = signAccessToken(userWithoutPassword);
-        const { refreshToken, expiresAt } = signRefreshToken(userWithoutPassword);
+            await createRefreshTokenQuery(refreshToken, userWithoutPassword.id, expiresAt, tx);
 
-        await createRefreshTokenQuery(refreshToken, userWithoutPassword.id, expiresAt, client);
-
-        await commitTransaction(client);
-
-        return { user: userWithoutPassword, accessToken: accessToken, refreshToken: refreshToken };
+            return { user: userWithoutPassword, accessToken: accessToken, refreshToken: refreshToken };
+        });
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to log in');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to log in");
     }
 };
 
 export const getProfile = async (user) => {
-    let client;
     try {
-        client = await connectClient();
-
-        const existingUsers = await getUserQuery(user.id, client);
+        const existingUsers = await getUserQuery(user.id);
 
         if (existingUsers.length === 0) {
-            return errorResponse('User not found');
+            return errorResponse("User not found");
         }
 
         const { password: _, ...userWithoutPassword } = existingUsers[0];
         return { ...userWithoutPassword };
     } catch (error) {
-        return errorResponse('Failed to fetch profile');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to fetch profile");
     }
 };
 
 export const logout = async (user) => {
-    let client;
     try {
-        client = await connectClient();
-
         const currentTime = getCurrentTime();
-        await updateRefreshTokenQuery(currentTime, user.id, client);
+        await updateRefreshTokenQuery(currentTime, user.id);
 
-        return { message: 'Logged out successfully' };
+        return { message: "Logged out successfully" };
     } catch (error) {
-        return errorResponse('Failed to log out');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to log out");
     }
 };
 
 export const updateProfile = async (newEmail, newPassword, email) => {
-    let client;
     try {
-        client = await connectClient();
+        return await prisma.$transaction(async (tx) => {
+            const existingUsers = await getUserByEmailQuery(email, tx);
 
-        await beginTransaction(client);
+            if (existingUsers.length === 0)
+                return errorResponse("User not found");
 
-        const existingUsers = await getUserByEmailQuery(email, client);
+            const user = existingUsers[0];
 
-        if (existingUsers.length === 0)
-            return errorResponse('User not found');
+            if (newEmail) {
+                const existingUsersByEmail = await getUserByEmailQuery(newEmail, tx);
 
-        const user = existingUsers[0];
+                if (existingUsersByEmail.length > 0)
+                    return errorResponse("Email is not available");
 
-        if (newEmail) {
-            const existingUsersByEmail = await getUserByEmailQuery(newEmail, client);
+                await updateUserByEmailQuery(newEmail, user.id, tx);
+            }
 
-            if (existingUsersByEmail.length > 0)
-                return errorResponse('Email is not available');
+            else if (newPassword) {
+                const salt = await bcrypt.genSalt(10);
+                const hashedPassword = await bcrypt.hash(newPassword, salt);
+                await updateUserByPasswordQuery(hashedPassword, user.id, tx);
+            }
 
-            await updateUserByEmailQuery(newEmail, user.id, client);
-        }
+            if (!newEmail && !newPassword) {
+                return errorResponse("Neither email nor password passed to change");
+            }
 
-        else if (newPassword) {
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(newPassword, salt);
-            await updateUserByPasswordQuery(hashedPassword, user.id, client);
-        }
-
-        if (!newEmail && !newPassword) {
-            return errorResponse('Neither email nor password passed to change')
-        }
-
-        await commitTransaction(client);
-
-        return { message: 'Profile updated successfully', newEmail: newEmail };
+            return { message: "Profile updated successfully", newEmail: newEmail };
+        });
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to update profile');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to update profile");
     }
 };
 
 export const changeEmail = async (oldEmail, newEmail) => {
-    let client;
     try {
-        client = await connectClient();
+        return await prisma.$transaction(async (tx) => {
+            const existingUsers = await getUserByEmailQuery(oldEmail, tx);
+            if (existingUsers.length === 0)
+                return errorResponse("User not found");
 
-        await beginTransaction(client);
+            const existingUsersByEmail = await getUserByEmailQuery(newEmail, tx);
+            if (existingUsersByEmail.length > 0)
+                return errorResponse("Email is not available");
 
-        const existingUsers = await getUserByEmailQuery(oldEmail, client);
-        if (existingUsers.length === 0)
-            return errorResponse('User not found');
+            await updateUserByEmailQuery(newEmail, existingUsers[0].id, tx);
 
-        const existingUsersByEmail = await getUserByEmailQuery(newEmail, client);
-        if (existingUsersByEmail.length > 0)
-            return errorResponse('Email is not available');
-
-        await updateUserByEmailQuery(newEmail, existingUsers[0].id, client);
-
-        await commitTransaction(client);
-
-        return { message: 'Profile updated successfully', newEmail: newEmail };
+            return { message: "Profile updated successfully", newEmail: newEmail };
+        });
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to update profile');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to update profile");
     }
 };
 
 export const changePassword = async (newPassword, email) => {
-    let client;
     try {
-        client = await connectClient();
+        return await prisma.$transaction(async (tx) => {
+            const existingUsers = await getUserByEmailQuery(email, tx);
 
-        await beginTransaction(client);
+            if (existingUsers.length === 0)
+                return errorResponse("User not found");
 
-        const existingUsers = await getUserByEmailQuery(email, client);
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+            await updateUserByPasswordQuery(hashedPassword, existingUsers[0].id, tx);
 
-        if (existingUsers.length === 0)
-            return errorResponse('User not found');
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-        await updateUserByPasswordQuery(hashedPassword, existingUsers[0].id, client);
-
-        await commitTransaction(client);
-
-        return { message: 'Profile updated successfully' };
+            return { message: "Profile updated successfully" };
+        });
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to update profile');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to update profile");
     }
 };
 
 export const changeName = async (newName, email) => {
-    let client;
     try {
-        client = await connectClient();
+        return await prisma.$transaction(async (tx) => {
+            const existingUsers = await getUserByEmailQuery(email, tx);
 
-        await beginTransaction(client);
+            if (existingUsers.length === 0)
+                return errorResponse("User not found");
 
-        const existingUsers = await getUserByEmailQuery(email, client);
+            await updateUserByNameQuery(newName, existingUsers[0].id, tx);
 
-        if (existingUsers.length === 0)
-            return errorResponse('User not found');
-
-        await updateUserByNameQuery(newName, existingUsers[0].id, client);
-
-        await commitTransaction(client);
-
-        return { message: 'Profile updated successfully', newName: newName };
+            return { message: "Profile updated successfully", newName: newName };
+        });
     } catch (error) {
-        if (client) await rollbackTransaction(client);
-        return errorResponse('Failed to update profile');
-    } finally {
-        if (client) releaseClient(client);
+        return errorResponse("Failed to update profile");
     }
 };

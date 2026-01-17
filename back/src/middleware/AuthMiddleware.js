@@ -1,7 +1,6 @@
 import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import {getUserQuery} from "../queries/AuthQueries.js";
-import {commitTransaction, connectClient, releaseClient} from "../queries/CommonQueries.js";
 import {errorResponse} from "../utils/errorUtils.js";
 
 dotenv.config();
@@ -39,11 +38,8 @@ export const verifyRefreshToken = async (req, res, next) => {
 }
 
 export const verifyUser = async (req, res, next) => {
-    let client;
     try {
-        client = await connectClient();
-
-        const existingUsers = await getUserQuery(req.user.id, client);
+        const existingUsers = await getUserQuery(req.user.id);
 
         if (existingUsers.length === 0) {
             return res.status(404).json({ error: 'User not found' });
@@ -52,13 +48,9 @@ export const verifyUser = async (req, res, next) => {
             return res.status(403).json({ error: 'User not verified' });
         }
 
-        await commitTransaction(client);
-
         next();
     } catch (error) {
         console.error(error);
         res.status(500).json(errorResponse('Failed to verify user'));
-    } finally {
-        if (client) releaseClient(client);
     }
 };

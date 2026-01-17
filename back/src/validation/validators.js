@@ -1,7 +1,6 @@
 //TODO: figure out if user's sending all of the group on each update, or adding single entries.
 //TODO: if latter, validate unique positions against db
 
-import {connectClient, releaseClient} from "../queries/CommonQueries.js";
 import {getAllFormAnswersQuery} from "../queries/InvitationQueries.js";
 
 export const uniquePositionValidator = (groupByField) => {
@@ -64,13 +63,10 @@ export const publishedQuestionConstraintsValidation = () => {
 };
 
 export const updatedQuestionConstraintsValidation = () => {
-    let client;
     return  async (value, { req }) => {
         try {
-            client = await connectClient();
-
             const answerMap = new Map();
-            const existingAnswers = await getAllFormAnswersQuery(req.params.id, client);
+            const existingAnswers = await getAllFormAnswersQuery(req.params.id);
 
             if (existingAnswers.length > 0) {
                 existingAnswers.forEach(question => {
@@ -101,8 +97,6 @@ export const updatedQuestionConstraintsValidation = () => {
 
         } catch (err) {
             throw new Error(`${err.message}`);
-        } finally {
-            if (client) releaseClient(client);
         }
     }
 };
