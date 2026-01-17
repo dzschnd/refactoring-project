@@ -63,18 +63,17 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
         );
       case "REGISTER":
         return (
-          <RegisterSuccess setCurrentPage={setCurrentPage} />
-          // <Register
-          //   setCurrentPage={setCurrentPage}
-          //   inputValues={registerInputValues}
-          //   setInputValues={setRegisterInputValues}
-          //   setIsWidePopup={setIsWidePopup}
-          // />
+          <Register
+            setCurrentPage={setCurrentPage}
+            inputValues={registerInputValues}
+            setInputValues={setRegisterInputValues}
+            setIsWidePopup={setIsWidePopup}
+          />
         );
-      // case "REGISTER_OTP_INPUT":
-      //   return <RegisterOtpInput setCurrentPage={setCurrentPage} />;
-      // case "REGISTER_SUCCESS":
-      //   return <RegisterSuccess setCurrentPage={setCurrentPage} />;
+      case "REGISTER_OTP_INPUT":
+        return <RegisterOtpInput setCurrentPage={setCurrentPage} />;
+      case "REGISTER_SUCCESS":
+        return <RegisterSuccess setCurrentPage={setCurrentPage} />;
       case "PASSWORD_RESET_OTP_INPUT":
         return <PasswordResetOtpInput setCurrentPage={setCurrentPage} />;
       case "PASSWORD_RESET":

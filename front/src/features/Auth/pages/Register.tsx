@@ -114,7 +114,7 @@ export const Register: FC<RegisterProps> = ({
 
   return (
     <div>
-      {!loading ? (
+      {loading ? (
         <div
           className={
             "h-[270px] sm:h-[194px] sm:w-[406px] md:mb-[163.5px] md:h-min md:w-full"
