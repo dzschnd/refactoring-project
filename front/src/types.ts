@@ -1,11 +1,8 @@
 import { CSSProperties } from "react";
-import { RegisterOtpInput } from "./features/Auth/pages/RegisterOtpInput";
+import type { DraftUpdateRequest } from "./shared/types";
+import { QuestionType } from "./shared/types";
 
-export enum QuestionType {
-  TEXT = "TEXT",
-  SELECT = "SELECT",
-  CHECKBOX = "CHECKBOX",
-}
+export { QuestionType };
 
 export type AuthPage = "LOGIN" | "REGISTER" | "REGISTER_OTP_INPUT" | "PASSWORD_RESET_OTP_INPUT" | "REGISTER_SUCCESS" | "FORGOT_PASSWORD" | "PASSWORD_RESET" | "PASSWORD_RESET_SUCCESS";
 
@@ -90,52 +87,7 @@ export interface CardInfo {
   templateName: string;
 }
 
-export interface UpdateDraftPayload {
-  id: number;
-  firstPartnerName?: string | null;
-  secondPartnerName?: string | null;
-  coupleImage?: string | null;
-  eventDate?: string | null;
-  templateName?: string | null;
-  colors?:
-    | {
-        colorCode: string | null;
-        position: number | null;
-      }[]
-    | null;
-  place?: {
-    address: string | null;
-    placeImage: string | null;
-    link: string | null;
-  };
-  planItems?:
-    | {
-        eventTime: string | null;
-        description: string | null;
-        position: number;
-      }[]
-    | null;
-  wishes?:
-    | {
-        wish: string;
-        position: number;
-      }[]
-    | null;
-  questions?:
-    | {
-        question: string;
-        type: QuestionType;
-        position: number;
-      }[]
-    | null;
-  answers?:
-    | {
-        answer: string;
-        position: number;
-        questionPosition: number;
-      }[]
-    | null;
-}
+export type UpdateDraftPayload = DraftUpdateRequest & { id: number };
 
 export interface PreviewProps {
   width: number;

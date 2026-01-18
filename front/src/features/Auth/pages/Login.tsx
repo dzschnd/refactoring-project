@@ -5,10 +5,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { AuthPage } from "../../../types";
+import type { AuthPage, StateError } from "../../../types";
 import { AppDispatch } from "../../../api/redux/store";
 import { useDispatch } from "react-redux";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { loginUser } from "../../../api/service/UserService";
 import { setEmail } from "../../../api/redux/slices/userSlice";
 import { INVALID_CREDENTIALS, SERVER_ERROR } from "../../../api/messages";
@@ -17,6 +19,7 @@ import Input from "../../../components/Input";
 import { Password } from "../../../assets/svg/auth/Password";
 import LinkToLoginOrRegister from "../components/LinkToLoginOrRegister";
 import SubmitButton from "../components/SubmitButton";
+import { loginSchema } from "../../../shared/schemas/auth";
 
 type LoginProps = {
   setCurrentPage: Dispatch<SetStateAction<AuthPage>>;
@@ -25,10 +28,7 @@ type LoginProps = {
   setInputValues: Dispatch<SetStateAction<{ email: string; password: string }>>;
 };
 
-interface FormInput {
-  email: string;
-  password: string;
-}
+type FormInput = z.infer<typeof loginSchema>;
 
 export const Login: FC<LoginProps> = ({
   setCurrentPage,
@@ -49,6 +49,7 @@ export const Login: FC<LoginProps> = ({
   } = useForm<FormInput>({
     mode: "onTouched",
     shouldFocusError: true,
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: inputValues.email,
       password: "",
@@ -60,37 +61,34 @@ export const Login: FC<LoginProps> = ({
     onChange: emailOnChange,
     onBlur: emailOnBlur,
     name: emailName,
-  } = register("email", {
-    required: "Пожалуйста, введите свою почту",
-    pattern: {
-      value:
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      message: "Некорректный формат почты",
-    },
-  });
+  } = register("email");
 
   const {
     ref: passwordRef,
     onChange: passwordOnChange,
     onBlur: passwordOnBlur,
     name: passwordName,
-  } = register("password", {
-    required: "Пожалуйста, введите пароль",
-  });
+  } = register("password");
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
     const response = await dispatch(
       loginUser({ email: data.email, password: data.password }),
     );
-    if (response.meta.requestStatus === "fulfilled") setIsAuthOpen(false);
-    else if (response.payload.status === 403) {
+    if (response.meta.requestStatus === "fulfilled") {
+      setIsAuthOpen(false);
+      return;
+    }
+    const error = response.payload as StateError | undefined;
+    if (error?.status === 403) {
       dispatch(setEmail(data.email));
       setCurrentPage("PASSWORD_RESET_OTP_INPUT");
-    } else if (response.payload.status === 400) {
-      setErrorMessage(INVALID_CREDENTIALS);
-    } else {
-      setErrorMessage(SERVER_ERROR);
+      return;
     }
+    if (error?.status === 400) {
+      setErrorMessage(INVALID_CREDENTIALS);
+      return;
+    }
+    setErrorMessage(error?.message ?? SERVER_ERROR);
   };
 
   useEffect(() => {

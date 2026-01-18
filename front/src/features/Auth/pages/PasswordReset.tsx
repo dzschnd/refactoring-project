@@ -5,15 +5,17 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { AuthPage } from "../../../types";
+import type { AuthPage, StateError } from "../../../types";
 import { AppDispatch, RootState } from "../../../api/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   requestPasswordReset,
   resetPassword,
 } from "../../../api/service/UserService";
-import { USER_NOT_FOUND } from "../../../api/messages";
+import { SERVER_ERROR, USER_NOT_FOUND } from "../../../api/messages";
 import Loader from "../../../components/Loader";
 import { ArrowBack } from "../../../assets/svg/common/ArrowBack";
 import Input from "../../../components/Input";
@@ -22,14 +24,14 @@ import SubmitButton from "../components/SubmitButton";
 import { Password } from "../../../assets/svg/auth/Password";
 import { Tooltip } from "../../../components/Tooltip";
 import useIsMobile from "../../../hooks/useIsMobile";
+import { resetPasswordSchema } from "../../../shared/schemas/auth";
 
 type PasswordResetProps = {
   setCurrentPage: Dispatch<SetStateAction<AuthPage>>;
 };
 
-interface FormInput {
-  password: string;
-}
+const passwordOnlySchema = resetPasswordSchema.pick({ password: true });
+type FormInput = z.infer<typeof passwordOnlySchema>;
 
 export const PasswordReset: FC<PasswordResetProps> = ({ setCurrentPage }) => {
   const dispatch: AppDispatch = useDispatch();
@@ -46,6 +48,7 @@ export const PasswordReset: FC<PasswordResetProps> = ({ setCurrentPage }) => {
   } = useForm<FormInput>({
     mode: "onTouched",
     shouldFocusError: true,
+    resolver: zodResolver(passwordOnlySchema),
     defaultValues: {
       password: "",
     },
@@ -56,13 +59,7 @@ export const PasswordReset: FC<PasswordResetProps> = ({ setCurrentPage }) => {
     onChange: passwordOnChange,
     onBlur: passwordOnBlur,
     name: passwordName,
-  } = register("password", {
-    required: "Пожалуйста, введите пароль",
-    minLength: {
-      value: 8,
-      message: "Длина пароля должна быть не менее восьми символов",
-    },
-  });
+  } = register("password");
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
     const response = await dispatch(
@@ -72,7 +69,8 @@ export const PasswordReset: FC<PasswordResetProps> = ({ setCurrentPage }) => {
     if (response.meta.requestStatus === "fulfilled")
       setCurrentPage("PASSWORD_RESET_SUCCESS");
     else {
-      setErrorMessage(response.payload.message);
+      const error = response.payload as StateError | undefined;
+      setErrorMessage(error?.message ?? SERVER_ERROR);
     }
   };
 

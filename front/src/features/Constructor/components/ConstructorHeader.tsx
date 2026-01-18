@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from "../../../api/redux/store";
 import { publishDraft, validateDraft } from "../../../api/service/DraftService";
 import cross from "../../../assetsOld/buttonIcons/cross.png";
 import { useCloseOnClickOutside } from "../../../hooks/useCloseOnClickOutside";
+import type { StateError } from "../../../types";
 
 interface ConstructorHeaderProps {
   isMobile: boolean;
@@ -33,8 +34,9 @@ const ConstructorHeader: FC<ConstructorHeaderProps> = ({
 
   const onValidate = async () => {
     const response = await validateDraft({ id });
-    if (response.status === 400) {
-      setValidationErrors(response.message);
+    const error = response as StateError | undefined;
+    if (error?.status === 400) {
+      setValidationErrors([error.message]);
       setShowOverlay(true);
     } else {
       if (window.confirm("ДЕНЕГ ХВАТИЛО?")) {

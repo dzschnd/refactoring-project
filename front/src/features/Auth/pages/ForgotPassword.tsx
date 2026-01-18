@@ -5,10 +5,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { AuthPage } from "../../../types";
+import type { AuthPage, StateError } from "../../../types";
 import { AppDispatch } from "../../../api/redux/store";
 import { useDispatch } from "react-redux";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import {
   loginUser,
   requestPasswordReset,
@@ -26,6 +28,7 @@ import LinkToLoginOrRegister from "../components/LinkToLoginOrRegister";
 import { ArrowBack } from "../../../assets/svg/common/ArrowBack";
 import Loader from "../../../components/Loader";
 import { flushSync } from "react-dom";
+import { requestResetPasswordSchema } from "../../../shared/schemas/auth";
 
 type ForgotPasswordProps = {
   setCurrentPage: Dispatch<SetStateAction<AuthPage>>;
@@ -34,10 +37,7 @@ type ForgotPasswordProps = {
   setIsWidePopup: Dispatch<SetStateAction<boolean>>;
 };
 
-interface FormInput {
-  email: string;
-  password: string;
-}
+type FormInput = z.infer<typeof requestResetPasswordSchema>;
 
 export const ForgotPassword: FC<ForgotPasswordProps> = ({
   setCurrentPage,
@@ -59,6 +59,7 @@ export const ForgotPassword: FC<ForgotPasswordProps> = ({
   } = useForm<FormInput>({
     mode: "onTouched",
     shouldFocusError: true,
+    resolver: zodResolver(requestResetPasswordSchema),
     defaultValues: {
       email: inputValues.email,
     },
@@ -69,14 +70,7 @@ export const ForgotPassword: FC<ForgotPasswordProps> = ({
     onChange: emailOnChange,
     onBlur: emailOnBlur,
     name: emailName,
-  } = register("email", {
-    required: "Пожалуйста, введите свою почту",
-    pattern: {
-      value:
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      message: "Некорректный формат почты",
-    },
-  });
+  } = register("email");
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
     setLoading(true);
@@ -86,11 +80,14 @@ export const ForgotPassword: FC<ForgotPasswordProps> = ({
     setLoading(false);
     if (response.meta.requestStatus === "fulfilled") {
       setCurrentPage("PASSWORD_RESET_OTP_INPUT");
-    } else if (response.payload.status === 404) {
-      setErrorMessage(USER_NOT_FOUND);
-    } else {
-      setErrorMessage(response.payload.message);
+      return;
     }
+    const error = response.payload as StateError | undefined;
+    if (error?.status === 404) {
+      setErrorMessage(USER_NOT_FOUND);
+      return;
+    }
+    setErrorMessage(error?.message ?? SERVER_ERROR);
   };
 
   useEffect(() => {

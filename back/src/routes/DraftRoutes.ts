@@ -2,29 +2,30 @@ import { Router } from 'express';
 import { DraftController } from '../controller/index.js';
 import { verifyAccessToken, verifyUser } from '../middleware/AuthMiddleware.js';
 import fetchDraft from '../middleware/fetchDraft.js';
-import {publishValidation, updateValidation} from '../validation/DraftValidation.js';
-import handleValidationErrors from '../middleware/handleValidationErrors.js';
 import asyncHandler from "../middleware/asyncHandler.js";
+import { validateBody } from "../middleware/validate.js";
+import { draftSchemas } from "../shared/schemas/draft.js";
+import { validateDraftPublish, validateDraftUpdate } from "../validation/draftValidation.js";
 
 const router = Router();
 
 router.put('/:id/publish',
     verifyAccessToken, verifyUser,
     fetchDraft,
-    publishValidation, handleValidationErrors,
+    validateDraftPublish,
     asyncHandler(DraftController.publishDraft));
 router.put('/:id/validate',
     verifyAccessToken, verifyUser,
     fetchDraft,
-    publishValidation, handleValidationErrors,
+    validateDraftPublish,
     asyncHandler(DraftController.validateDraft));
 router.post('/',
     verifyAccessToken, verifyUser,
-    updateValidation, handleValidationErrors,
+    validateBody(draftSchemas.create),
     asyncHandler(DraftController.createDraft));
 router.patch('/:id',
     verifyAccessToken, verifyUser,
-    updateValidation, handleValidationErrors,
+    validateDraftUpdate,
     asyncHandler(DraftController.updateDraft));
 router.get('/:id',
     verifyAccessToken, verifyUser,

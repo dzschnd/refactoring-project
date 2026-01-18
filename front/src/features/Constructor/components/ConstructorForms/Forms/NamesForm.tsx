@@ -13,11 +13,18 @@ import {
   uploadImage,
 } from "../../../../../api/service/UploadService";
 import { defaultTemplateImages } from "../../../../Templates/defaultTemplateImages";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { draftUpdateBaseSchema } from "../../../../../shared/schemas/draft";
 
 interface FormInput {
   firstPartnerName: string | null;
   secondPartnerName: string | null;
 }
+
+const namesFormSchema = draftUpdateBaseSchema.pick({
+  firstPartnerName: true,
+  secondPartnerName: true,
+});
 
 const NamesForm: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -40,6 +47,7 @@ const NamesForm: FC = () => {
     formState: { errors },
   } = useForm<FormInput>({
     mode: "onBlur",
+    resolver: zodResolver(namesFormSchema),
     defaultValues: {
       firstPartnerName: firstPartnerName,
       secondPartnerName: secondPartnerName,
@@ -117,9 +125,6 @@ const NamesForm: FC = () => {
             onBlur={handleUpdateDraft}
           />
         )}
-        rules={{
-          required: "Please enter the first partner's name",
-        }}
       />
       {errors.firstPartnerName && (
         <span className="text-red-500">{errors.firstPartnerName.message}</span>
@@ -141,9 +146,6 @@ const NamesForm: FC = () => {
             onBlur={handleUpdateDraft}
           />
         )}
-        rules={{
-          required: "Please enter the second partner's name",
-        }}
       />
       {errors.secondPartnerName && (
         <span className="text-red-500">{errors.secondPartnerName.message}</span>

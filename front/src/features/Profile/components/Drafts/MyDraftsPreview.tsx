@@ -12,7 +12,7 @@ import { CardInfo } from "../../../../types";
 import { getAllInvitations } from "../../../../api/service/InvitationService";
 
 const MyDraftsPreview: FC = () => {
-  const [allDrafts, setAllDrafts] = useState([]);
+  const [allDrafts, setAllDrafts] = useState<CardInfo[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const MyDraftsPreview: FC = () => {
 
   const fetchDrafts = async () => {
     const result = await getAllDrafts();
-    setAllDrafts(result);
+    setAllDrafts(Array.isArray(result) ? result : []);
   };
 
   const handleDelete = async (id: number) => {

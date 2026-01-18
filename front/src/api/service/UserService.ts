@@ -2,6 +2,25 @@ import axios from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { parseServiceError } from "../../utils/parseServiceError";
 import { axiosAuthorized, baseURL } from "./config";
+import type {
+  RegisterRequest,
+  RequestOtpRequest,
+  LoginRequest,
+  VerifyEmailRequest,
+  RequestResetPasswordRequest,
+  ResetPasswordRequest,
+  ChangePasswordRequest,
+  RequestChangeEmailRequest,
+  ChangeEmailRequest,
+  ChangeNameRequest,
+} from "../../shared/types";
+import {
+  messageResponseSchema,
+  userResponseSchema,
+  requestPasswordResetResponseSchema,
+  changeEmailResponseSchema,
+  changeNameResponseSchema,
+} from "../../shared/schemas/responses";
 
 const BASE_URL = `${baseURL}/auth`;
 
@@ -9,7 +28,7 @@ const BASE_URL = `${baseURL}/auth`;
 export const registerUser = createAsyncThunk(
   `user/register`,
   async (
-    payload: { email: string; password: string },
+    payload: RegisterRequest,
     { rejectWithValue },
   ) => {
     try {
@@ -17,7 +36,7 @@ export const registerUser = createAsyncThunk(
         email: payload.email,
         password: payload.password,
       });
-      return response.data;
+      return userResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -27,12 +46,12 @@ export const registerUser = createAsyncThunk(
 // request otp: send email -> get otp sent to email
 export const requestOtp = createAsyncThunk(
   `user/requestOtp`,
-  async (payload: { email: string }, { rejectWithValue }) => {
+  async (payload: RequestOtpRequest, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${BASE_URL}/requestOtp`, {
         email: payload.email,
       });
-      return response.data;
+      return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -42,7 +61,7 @@ export const requestOtp = createAsyncThunk(
 // login: send email + password -> get new refresh-access pair
 export const loginUser = createAsyncThunk(
   `user/login`,
-  async (payload: { email: string; password: string }, { rejectWithValue }) => {
+  async (payload: LoginRequest, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${BASE_URL}/login`,
@@ -54,8 +73,7 @@ export const loginUser = createAsyncThunk(
           withCredentials: true,
         },
       );
-      console.log(response);
-      return response.data;
+      return userResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -90,7 +108,7 @@ export const getUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosAuthorized.get(`${BASE_URL}/me`);
-      return response.data;
+      return userResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -103,7 +121,7 @@ export const logoutUser = createAsyncThunk(
   async (_, { rejectWithValue }) => {
     try {
       const response = await axiosAuthorized.patch(`${BASE_URL}/logout`, {});
-      return response.data;
+      return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -113,13 +131,13 @@ export const logoutUser = createAsyncThunk(
 // verify email: send email, otp -> check email
 export const verifyEmail = createAsyncThunk(
   `user/verify-email`,
-  async (payload: { email: string; otp: string }, { rejectWithValue }) => {
+  async (payload: VerifyEmailRequest, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${BASE_URL}/verify-email`, {
         email: payload.email,
         otp: payload.otp,
       });
-      return response.data;
+      return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -129,7 +147,7 @@ export const verifyEmail = createAsyncThunk(
 // activate user: send email, otp -> get user activated
 export const activateUser = createAsyncThunk(
   `user/activate`,
-  async (payload: { email: string; otp: string }, { rejectWithValue }) => {
+  async (payload: VerifyEmailRequest, { rejectWithValue }) => {
     try {
       const response = await axios.post(
         `${BASE_URL}/activate`,
@@ -141,7 +159,7 @@ export const activateUser = createAsyncThunk(
           withCredentials: true,
         },
       );
-      return response.data;
+      return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -151,12 +169,12 @@ export const activateUser = createAsyncThunk(
 // request reset password: send email -> get otp sent to email
 export const requestPasswordReset = createAsyncThunk(
   "user/requestPasswordReset",
-  async (payload: { email: string }, { rejectWithValue }) => {
+  async (payload: RequestResetPasswordRequest, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${BASE_URL}/password/reset`, {
         email: payload.email,
       });
-      return response.data;
+      return requestPasswordResetResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -166,13 +184,13 @@ export const requestPasswordReset = createAsyncThunk(
 // reset password: send otp + new password -> change password
 export const resetPassword = createAsyncThunk(
   "user/resetPassword",
-  async (payload: { email: string; password: string }, { rejectWithValue }) => {
+  async (payload: ResetPasswordRequest, { rejectWithValue }) => {
     try {
       const response = await axios.patch(`${BASE_URL}/password/reset`, {
         email: payload.email,
         password: payload.password,
       });
-      return response.data;
+      return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -182,16 +200,13 @@ export const resetPassword = createAsyncThunk(
 // change password (logged in): send access token + new password -> change password
 export const changePassword = createAsyncThunk(
   "user/changePassword",
-  async (
-    payload: { oldPassword: string; newPassword: string },
-    { rejectWithValue },
-  ) => {
+  async (payload: ChangePasswordRequest, { rejectWithValue }) => {
     try {
       const response = await axiosAuthorized.patch(`${BASE_URL}/me/password`, {
         oldPassword: payload.oldPassword,
         newPassword: payload.newPassword,
       });
-      return response.data;
+      return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -201,16 +216,13 @@ export const changePassword = createAsyncThunk(
 // request change email: send new email -> get otp sent to email
 export const requestEmailChange = createAsyncThunk(
   "user/requestEmailChange",
-  async (
-    payload: { currentEmail: string; newEmail: string },
-    { rejectWithValue },
-  ) => {
+  async (payload: RequestChangeEmailRequest, { rejectWithValue }) => {
     try {
       const response = await axiosAuthorized.post(
         `${BASE_URL}/me/email/change-request`,
         { currentEmail: payload.currentEmail, newEmail: payload.newEmail },
       );
-      return response.data;
+      return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -220,13 +232,13 @@ export const requestEmailChange = createAsyncThunk(
 // change email: send access token + otp + new email -> change email
 export const changeEmail = createAsyncThunk(
   "user/changeEmail",
-  async (payload: { otp: string; newEmail: string }, { rejectWithValue }) => {
+  async (payload: ChangeEmailRequest, { rejectWithValue }) => {
     try {
       const response = await axiosAuthorized.patch(`${BASE_URL}/me/email`, {
         otp: payload.otp,
         newEmail: payload.newEmail,
       });
-      return response.data;
+      return changeEmailResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -235,12 +247,12 @@ export const changeEmail = createAsyncThunk(
 
 export const changeName = createAsyncThunk(
   "user/changeName",
-  async (payload: { newName: string }, { rejectWithValue }) => {
+  async (payload: ChangeNameRequest, { rejectWithValue }) => {
     try {
       const response = await axiosAuthorized.patch(`${BASE_URL}/me/name`, {
         newName: payload.newName,
       });
-      return response.data;
+      return changeNameResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }

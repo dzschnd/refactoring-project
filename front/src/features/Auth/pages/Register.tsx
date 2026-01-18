@@ -5,10 +5,12 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { AuthPage } from "../../../types";
+import type { AuthPage, StateError } from "../../../types";
 import { AppDispatch } from "../../../api/redux/store";
 import { useDispatch } from "react-redux";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { registerUser } from "../../../api/service/UserService";
 import { EMAIL_TAKEN, SERVER_ERROR } from "../../../api/messages";
 import Input from "../../../components/Input";
@@ -20,6 +22,7 @@ import { Tooltip } from "../../../components/Tooltip";
 import useIsMobile from "../../../hooks/useIsMobile";
 import SubmitButton from "../components/SubmitButton";
 import Loader from "../../../components/Loader";
+import { registerSchema } from "../../../shared/schemas/auth";
 
 type RegisterProps = {
   setCurrentPage: Dispatch<SetStateAction<AuthPage>>;
@@ -28,10 +31,7 @@ type RegisterProps = {
   setIsWidePopup: Dispatch<SetStateAction<boolean>>;
 };
 
-interface FormInput {
-  email: string;
-  password: string;
-}
+type FormInput = z.infer<typeof registerSchema>;
 
 export const Register: FC<RegisterProps> = ({
   setCurrentPage,
@@ -53,6 +53,7 @@ export const Register: FC<RegisterProps> = ({
   } = useForm<FormInput>({
     mode: "onTouched",
     shouldFocusError: true,
+    resolver: zodResolver(registerSchema),
     defaultValues: {
       email: inputValues.email,
       password: "",
@@ -64,27 +65,14 @@ export const Register: FC<RegisterProps> = ({
     onChange: emailOnChange,
     onBlur: emailOnBlur,
     name: emailName,
-  } = register("email", {
-    required: "Пожалуйста, введите свою почту",
-    pattern: {
-      value:
-        /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-      message: "Некорректный формат почты",
-    },
-  });
+  } = register("email");
 
   const {
     ref: passwordRef,
     onChange: passwordOnChange,
     onBlur: passwordOnBlur,
     name: passwordName,
-  } = register("password", {
-    required: "Пожалуйста, введите пароль",
-    minLength: {
-      value: 8,
-      message: "Длина пароля должна быть не менее восьми символов",
-    },
-  });
+  } = register("password");
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
     setLoading(true);
@@ -97,13 +85,12 @@ export const Register: FC<RegisterProps> = ({
     );
     setLoading(false);
     setIsWidePopup(false);
-    if (response.meta.requestStatus === "fulfilled")
+    if (response.meta.requestStatus === "fulfilled") {
       setCurrentPage("REGISTER_OTP_INPUT");
-    else {
-      setErrorMessage(
-        response.payload.status === 400 ? EMAIL_TAKEN : SERVER_ERROR,
-      );
+      return;
     }
+    const error = response.payload as StateError | undefined;
+    setErrorMessage(error?.status === 400 ? EMAIL_TAKEN : SERVER_ERROR);
   };
 
   const isMobile = useIsMobile();

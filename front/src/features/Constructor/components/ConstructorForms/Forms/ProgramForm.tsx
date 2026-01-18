@@ -8,6 +8,9 @@ import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
 import { updateDraft } from "../../../../../api/service/DraftService";
 import { Time } from "@internationalized/date";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { draftUpdateBaseSchema } from "../../../../../shared/schemas/draft";
 
 interface FormInput {
   planItems:
@@ -19,11 +22,29 @@ interface FormInput {
     | null;
 }
 
+const timeToString = (value: Time) => {
+  const hours = value.hour.toString().padStart(2, "0");
+  const minutes = value.minute.toString().padStart(2, "0");
+  return `${hours}:${minutes}`;
+};
+
+const programFormSchema = z.object({
+  planItems: z.preprocess((value) => {
+    if (!Array.isArray(value)) return value;
+    return value.map((planItem) => ({
+      ...planItem,
+      eventTime: planItem.eventTime ? timeToString(planItem.eventTime) : "",
+      description: planItem.description ?? "",
+    }));
+  }, draftUpdateBaseSchema.shape.planItems),
+});
+
 const ProgramForm: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { id, planItems } = useSelector((state: RootState) => state.draft);
 
   const { control, getValues, setValue } = useForm<FormInput>({
+    resolver: zodResolver(programFormSchema),
     defaultValues: {
       planItems: planItems
         ? [...planItems]

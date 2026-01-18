@@ -8,12 +8,14 @@ import { Link, useNavigate } from "react-router-dom";
 import goBackIcon from "../../../assetsOld/buttonIcons/arrowLeft.png";
 import DraftCard from "../components/Drafts/DraftCard";
 import { getAllInvitations } from "../../../api/service/InvitationService";
-import { CardInfo } from "../../../types";
+import type { InvitationDetailsResponse } from "../../../shared/types";
 import { getAllDrafts } from "../../../api/service/DraftService";
 import InivitationCardSkeleton from "../components/Invitations/InivitationCardSkeleton";
 
 const MyInvitationsPage: FC = () => {
-  const [allInvitations, setAllInvitations] = useState([]);
+  const [allInvitations, setAllInvitations] = useState<
+    InvitationDetailsResponse[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -23,7 +25,7 @@ const MyInvitationsPage: FC = () => {
 
   const fetchInvitations = async () => {
     const result = await getAllInvitations();
-    setAllInvitations(result);
+    setAllInvitations(Array.isArray(result) ? result : []);
     setLoading(false);
   };
 
@@ -57,7 +59,7 @@ const MyInvitationsPage: FC = () => {
               ) : allInvitations &&
                 Array.isArray(allInvitations) &&
                 allInvitations.length > 0 ? (
-                allInvitations.map((invitation: CardInfo) => (
+                allInvitations.map((invitation) => (
                   <InvitationCard
                     key={invitation.id}
                     id={invitation.id}

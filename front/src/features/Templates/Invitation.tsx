@@ -2,67 +2,29 @@ import { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getInvitation } from "../../api/service/InvitationService";
 import { QuestionType } from "../../types";
+import type { InvitationDetailsResponse } from "../../shared/types";
+import type { StateError } from "../../types";
 import { NezhnostInvitation } from "./Nezhnost/NezhnostInvitation";
 import useIsMobile from "../../hooks/useIsMobile";
 
-interface InvitationData {
-  firstPartnerName: string | null;
-  secondPartnerName: string | null;
-  coupleImage: string | null;
-  eventDate: string | null;
-  place: {
-    address: string | null;
-    placeImage: string | null;
-    link: string | null;
-  } | null;
-  colors:
-    | {
-        colorCode: string;
-        position: number;
-      }[]
-    | null;
-  planItems:
-    | {
-        eventTime: string;
-        description: string;
-        position: number;
-      }[]
-    | null;
-  wishes:
-    | {
-        wish: string;
-        position: number;
-      }[]
-    | null;
-  questions:
-    | {
-        question: string;
-        type: QuestionType;
-        position: number;
-      }[]
-    | null;
-  answers:
-    | {
-        answer: string;
-        questionPosition: number;
-        position: number;
-      }[]
-    | null;
-}
-
 const Invitation: FC = () => {
   const { id } = useParams();
-  const [invitationData, setInvitationData] = useState<InvitationData | null>(
-    null,
-  );
+  const [invitationData, setInvitationData] =
+    useState<InvitationDetailsResponse | null>(null);
 
   useEffect(() => {
     const getCurrentInvitation = async () => {
       if (!id) return null;
       const data = await getInvitation(parseInt(id));
-      setInvitationData(data);
-      if (data.firstPartnerName && data.secondPartnerName)
-        document.title = `${data.firstPartnerName} и ${data.secondPartnerName}`;
+      const error = data as StateError | undefined;
+      if (error?.status) {
+        setInvitationData(null);
+        return;
+      }
+      const invitation = data as InvitationDetailsResponse;
+      setInvitationData(invitation);
+      if (invitation.firstPartnerName && invitation.secondPartnerName)
+        document.title = `${invitation.firstPartnerName} и ${invitation.secondPartnerName}`;
     };
 
     getCurrentInvitation().then();

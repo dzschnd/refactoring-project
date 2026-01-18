@@ -7,6 +7,13 @@ import {
   updateDraft,
 } from "../../service/DraftService";
 import { DraftState, StateError } from "../../../types";
+import type {
+  AnswerDTO,
+  ColorDTO,
+  PlanItemDTO,
+  QuestionDTO,
+  WishDTO,
+} from "../../../shared/types";
 import { resetImage, uploadImage } from "../../service/UploadService";
 
 const initialState: DraftState = {
@@ -45,25 +52,25 @@ export const draftSlice = createSlice({
         ...state,
         ...action.payload,
         wishes: action.payload.wishes
-          ? action.payload.wishes.map((wish: any) => ({ ...wish }))
+          ? (action.payload.wishes as WishDTO[]).map((wish) => ({ ...wish }))
           : state.wishes,
         prevWishes: action.payload.prevWishes
-          ? action.payload.prevWishes.map((wish: any) => ({ ...wish }))
+          ? (action.payload.prevWishes as WishDTO[]).map((wish) => ({ ...wish }))
           : state.prevWishes,
         colors: action.payload.colors
-          ? action.payload.colors.map((color: any) => ({ ...color }))
+          ? (action.payload.colors as ColorDTO[]).map((color) => ({ ...color }))
           : state.colors,
         prevColors: action.payload.prevColors
-          ? action.payload.prevColors.map((color: any) => ({ ...color }))
+          ? (action.payload.prevColors as ColorDTO[]).map((color) => ({ ...color }))
           : state.prevColors,
         planItems: action.payload.planItems
-          ? action.payload.planItems.map((item: any) => ({ ...item }))
+          ? (action.payload.planItems as PlanItemDTO[]).map((item) => ({ ...item }))
           : state.planItems,
         questions: action.payload.questions
-          ? action.payload.questions.map((question: any) => ({ ...question }))
+          ? (action.payload.questions as QuestionDTO[]).map((question) => ({ ...question }))
           : state.questions,
         answers: action.payload.answers
-          ? action.payload.answers.map((answer: any) => ({ ...answer }))
+          ? (action.payload.answers as AnswerDTO[]).map((answer) => ({ ...answer }))
           : state.answers,
       };
     },
@@ -76,6 +83,7 @@ export const draftSlice = createSlice({
           templateName: action.payload.templateName,
           colors: action.payload.colors,
           wishes: action.payload.wishes,
+          place: action.payload.place ?? initialState.place,
         });
       })
       .addCase(resetPassword.rejected, (state, action) => {
@@ -100,7 +108,8 @@ export const draftSlice = createSlice({
 
       .addCase(uploadImage.fulfilled, (state, action) => {
         state.coupleImage = action.payload.coupleImage;
-        state.place.placeImage = action.payload.place.placeImage;
+        state.place.placeImage =
+          action.payload.place?.placeImage ?? state.place.placeImage;
         state.loading = false;
         state.error = null;
       })
@@ -115,7 +124,8 @@ export const draftSlice = createSlice({
 
       .addCase(resetImage.fulfilled, (state, action) => {
         state.coupleImage = action.payload.coupleImage;
-        state.place.placeImage = action.payload.place.placeImage;
+        state.place.placeImage =
+          action.payload.place?.placeImage ?? state.place.placeImage;
         state.loading = false;
         state.error = null;
       })
@@ -134,6 +144,7 @@ export const draftSlice = createSlice({
           loading: false,
           error: null,
           ...action.payload,
+          place: action.payload.place ?? state.place,
         };
       })
       .addCase(getDraft.rejected, (state, action) => {
@@ -149,6 +160,7 @@ export const draftSlice = createSlice({
         return {
           ...state,
           ...action.payload,
+          place: action.payload.place ?? state.place,
           loading: false,
           error: null,
         };

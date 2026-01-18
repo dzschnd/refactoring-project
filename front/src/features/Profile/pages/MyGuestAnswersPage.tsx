@@ -8,64 +8,64 @@ import {
   getAllGuestAnswers,
   getAllInvitations,
 } from "../../../api/service/InvitationService";
-import { CardInfo } from "../../../types";
+import type {
+  GuestAnswerResponse,
+  InvitationDetailsResponse,
+} from "../../../shared/types";
 import GuestAnswerSkeleton from "../components/GuestAnswers/GuestAnswerSkeleton";
 
 const MyGuestAnswersPage: FC = () => {
   const location = useLocation();
   const { id } = location.state || {};
-  const [allGuestAnswers, setAllGuestAnswers] = useState([]);
+  const [allGuestAnswers, setAllGuestAnswers] = useState<GuestAnswerResponse[]>([]);
   const [loading, setLoading] = useState(true);
-  const [allInvitations, setAllInvitations] = useState<CardInfo[]>([]);
+  const [allInvitations, setAllInvitations] = useState<InvitationDetailsResponse[]>([]);
   const [currentId, setCurrentId] = useState<number>(id ? parseInt(id) : 0);
   const navigate = useNavigate();
 
   const fetchGuestAnswers = async () => {
     const result = await getAllGuestAnswers();
     setLoading(false);
-    setAllGuestAnswers(result);
+    setAllGuestAnswers(Array.isArray(result) ? result : []);
   };
 
   const fetchInvitations = async () => {
     const result = await getAllInvitations();
-    setAllInvitations(result);
-    if (!id && result.length > 0) setCurrentId(result[0].id);
+    const invitations = Array.isArray(result) ? result : [];
+    setAllInvitations(invitations);
+    if (!id && invitations.length > 0) setCurrentId(invitations[0].id);
   };
 
   useEffect(() => {
     fetchInvitations().then(fetchGuestAnswers);
   }, []);
 
-  const groupAnswersByGuestId = (answers: any[]) => {
-    return answers.reduce((acc: any, answer: any) => {
-      if (!acc[answer.guest_id]) {
-        acc[answer.guest_id] = [];
+  const groupAnswersByGuestId = (answers: GuestAnswerResponse[]) => {
+    return answers.reduce<Record<string, GuestAnswerResponse[]>>((acc, answer) => {
+      if (!acc[answer.guestId]) {
+        acc[answer.guestId] = [];
       }
-      acc[answer.guest_id].push(answer);
+      acc[answer.guestId].push(answer);
       return acc;
     }, {});
   };
 
   const getGuestAnswersByInvitation = (invitationId: number) => {
     const filteredAnswers = allGuestAnswers.filter(
-      (guestAnswer: any) => guestAnswer.invitation_id === invitationId,
+      (guestAnswer) => guestAnswer.invitationId === invitationId,
     );
 
-    const sortedAnswers = filteredAnswers.sort((a: any, b: any) => {
-      return (
-        new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
-      );
-    });
+    const sortedAnswers = filteredAnswers.sort((a, b) => a.id - b.id);
 
     return groupAnswersByGuestId(sortedAnswers);
   };
 
-  const groupAnswersByQuestionId = (answers: any[]) => {
-    return answers.reduce((acc: any, answer: any) => {
-      if (!acc[answer.question_id]) {
-        acc[answer.question_id] = [];
+  const groupAnswersByQuestionId = (answers: GuestAnswerResponse[]) => {
+    return answers.reduce<Record<number, string[]>>((acc, answer) => {
+      if (!acc[answer.questionId]) {
+        acc[answer.questionId] = [];
       }
-      acc[answer.question_id].push(answer.answer);
+      acc[answer.questionId].push(answer.answer);
       return acc;
     }, {});
   };
@@ -102,7 +102,7 @@ const MyGuestAnswersPage: FC = () => {
                     <div className="scrollbar-hide flex gap-[30px] overflow-x-auto pb-[3px]">
                       {allInvitations &&
                         Array.isArray(allInvitations) &&
-                        allInvitations.map((invitation: any) => (
+                        allInvitations.map((invitation) => (
                           <div key={invitation.id}>
                             <button onClick={() => setCurrentId(invitation.id)}>
                               <span
@@ -121,7 +121,7 @@ const MyGuestAnswersPage: FC = () => {
                       {allInvitations &&
                       Array.isArray(allInvitations) &&
                       allGuestAnswers.length > 0 ? (
-                        allInvitations.map((invitation: any) => (
+                        allInvitations.map((invitation) => (
                           <div key={invitation.id}>
                             {invitation.id === currentId &&
                               allGuestAnswers &&
@@ -135,7 +135,7 @@ const MyGuestAnswersPage: FC = () => {
                                       getGuestAnswersByInvitation(
                                         invitation.id,
                                       ),
-                                    ).map(([guestId, answers]: any) => (
+                                    ).map(([guestId, answers]) => (
                                       <div
                                         key={guestId}
                                         className="mt-[30px] flex flex-col gap-5"
@@ -144,7 +144,7 @@ const MyGuestAnswersPage: FC = () => {
                                           className="flex flex-col gap-5 rounded-[20px] bg-green-50 p-5 md:p-[30px]"
                                           style={{
                                             backgroundColor: answers[0]
-                                              .is_coming
+                                              .isComing
                                               ? "#A2FDDB40"
                                               : "#FFEBEA",
                                           }}
@@ -154,7 +154,7 @@ const MyGuestAnswersPage: FC = () => {
                                               Имя:&nbsp;
                                             </dt>
                                             <dd className="font-primary text-400 font-light leading-[1.4] text-grey-500">
-                                              {answers[0].guest_name}
+                                              {answers[0].guestName}
                                             </dd>
                                           </div>
                                           <div className="flex flex-col sm:flex-row">
@@ -162,7 +162,7 @@ const MyGuestAnswersPage: FC = () => {
                                               Присутствие:&nbsp;
                                             </dt>
                                             <dd className="font-primary text-400 font-light leading-[1.4] text-grey-500">
-                                              {answers[0].is_coming
+                                              {answers[0].isComing
                                                 ? "С удовольствием приеду (приедем)"
                                                 : "К сожалению, не получится"}
                                             </dd>
@@ -171,15 +171,11 @@ const MyGuestAnswersPage: FC = () => {
                                             {Object.entries(
                                               groupAnswersByQuestionId(answers),
                                             ).map(
-                                              ([
-                                                questionId,
-                                                groupedAnswers,
-                                              ]: any) => {
+                                              ([questionId, groupedAnswers]) => {
                                                 const question =
-                                                  invitation.questions.find(
-                                                    (q: any) =>
-                                                      q.id ===
-                                                      parseInt(questionId),
+                                                  invitation.questions?.find(
+                                                    (q) =>
+                                                      q.id === Number(questionId),
                                                   );
                                                 return question ? (
                                                   <div

@@ -6,6 +6,8 @@ import { AppDispatch, RootState } from "../../../../../api/redux/store";
 import { updateDraft } from "../../../../../api/service/DraftService";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
 import { Color } from "../../../../../types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { draftUpdateBaseSchema } from "../../../../../shared/schemas/draft";
 
 interface FormInput {
   colors:
@@ -15,6 +17,8 @@ interface FormInput {
       }[]
     | null;
 }
+
+const dresscodeFormSchema = draftUpdateBaseSchema.pick({ colors: true });
 
 const DresscodeForm: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -27,6 +31,7 @@ const DresscodeForm: FC = () => {
   );
 
   const { control, getValues } = useForm<FormInput>({
+    resolver: zodResolver(dresscodeFormSchema),
     defaultValues: {
       colors: colors
         ? colors.map((color: Color, index: number) => ({

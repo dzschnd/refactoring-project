@@ -14,11 +14,19 @@ import {
   uploadImage,
 } from "../../../../../api/service/UploadService";
 import { defaultTemplateImages } from "../../../../Templates/defaultTemplateImages";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { placeSchema } from "../../../../../shared/schemas/draft";
 
 interface FormInput {
   address: string | null;
   link: string | null;
 }
+
+const placeFormSchema = z.object({
+  address: placeSchema.shape.address,
+  link: placeSchema.shape.link,
+});
 
 const PlaceForm: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -32,6 +40,7 @@ const PlaceForm: FC = () => {
     formState: { errors },
   } = useForm<FormInput>({
     mode: "onBlur",
+    resolver: zodResolver(placeFormSchema),
     defaultValues: {
       address: place.address,
       link: place.link,
@@ -116,9 +125,6 @@ const PlaceForm: FC = () => {
             onBlur={handleUpdateDraft}
           />
         )}
-        rules={{
-          required: "Please enter the first partner's name",
-        }}
       />
       {errors.address && (
         <span className="text-red-500">{errors.address.message}</span>

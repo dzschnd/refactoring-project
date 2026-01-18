@@ -4,6 +4,7 @@ import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../api/redux/store";
 import { createDraft } from "../../api/service/DraftService";
 import Button from "../../components/Button";
+import type { StateError } from "../../types";
 
 interface TemplateCardProps {
   name: string;
@@ -24,7 +25,8 @@ const TemplateCard: FC<TemplateCardProps> = ({
   const dispatch: AppDispatch = useDispatch();
   const handleChooseTemplate = async () => {
     const response = await dispatch(createDraft({ templateName: name }));
-    if (response.payload.status === 403) {
+    const error = response.payload as StateError | undefined;
+    if (error?.status === 403) {
       navigate("/login");
     }
     if (response.meta.requestStatus === "fulfilled")

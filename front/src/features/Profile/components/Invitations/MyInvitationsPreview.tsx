@@ -3,10 +3,12 @@ import InvitationCard from "./InvitationCard";
 import { Link, useNavigate } from "react-router-dom";
 import goToIcon from "../../../../assetsOld/buttonIcons/arrowRight.png";
 import { getAllInvitations } from "../../../../api/service/InvitationService";
-import { CardInfo } from "../../../../types";
+import type { InvitationDetailsResponse } from "../../../../shared/types";
 
 const MyInvitationsPreview: FC = () => {
-  const [allInvitations, setAllInvitations] = useState([]);
+  const [allInvitations, setAllInvitations] = useState<
+    InvitationDetailsResponse[]
+  >([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -15,7 +17,7 @@ const MyInvitationsPreview: FC = () => {
 
   const fetchInvitations = async () => {
     const result = await getAllInvitations();
-    setAllInvitations(result);
+    setAllInvitations(Array.isArray(result) ? result : []);
   };
 
   return (
@@ -36,7 +38,7 @@ const MyInvitationsPreview: FC = () => {
       </button>
       {allInvitations && allInvitations.length > 0 ? (
         <div className="scrollbar-hide mt-10 flex max-w-[326px] gap-10 overflow-x-scroll">
-          {allInvitations.map((invitation: CardInfo) => (
+          {allInvitations.map((invitation) => (
             <InvitationCard
               key={invitation.id}
               id={invitation.id}

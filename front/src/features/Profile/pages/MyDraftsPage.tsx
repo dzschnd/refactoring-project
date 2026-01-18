@@ -10,7 +10,7 @@ import { CardInfo } from "../../../types";
 import DraftCardSkeleton from "../components/Drafts/DraftCardSkeleton";
 
 const MyDraftsPage: FC = () => {
-  const [allDrafts, setAllDrafts] = useState([]);
+  const [allDrafts, setAllDrafts] = useState<CardInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ const MyDraftsPage: FC = () => {
 
   const fetchDrafts = async () => {
     const result = await getAllDrafts();
-    setAllDrafts(result);
+    setAllDrafts(Array.isArray(result) ? result : []);
     setLoading(false);
   };
 

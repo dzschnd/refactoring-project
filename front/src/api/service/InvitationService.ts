@@ -1,18 +1,17 @@
 import axios from "axios";
 import { parseServiceError } from "../../utils/parseServiceError";
 import { axiosAuthorized, baseURL } from "./config";
+import type { SubmitGuestAnswersRequest } from "../../shared/types";
+import { responseSchemas } from "../../shared/schemas/responses";
 const BASE_URL: string = `${baseURL}/published-invitations`;
 
 // router.post('/guest-answers/:id',
 //     PublishedInvitationController.createGuestAnswer);
 export const submitGuestAnswers = async (
   id: number,
-  isComing: boolean,
-  guestName: string,
-  answers: {
-    questionPosition: number;
-    answer: string;
-  }[],
+  isComing: SubmitGuestAnswersRequest["isComing"],
+  guestName: SubmitGuestAnswersRequest["guestName"],
+  answers: SubmitGuestAnswersRequest["answers"],
 ) => {
   try {
     const response = await axios.post(
@@ -26,7 +25,7 @@ export const submitGuestAnswers = async (
         withCredentials: true,
       },
     );
-    return response.data;
+    return responseSchemas.message.parse(response.data);
   } catch (error) {
     return parseServiceError(error);
   }
@@ -39,7 +38,7 @@ export const submitGuestAnswers = async (
 export const getAllGuestAnswers = async () => {
   try {
     const response = await axiosAuthorized.get(`${BASE_URL}/guest-answers`);
-    return response.data;
+    return responseSchemas.guestAnswerList.parse(response.data);
   } catch (error) {
     return parseServiceError(error);
   }
@@ -51,7 +50,7 @@ export const getAllGuestAnswers = async () => {
 export const getInvitation = async (id: number) => {
   try {
     const response = await axios.get(`${BASE_URL}/${id}`);
-    return response.data;
+    return responseSchemas.invitationDetails.parse(response.data);
   } catch (error) {
     return parseServiceError(error);
   }
@@ -63,7 +62,7 @@ export const getInvitation = async (id: number) => {
 export const getAllInvitations = async () => {
   try {
     const response = await axiosAuthorized.get(`${BASE_URL}`);
-    return response.data;
+    return responseSchemas.invitationDetailsList.parse(response.data);
   } catch (error) {
     return parseServiceError(error);
   }

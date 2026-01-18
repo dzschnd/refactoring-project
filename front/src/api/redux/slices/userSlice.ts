@@ -114,7 +114,7 @@ export const userSlice = createSlice({
       .addCase(changeEmail.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.email = action.payload.newEmail;
+        state.email = action.payload.newEmail ?? state.email;
       })
       .addCase(changeEmail.rejected, (state, action) => {
         state.loading = false;

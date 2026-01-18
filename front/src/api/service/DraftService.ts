@@ -1,6 +1,8 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { parseServiceError } from "../../utils/parseServiceError";
 import { UpdateDraftPayload } from "../../types";
+import type { CreateDraftRequest, DraftUpdateRequest } from "../../shared/types";
+import { responseSchemas } from "../../shared/schemas/responses";
 import { axiosAuthorized, baseURL } from "./config";
 
 const BASE_URL = `${baseURL}/drafts`;
@@ -19,7 +21,7 @@ export const publishDraft = createAsyncThunk(
         {},
         { withCredentials: true },
       );
-      return response.data;
+      return responseSchemas.invitationDetails.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -33,7 +35,7 @@ export const validateDraft = async (payload: { id: number }) => {
       {},
       { withCredentials: true },
     );
-    return response.data;
+    return responseSchemas.message.parse(response.data);
   } catch (error) {
     return parseServiceError(error);
   }
@@ -45,14 +47,14 @@ export const validateDraft = async (payload: { id: number }) => {
 //   DraftController.createDraft);
 export const createDraft = createAsyncThunk(
   "draft/create",
-  async (payload: { templateName: string }, { rejectWithValue }) => {
+  async (payload: CreateDraftRequest, { rejectWithValue }) => {
     try {
       const response = await axiosAuthorized.post(
         `${BASE_URL}`,
         { templateName: payload.templateName },
         { withCredentials: true },
       );
-      return response.data;
+      return responseSchemas.invitationDetails.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -67,7 +69,7 @@ export const updateDraft = createAsyncThunk(
   "draft/update",
   async (payload: UpdateDraftPayload, { rejectWithValue }) => {
     try {
-      const updateFields: any = {};
+      const updateFields: DraftUpdateRequest = {};
 
       if (payload.firstPartnerName !== undefined)
         updateFields.firstPartnerName = payload.firstPartnerName;
@@ -93,7 +95,7 @@ export const updateDraft = createAsyncThunk(
         updateFields,
       );
 
-      return response.data;
+      return responseSchemas.invitationDetails.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -108,7 +110,7 @@ export const getDraft = createAsyncThunk(
   async (payload: { id: number }, { rejectWithValue }) => {
     try {
       const response = await axiosAuthorized.get(`${BASE_URL}/${payload.id}`);
-      return response.data;
+      return responseSchemas.invitationDetails.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
@@ -121,7 +123,7 @@ export const getDraft = createAsyncThunk(
 export const getAllDrafts = async () => {
   try {
     const response = await axiosAuthorized.get(`${BASE_URL}`);
-    return response.data;
+    return responseSchemas.invitationDetailsList.parse(response.data);
   } catch (error) {
     return parseServiceError(error);
   }
@@ -133,7 +135,7 @@ export const getAllDrafts = async () => {
 export const deleteDraft = async (id: number) => {
   try {
     const response = await axiosAuthorized.delete(`${BASE_URL}/${id}`);
-    return response.data;
+    return responseSchemas.message.parse(response.data);
   } catch (error) {
     return parseServiceError(error);
   }

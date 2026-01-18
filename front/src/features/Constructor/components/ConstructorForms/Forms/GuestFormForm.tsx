@@ -8,6 +8,8 @@ import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
 import { updateDraft } from "../../../../../api/service/DraftService";
 import GuestFormInput from "../Inputs/GuestFormInput";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { draftUpdateBaseSchema } from "../../../../../shared/schemas/draft";
 
 interface FormInput {
   questions:
@@ -26,6 +28,13 @@ interface FormInput {
     | null;
 }
 
+type AnswerFormValue = NonNullable<FormInput["answers"]>[number];
+
+const guestFormSchema = draftUpdateBaseSchema.pick({
+  questions: true,
+  answers: true,
+});
+
 const GuestFormForm: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const { id, questions, answers } = useSelector(
@@ -33,6 +42,7 @@ const GuestFormForm: FC = () => {
   );
 
   const { control, getValues, setValue } = useForm<FormInput>({
+    resolver: zodResolver(guestFormSchema),
     defaultValues: questions
       ? {
           questions: [...questions].sort((a, b) => a.position - b.position),
@@ -293,7 +303,7 @@ const GuestFormForm: FC = () => {
                 const updatedAnswers = currentAnswers
                   .filter((answer) => answer.questionPosition !== index)
                   .concat(
-                    value.answers.map((answer: any, answerIndex: number) => ({
+                    (value.answers ?? []).map((answer: AnswerFormValue, answerIndex: number) => ({
                       ...answer,
                       questionPosition: index,
                       position: answerIndex,

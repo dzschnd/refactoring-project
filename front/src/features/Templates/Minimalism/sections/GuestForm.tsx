@@ -9,6 +9,7 @@ import { GUEST_FORM_EMPTY } from "../../../../api/messages";
 import { GuestFormSentPopup } from "../../GuestFormSentPopup";
 import { Button } from "../components/Button";
 import { ISO2TextRuLong } from "../../../../utils/dateUtils";
+import type { StateError } from "../../../../types";
 
 export const GuestForm: FC<TemplateGuestFormProps> = ({
   id,
@@ -60,7 +61,8 @@ export const GuestForm: FC<TemplateGuestFormProps> = ({
       guestName.trim(),
       selectedAnswers,
     );
-    if (!response.status || response.status === 200) {
+    const error = response as StateError | undefined;
+    if (!error?.status) {
       setIsPopupOpen(true);
     }
   };

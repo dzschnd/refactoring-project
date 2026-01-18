@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { AuthPage } from "../../../types";
+import type { AuthPage, StateError } from "../../../types";
 import { AppDispatch, RootState } from "../../../api/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { requestOtp, verifyEmail } from "../../../api/service/UserService";
@@ -17,6 +17,7 @@ import {
   SERVER_ERROR,
 } from "../../../api/messages";
 import clsx from "clsx";
+import { verifyEmailSchema } from "../../../shared/schemas/auth";
 
 type OtpInputProps = {
   setCurrentPage: Dispatch<SetStateAction<AuthPage>>;
@@ -43,17 +44,23 @@ export const RegisterOtpInput: FC<OtpInputProps> = ({ setCurrentPage }) => {
   };
 
   const onSubmit = async (otp: string) => {
+    const otpValidation = verifyEmailSchema.shape.otp.safeParse(otp);
+    if (!otpValidation.success) {
+      setError(otpValidation.error.issues[0]?.message ?? INVALID_OTP_TRY_REPEAT);
+      return;
+    }
     const response = await dispatch(verifyEmail({ email: email, otp: otp }));
     if (response.meta.requestStatus === "fulfilled") {
       setIsSuccess(true);
       setTimeout(() => setCurrentPage("PASSWORD_RESET"), 1000);
     } else if (!error && prevOtpLength < 6) {
-      if (response.payload.status === 404) {
+      const errorPayload = response.payload as StateError | undefined;
+      if (errorPayload?.status === 404) {
         setError(INVALID_OTP_TRY_REPEAT);
-      } else if (response.payload.status === 400) {
+      } else if (errorPayload?.status === 400) {
         setError(OTP_EXPIRED);
       } else {
-        setError(SERVER_ERROR);
+        setError(errorPayload?.message ?? SERVER_ERROR);
       }
     }
   };

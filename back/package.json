@@ -23,7 +23,6 @@
     "dotenv": "^16.4.5",
     "express": "5.0.0-beta.3",
     "express-session": "^1.18.1",
-    "express-validator": "^7.2.0",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
@@ -32,7 +31,8 @@
     "nodemon": "^3.1.7",
     "pino": "^9.6.0",
     "pug": "2.0.0-beta11",
-    "session-file-store": "^1.5.0"
+    "session-file-store": "^1.5.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",

@@ -14,6 +14,8 @@ import {
 } from "../../../../api/service/UserService";
 import FormErrorMessage from "../../../../components/FormErrorMessage";
 import OtpInput from "./OtpInput";
+import { changeNameSchema, requestChangeEmailSchema } from "../../../../shared/schemas/auth";
+import type { StateError } from "../../../../types";
 
 const ProfileInfo: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -52,6 +54,14 @@ const ProfileInfo: FC = () => {
       setIsEmailInputOpen(false);
       return;
     }
+    const emailValidation = requestChangeEmailSchema.safeParse({
+      currentEmail: email,
+      newEmail: newEmail.trim(),
+    });
+    if (!emailValidation.success) {
+      setEmailError(emailValidation.error.issues[0]?.message ?? "Некорректный формат почты");
+      return;
+    }
     setIsOtpInputLoading(true);
     const response = await dispatch(
       requestEmailChange({ currentEmail: email, newEmail: newEmail.trim() }),
@@ -61,7 +71,8 @@ const ProfileInfo: FC = () => {
       setIsOtpInputOpen(true);
       setEmailError("");
     } else {
-      setEmailError(response.payload.message);
+      const errorPayload = response.payload as StateError | undefined;
+      setEmailError(errorPayload?.message ?? "Произошла ошибка");
       setIsEmailInputOpen(false);
       setValue("email", email);
     }
@@ -80,14 +91,16 @@ const ProfileInfo: FC = () => {
       changeEmail({ otp: otp, newEmail: newEmail.trim() }),
     );
     if (response.meta.requestStatus !== "fulfilled") {
+      const errorPayload = response.payload as StateError | undefined;
       if (
-        response.payload.status === 400 &&
+        errorPayload?.status === 400 &&
         !isInvalidOtpError &&
         prevOtpLength < 6
-      )
+      ) {
         setIsInvalidOtpError("error");
-      else if (response.payload.status !== 400)
-        setEmailError(response.payload.message);
+      } else if (errorPayload?.status !== 400) {
+        setEmailError(errorPayload?.message ?? "Произошла ошибка");
+      }
       if (email) setValue("email", email);
     } else {
       setIsSuccessfulEmailChange(true);
@@ -103,9 +116,15 @@ const ProfileInfo: FC = () => {
       setIsNameInputOpen(false);
       return;
     }
+    const nameValidation = changeNameSchema.safeParse({ newName: newName.trim() });
+    if (!nameValidation.success) {
+      setNameError(nameValidation.error.issues[0]?.message ?? "Пожалуйста, укажите имя");
+      return;
+    }
     const response = await dispatch(changeName({ newName: newName.trim() }));
     if (response.meta.requestStatus !== "fulfilled") {
-      setNameError(response.payload.message);
+      const errorPayload = response.payload as StateError | undefined;
+      setNameError(errorPayload?.message ?? "Произошла ошибка");
       if (name) setValue("name", name);
     }
     setIsNameInputOpen(false);

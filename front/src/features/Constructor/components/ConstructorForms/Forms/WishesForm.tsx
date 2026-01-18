@@ -7,6 +7,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../../../api/redux/store";
 import { updateDraft } from "../../../../../api/service/DraftService";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { draftUpdateBaseSchema } from "../../../../../shared/schemas/draft";
 
 interface FormInput {
   wishes:
@@ -16,6 +18,8 @@ interface FormInput {
       }[]
     | null;
 }
+
+const wishesFormSchema = draftUpdateBaseSchema.pick({ wishes: true });
 
 const WishesForm: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -28,6 +32,7 @@ const WishesForm: FC = () => {
   );
 
   const { control, getValues, setValue } = useForm<FormInput>({
+    resolver: zodResolver(wishesFormSchema),
     defaultValues: {
       wishes: wishes
         ? [...wishes].sort((a, b) => a.position - b.position)

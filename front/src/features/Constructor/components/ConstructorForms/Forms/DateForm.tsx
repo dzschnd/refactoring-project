@@ -10,10 +10,21 @@ import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
 import { DateValue } from "react-aria-components";
 import { parseDate } from "@internationalized/date";
 import { dateValue2ISO } from "../../../../../utils/dateUtils";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { draftUpdateBaseSchema } from "../../../../../shared/schemas/draft";
 
 interface FormInput {
   eventDateValue: DateValue | undefined;
 }
+
+const dateFormSchema = z.object({
+  eventDateValue: z.preprocess((value) => {
+    if (!value) return undefined;
+    if (typeof value === "string") return value;
+    return dateValue2ISO(value as DateValue);
+  }, draftUpdateBaseSchema.shape.eventDate),
+});
 
 const DateForm: FC = () => {
   const dispatch: AppDispatch = useDispatch();
@@ -25,6 +36,7 @@ const DateForm: FC = () => {
     formState: { errors },
   } = useForm<FormInput>({
     mode: "onBlur",
+    resolver: zodResolver(dateFormSchema),
     defaultValues: {
       eventDateValue: eventDate ? parseDate(eventDate) : undefined,
     },
@@ -96,9 +108,6 @@ const DateForm: FC = () => {
             onBlur={handleUpdateDraft}
           />
         )}
-        rules={{
-          required: "Please enter the event date",
-        }}
       />
       {errors.eventDateValue && (
         <span className="text-red-500">{errors.eventDateValue.message}</span>

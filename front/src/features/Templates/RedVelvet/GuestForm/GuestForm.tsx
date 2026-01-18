@@ -6,6 +6,7 @@ import FormErrorMessage from "../../../../components/FormErrorMessage";
 import heart from "../../../../assetsOld/guestFormHeart.svg";
 import { useCloseOnClickOutside } from "../../../../hooks/useCloseOnClickOutside";
 import { getScrollbarWidth } from "../../../../utils/getScrollbarWidth";
+import type { StateError } from "../../../../types";
 
 interface GuestFormProps {
   questions: {
@@ -68,7 +69,8 @@ const GuestForm: FC<GuestFormProps> = ({
       guestName.trim(),
       selectedAnswers,
     );
-    if (!response.status || response.status === 200) {
+    const error = response as StateError | undefined;
+    if (!error?.status) {
       setIsPopupOpen(true);
     }
   };

@@ -1,5 +1,4 @@
 import React, { ChangeEvent, FC, useId } from "react";
-import { FieldValues } from "react-hook-form";
 import TextInput from "./TextInput";
 import questionIcon from "../../../../../assetsOld/formIcons/question-circle.png";
 import trashIcon from "../../../../../assetsOld/buttonIcons/trash.png";
@@ -14,22 +13,24 @@ interface AppendAnswerProps {
   questionPosition: number;
 }
 
+interface GuestFormAnswerValue {
+  answer: string;
+  questionPosition: number;
+  position: number;
+  globalAnswerIndex: number;
+}
+
+interface GuestFormQuestionValue {
+  question: string;
+  type: QuestionType;
+  position: number;
+  answers: GuestFormAnswerValue[] | null;
+}
+
 interface GuestFormInputProps {
-  value?: {
-    question: string;
-    type: QuestionType;
-    position: number;
-    answers:
-      | {
-          answer: string;
-          questionPosition: number;
-          position: number;
-          globalAnswerIndex: number;
-        }[]
-      | null;
-  } | null;
+  value?: GuestFormQuestionValue | null;
   placeholder: string;
-  onChange: (value: FieldValues) => void;
+  onChange: (value: GuestFormQuestionValue) => void;
   onBlur: () => void;
   onRemoveAnswer: (globalAnswerIndex: number) => void;
   onRemoveQuestion: () => void;
@@ -48,6 +49,12 @@ const GuestFormInput: FC<GuestFormInputProps> = ({
   questionIndex,
 }) => {
   const baseId = useId();
+  const safeValue: GuestFormQuestionValue = value ?? {
+    question: "",
+    type: QuestionType.CHECKBOX,
+    position: questionIndex,
+    answers: [],
+  };
 
   return (
     <div className="mb-5 mt-5 flex flex-col gap-10">
@@ -66,10 +73,10 @@ const GuestFormInput: FC<GuestFormInputProps> = ({
           </div>
 
           <QuestionTypeSelect
-            value={value?.type || QuestionType.CHECKBOX}
+            value={safeValue.type}
             onChange={(newType: QuestionType) => {
-              const updatedValue = {
-                ...value,
+              const updatedValue: GuestFormQuestionValue = {
+                ...safeValue,
                 type: newType,
               };
               onChange(updatedValue);
@@ -81,10 +88,10 @@ const GuestFormInput: FC<GuestFormInputProps> = ({
             placeholder={placeholder}
             label="Введите вопрос"
             icon={questionIcon}
-            value={value?.question || ""}
+            value={safeValue.question}
             onChange={(e) => {
-              const updatedValue = {
-                ...value,
+              const updatedValue: GuestFormQuestionValue = {
+                ...safeValue,
                 question: e.target.value,
               };
               onChange(updatedValue);
@@ -92,17 +99,17 @@ const GuestFormInput: FC<GuestFormInputProps> = ({
             onBlur={onBlur}
           />
 
-          {value?.type !== QuestionType.TEXT && (
+          {safeValue.type !== QuestionType.TEXT && (
             <div className="flex flex-col gap-3">
-              {value?.answers?.map(
+              {safeValue.answers?.map(
                 (a, answerIndex) =>
-                  a.questionPosition === value?.position && (
+                  a.questionPosition === safeValue.position && (
                     <GuestFormAnswerInput
                       index={answerIndex}
                       key={answerIndex}
                       value={a.answer}
                       onChange={(e: ChangeEvent<HTMLInputElement>) => {
-                        const updatedAnswers = value.answers?.map(
+                        const updatedAnswers = (safeValue.answers ?? []).map(
                           (answer, index) => {
                             if (index === answerIndex) {
                               return { ...answer, answer: e.target.value };
@@ -111,7 +118,7 @@ const GuestFormInput: FC<GuestFormInputProps> = ({
                           },
                         );
                         onChange({
-                          ...value,
+                          ...safeValue,
                           answers: updatedAnswers,
                         });
                       }}
@@ -127,8 +134,8 @@ const GuestFormInput: FC<GuestFormInputProps> = ({
                 onClick={() =>
                   appendAnswer({
                     answer: "",
-                    position: value?.answers?.length || 0,
-                    questionPosition: value?.position || 0,
+                    position: safeValue.answers?.length || 0,
+                    questionPosition: safeValue.position,
                   })
                 }
               >

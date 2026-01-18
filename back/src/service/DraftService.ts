@@ -30,7 +30,7 @@ import {getInvitationDetails} from "../utils/InvitationUtils.js";
 import { errorResponse } from "../utils/errorUtils.js";
 import logger from "../logger.js";
 import {cleanupAllImages, cleanupOldImages, getParams, r2} from "../utils/R2Utils.js";
-import type { DraftUpdateDTO, InvitationDetailsDTO } from "../types/dto.js";
+import type { DraftUpdateDTO, InvitationDetailsDTO, QuestionDTO } from "../types/dto.js";
 import type { ServiceResponse } from "../types/service.js";
 
 export const createDraft = async (userId: number, templateName: string): Promise<ServiceResponse<InvitationDetailsDTO>> => {
@@ -242,7 +242,7 @@ export const updateDraft = async (draftId: number | string, data: DraftUpdateDTO
                 }
             }
 
-            const questionsList = questions ?? [];
+            const questionsList: QuestionDTO[] = questions ?? [];
             if (answers) {
                 await deleteFormAnswersQuery(draftId, tx);
                 for (const answer of answers) {

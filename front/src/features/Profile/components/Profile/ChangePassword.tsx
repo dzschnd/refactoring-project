@@ -4,21 +4,22 @@ import InputField from "../../../Auth/components/InputField";
 import lockIcon from "../../../../assetsOld/formIcons/lock.png";
 import SubmitButton from "../../../Auth/components/SubmitButton";
 import { SubmitHandler, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { AppDispatch } from "../../../../api/redux/store";
 import { useDispatch } from "react-redux";
 import { changePassword } from "../../../../api/service/UserService";
 import FormErrorMessage from "../../../../components/FormErrorMessage";
 import { WRONG_PASSWORD } from "../../../../api/messages";
+import { changePasswordSchema } from "../../../../shared/schemas/auth";
+import type { StateError } from "../../../../types";
 
-interface FormInput {
-  oldPassword: string;
-  newPassword: string;
-}
+type FormInput = z.infer<typeof changePasswordSchema>;
 
 const ChangePassword: FC = () => {
   const dispatch: AppDispatch = useDispatch();
   const [error, setError] = useState<string>("");
-  const [successMessage, setSuccessMessage] = useState(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   const {
     register,
@@ -30,6 +31,7 @@ const ChangePassword: FC = () => {
   } = useForm<FormInput>({
     mode: "onSubmit",
     reValidateMode: "onBlur",
+    resolver: zodResolver(changePasswordSchema),
     defaultValues: {
       oldPassword: "",
       newPassword: "",
@@ -42,11 +44,13 @@ const ChangePassword: FC = () => {
     const result = await dispatch(changePassword({ oldPassword, newPassword }));
     if (result.meta.requestStatus === "rejected") {
       setSuccessMessage(null);
-      if (result.payload.status === 400) setError(WRONG_PASSWORD);
-      else setError(result.payload.message);
+      const error = result.payload as StateError | undefined;
+      if (error?.status === 400) setError(WRONG_PASSWORD);
+      else setError(error?.message ?? "Произошла ошибка");
     } else {
       setError("");
-      setSuccessMessage(result.payload.message);
+      const success = result.payload as { message?: string } | undefined;
+      setSuccessMessage(success?.message ?? "Пароль обновлен");
       setValue("oldPassword", "");
       setValue("newPassword", "");
     }
@@ -71,9 +75,7 @@ const ChangePassword: FC = () => {
         <div className="relative md:mb-[30px]">
           <InputLabel id={"oldPassword"} label={"Введите старый пароль"} />
           <InputField
-            {...register("oldPassword", {
-              required: "Пожалуйста, введите текущий пароль",
-            })}
+            {...register("oldPassword")}
             onChange={() => clearErrors("oldPassword")}
             id={"oldPassword"}
             type={"password"}
@@ -87,13 +89,7 @@ const ChangePassword: FC = () => {
         <div className="relative md:mb-[30px]">
           <InputLabel id={"newPassword"} label={"Введите новый пароль"} />
           <InputField
-            {...register("newPassword", {
-              required: "Пожалуйста, введите новый пароль",
-              minLength: {
-                value: 8,
-                message: "Длина пароль должна быть не менее 8 символов",
-              },
-            })}
+            {...register("newPassword")}
             id={"newPassword"}
             type={"password"}
             placeholder={"******"}
