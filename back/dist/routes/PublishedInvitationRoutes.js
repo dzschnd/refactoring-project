@@ -1,0 +1,11 @@
+import { Router } from 'express';
+import { PublishedInvitationController } from '../controller/index.js';
+import { verifyAccessToken, verifyUser } from '../middleware/AuthMiddleware.js';
+import { formAnswerValidation } from '../validation/GuestAnswerValidation.js';
+import handleValidationErrors from '../middleware/handleValidationErrors.js';
+const router = Router();
+router.post('/guest-answers/:id', formAnswerValidation, handleValidationErrors, PublishedInvitationController.submitGuestAnswers);
+router.get('/guest-answers', verifyAccessToken, verifyUser, PublishedInvitationController.getAllGuestAnswers);
+router.get('/:id', PublishedInvitationController.getInvitation);
+router.get('/', verifyAccessToken, verifyUser, PublishedInvitationController.getAllInvitations);
+export default router;

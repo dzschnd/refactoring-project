@@ -1,0 +1,15 @@
+import { Router } from 'express';
+import { DraftController } from '../controller/index.js';
+import { verifyAccessToken, verifyUser } from '../middleware/AuthMiddleware.js';
+import fetchDraft from '../middleware/fetchDraft.js';
+import { publishValidation, updateValidation } from '../validation/DraftValidation.js';
+import handleValidationErrors from '../middleware/handleValidationErrors.js';
+const router = Router();
+router.put('/:id/publish', verifyAccessToken, verifyUser, fetchDraft, publishValidation, handleValidationErrors, DraftController.publishDraft);
+router.put('/:id/validate', verifyAccessToken, verifyUser, fetchDraft, publishValidation, handleValidationErrors, DraftController.validateDraft);
+router.post('/', verifyAccessToken, verifyUser, updateValidation, handleValidationErrors, DraftController.createDraft);
+router.patch('/:id', verifyAccessToken, verifyUser, updateValidation, handleValidationErrors, DraftController.updateDraft);
+router.get('/:id', verifyAccessToken, verifyUser, DraftController.getDraft);
+router.get('/', verifyAccessToken, verifyUser, DraftController.getAllDrafts);
+router.delete('/:id', verifyAccessToken, verifyUser, DraftController.deleteDraft);
+export default router;
