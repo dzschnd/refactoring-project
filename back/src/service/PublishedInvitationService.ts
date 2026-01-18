@@ -9,7 +9,8 @@ import {
 } from "../queries/InvitationQueries.js";
 
 import {getInvitationDetails} from "../utils/InvitationUtils.js";
-import {errorResponse} from "../utils/errorUtils.js";
+import { errorResponse } from "../utils/errorUtils.js";
+import logger from "../logger.js";
 import type { GuestAnswer } from "@prisma/client";
 import type { ServiceResponse } from "../types/service.js";
 import type { GuestAnswerDTO, InvitationDetailsDTO } from "../types/dto.js";
@@ -21,7 +22,7 @@ export const getInvitation = async (invitationId: number | string): Promise<Serv
             return errorResponse("Invitation not found");
         return invitationInfo;
     } catch (error) {
-        console.log(error);
+        logger.error({ err: error }, "Failed to retrieve invitation");
         return errorResponse("Failed to retrieve invitation");
     }
 };
@@ -74,7 +75,7 @@ export const submitGuestAnswers = async (
             return {message: "Answers submitted successfully"};
         });
     } catch (error) {
-        console.error(error);
+        logger.error({ err: error }, "Failed to create guest answer");
         return errorResponse("Failed to create guest answer");
     }
 };
@@ -85,7 +86,7 @@ export const getAllGuestAnswers = async (authorId: number): Promise<ServiceRespo
         if (existingGuestAnswers.length === 0) return errorResponse("No guest answers found");
         return existingGuestAnswers;
     } catch (error) {
-        console.error(error);
+        logger.error({ err: error }, "Failed to retrieve guest answers");
         return errorResponse("Failed to retrieve guest answers");
     }
 };

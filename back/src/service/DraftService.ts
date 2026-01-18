@@ -27,7 +27,8 @@ import {
 } from "../queries/InvitationQueries.js";
 
 import {getInvitationDetails} from "../utils/InvitationUtils.js";
-import {errorResponse} from "../utils/errorUtils.js";
+import { errorResponse } from "../utils/errorUtils.js";
+import logger from "../logger.js";
 import {cleanupAllImages, cleanupOldImages, getParams, r2} from "../utils/R2Utils.js";
 import type { DraftUpdateDTO, InvitationDetailsDTO } from "../types/dto.js";
 import type { ServiceResponse } from "../types/service.js";
@@ -261,7 +262,7 @@ export const updateDraft = async (draftId: number | string, data: DraftUpdateDTO
             return details;
         });
     } catch (error) {
-        console.log(error);
+        logger.error({ err: error }, "Failed to update draft");
         return errorResponse("Failed to update draft");
     }
 };
@@ -293,7 +294,7 @@ export const getDraft = async (draftId: number | string, userId: number): Promis
             return errorResponse("Draft not found");
         return draftInfo;
     } catch (error) {
-        console.log(error)
+        logger.error({ err: error }, "Failed to retrieve draft");
         return errorResponse("Failed to retrieve draft");
     }
 };
@@ -304,7 +305,7 @@ export const getAllDrafts = async (userId: number): Promise<ServiceResponse<Invi
         const details = await Promise.all(drafts.map(draft => getInvitationDetails(draft.id, false)));
         return details.filter((draft): draft is NonNullable<typeof draft> => draft !== null);
     } catch (error) {
-        console.log(error)
+        logger.error({ err: error }, "Failed to retrieve drafts");
         return errorResponse("Failed to retrieve drafts");
     }
 };
@@ -320,6 +321,7 @@ export const deleteDraft = async (draftId: number | string, userId: number): Pro
         return { message: "Draft deleted successfully" };
     } catch (error) {
         const message = error instanceof Error ? error.message : "Unknown error";
+        logger.error({ err: error }, "Failed to delete draft");
         return errorResponse("Failed to delete draft: " + message);
     }
 };

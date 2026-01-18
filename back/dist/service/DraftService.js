@@ -2,6 +2,7 @@ import prisma from "../config/prisma.js";
 import { createDraftQuery, createColorQuery, createFormAnswerQuery, createFormQuestionQuery, createInvitationColorQuery, createPlaceQuery, createPlanItemQuery, createWishQuery, deleteFormAnswersQuery, deleteFormQuestionsQuery, deleteInvitationColorsQuery, deletePlanItemsQuery, deleteWishesQuery, getAllInvitationsQuery, getColorIdQuery, getFormQuestionByPositionQuery, getInvitationPlaceIdQuery, getTemplateIdQuery, updateInvitationPlaceIdQuery, updatePlaceQuery, publishInvitationQuery, deleteInvitation, getDraftQuery } from "../queries/InvitationQueries.js";
 import { getInvitationDetails } from "../utils/InvitationUtils.js";
 import { errorResponse } from "../utils/errorUtils.js";
+import logger from "../logger.js";
 import { cleanupAllImages, cleanupOldImages, getParams, r2 } from "../utils/R2Utils.js";
 export const createDraft = async (userId, templateName) => {
     try {
@@ -71,10 +72,14 @@ export const uploadImageToDraft = async (draftId, file, type, userId) => {
         return errorResponse("Invalid type");
     if (type === "placeImage") {
         draft = await getDraft(draftId, userId);
+        if ("error" in draft) {
+            return draft;
+        }
         currentPlace = draft.place;
     }
-    const updateResult = await updateDraft(draftId, type === "coupleImage" ? { coupleImage: imageUrl } : { place: { ...currentPlace, placeImage: imageUrl } }, userId);
-    if (updateResult.error) {
+    const safePlace = currentPlace ?? { address: null, placeImage: null, link: null };
+    const updateResult = await updateDraft(draftId, type === "coupleImage" ? { coupleImage: imageUrl } : { place: { ...safePlace, placeImage: imageUrl } }, userId);
+    if ("error" in updateResult) {
         await r2.deleteObject(params).promise();
         return errorResponse("Failed to upload image");
     }
@@ -86,8 +91,8 @@ export const uploadImageToDraft = async (draftId, file, type, userId) => {
 export const resetDraftImage = async (draftId, type, userId) => {
     if (!(type === "coupleImage" || type === "placeImage"))
         return errorResponse("Invalid type");
-    const updateResult = await updateDraft(draftId, type === "coupleImage" ? { coupleImage: null } : { place: { placeImage: null } }, userId);
-    if (updateResult.error) {
+    const updateResult = await updateDraft(draftId, type === "coupleImage" ? { coupleImage: null } : { place: { address: null, placeImage: null, link: null } }, userId);
+    if ("error" in updateResult) {
         return errorResponse("Failed to upload image");
     }
     else {
@@ -187,7 +192,7 @@ export const updateDraft = async (draftId, data, userId) => {
         });
     }
     catch (error) {
-        console.log(error);
+        logger.error({ err: error }, "Failed to update draft");
         return errorResponse("Failed to update draft");
     }
 };
@@ -218,7 +223,7 @@ export const getDraft = async (draftId, userId) => {
         return draftInfo;
     }
     catch (error) {
-        console.log(error);
+        logger.error({ err: error }, "Failed to retrieve draft");
         return errorResponse("Failed to retrieve draft");
     }
 };
@@ -229,7 +234,7 @@ export const getAllDrafts = async (userId) => {
         return details.filter((draft) => draft !== null);
     }
     catch (error) {
-        console.log(error);
+        logger.error({ err: error }, "Failed to retrieve drafts");
         return errorResponse("Failed to retrieve drafts");
     }
 };
@@ -243,6 +248,7 @@ export const deleteDraft = async (draftId, userId) => {
     }
     catch (error) {
         const message = error instanceof Error ? error.message : "Unknown error";
+        logger.error({ err: error }, "Failed to delete draft");
         return errorResponse("Failed to delete draft: " + message);
     }
 };

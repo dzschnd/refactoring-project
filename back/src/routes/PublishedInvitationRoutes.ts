@@ -3,19 +3,20 @@ import { PublishedInvitationController } from '../controller/index.js';
 import { verifyAccessToken, verifyUser } from '../middleware/AuthMiddleware.js';
 import {formAnswerValidation} from '../validation/GuestAnswerValidation.js';
 import handleValidationErrors from '../middleware/handleValidationErrors.js';
+import asyncHandler from "../middleware/asyncHandler.js";
 
 const router = Router();
 
 router.post('/guest-answers/:id',
     formAnswerValidation, handleValidationErrors,
-    PublishedInvitationController.submitGuestAnswers);
+    asyncHandler(PublishedInvitationController.submitGuestAnswers));
 router.get('/guest-answers',
     verifyAccessToken, verifyUser,
-    PublishedInvitationController.getAllGuestAnswers);
+    asyncHandler(PublishedInvitationController.getAllGuestAnswers));
 router.get('/:id',
-    PublishedInvitationController.getInvitation);
+    asyncHandler(PublishedInvitationController.getInvitation));
 router.get('/',
     verifyAccessToken, verifyUser,
-    PublishedInvitationController.getAllInvitations);
+    asyncHandler(PublishedInvitationController.getAllInvitations));
 
 export default router;

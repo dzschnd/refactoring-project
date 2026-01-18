@@ -1,30 +1,35 @@
 import type { Request, Response } from "express";
 import * as PublishedInvitationService from "../service/PublishedInvitationService.js";
-import {errorResponse} from "../utils/errorUtils.js";
 import { SERVER_ERROR } from "../messages/messages.js";
 import type { GuestAnswerDTO } from "../types/dto.js";
 import { isServiceError } from "../types/service.js";
+import {
+    ForbiddenError,
+    InternalServerError,
+    NotFoundError,
+    UnprocessableEntityError,
+} from "../errors/index.js";
 
 export const getInvitation = async (req: Request, res: Response): Promise<Response> => {
     const { id: invitationId } = req.params;
 
     const invitationInfo = await PublishedInvitationService.getInvitation(invitationId);
     if (isServiceError(invitationInfo)) {
-        const statusCode = invitationInfo.error === 'Invitation not found'
-            ? 404
-            : 500;
-        return res.status(statusCode).json(errorResponse(invitationInfo.status === 500 ? SERVER_ERROR : invitationInfo.error));
+        if (invitationInfo.error === 'Invitation not found') {
+            throw new NotFoundError("Invitation not found");
+        }
+        throw new InternalServerError(SERVER_ERROR);
     }
     return res.status(200).json(invitationInfo);
 };
 
 export const getAllInvitations = async (req: Request, res: Response): Promise<Response> => {
     if (!req.user) {
-        return res.status(403).json(errorResponse("Forbidden"));
+        throw new ForbiddenError("Forbidden");
     }
     const allInvitationsInfo = await PublishedInvitationService.getAllInvitations(req.user.id);
     if (isServiceError(allInvitationsInfo)) {
-        return res.status(500).json(errorResponse(allInvitationsInfo.status === 500 ? SERVER_ERROR : allInvitationsInfo.error));
+        throw new InternalServerError(SERVER_ERROR);
     }
     return res.status(200).json(allInvitationsInfo);
 };
@@ -47,25 +52,33 @@ export const submitGuestAnswers = async (req: Request, res: Response): Promise<R
     );
 
     if (isServiceError(guestAnswer)) {
-        const statusCode = guestAnswer.error === 'Invitation not found' || guestAnswer.error === 'Question not found' || guestAnswer.error === 'No questions found for invitation'
-            ? 404 : guestAnswer.error === 'Not all questions are answered'
-            ? 422
-            : 500;
-        return res.status(statusCode).json(errorResponse(guestAnswer.status === 500 ? SERVER_ERROR : guestAnswer.error));
+        if (guestAnswer.error === 'Invitation not found') {
+            throw new NotFoundError("Invitation not found");
+        }
+        if (guestAnswer.error === 'Question not found') {
+            throw new NotFoundError("Question not found");
+        }
+        if (guestAnswer.error === 'No questions found for invitation') {
+            throw new NotFoundError("No questions found for invitation");
+        }
+        if (guestAnswer.error === 'Not all questions are answered') {
+            throw new UnprocessableEntityError("Not all questions are answered");
+        }
+        throw new InternalServerError(SERVER_ERROR);
     }
     return res.status(201).json(guestAnswer);
 };
 
 export const getAllGuestAnswers = async (req: Request, res: Response): Promise<Response> => {
     if (!req.user) {
-        return res.status(403).json(errorResponse("Forbidden"));
+        throw new ForbiddenError("Forbidden");
     }
     const allGuestAnswers = await PublishedInvitationService.getAllGuestAnswers(req.user.id);
     if (isServiceError(allGuestAnswers)) {
-        const statusCode = allGuestAnswers.error === 'No guest answers found'
-            ? 404
-            : 500;
-        return res.status(statusCode).json(errorResponse(allGuestAnswers.status === 500 ? SERVER_ERROR : allGuestAnswers.error));
+        if (allGuestAnswers.error === 'No guest answers found') {
+            throw new NotFoundError("No guest answers found");
+        }
+        throw new InternalServerError(SERVER_ERROR);
     }
     return res.status(200).json(allGuestAnswers);
 };

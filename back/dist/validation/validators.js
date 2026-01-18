@@ -52,12 +52,13 @@ export const updatedQuestionConstraintsValidation = () => {
     return async (value, { req }) => {
         try {
             const answerMap = new Map();
-            const existingQuestions = await getAllFormQuestionsQuery(req.params.id);
+            const invitationId = req.params?.id;
+            const existingQuestions = await getAllFormQuestionsQuery(invitationId ?? 0);
             const questionPositionById = new Map();
             existingQuestions.forEach((question) => {
                 questionPositionById.set(question.id, question.position);
             });
-            const existingAnswers = await getAllFormAnswersQuery(req.params.id);
+            const existingAnswers = await getAllFormAnswersQuery(invitationId ?? 0);
             if (existingAnswers.length > 0) {
                 existingAnswers.forEach(answer => {
                     const questionPosition = questionPositionById.get(answer.questionId);

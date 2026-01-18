@@ -7,6 +7,9 @@ import publishedInvitationRoutes from './routes/PublishedInvitationRoutes.js';
 import uploadRoutes from './routes/UploadRoutes.js';
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import requestLogger from "./middleware/requestLogger.js";
+import errorHandler from "./middleware/errorHandler.js";
+import logger from "./logger.js";
 dotenv.config();
 const app = express();
 app.use(cors({
@@ -25,11 +28,13 @@ app.use(session({
 }));
 app.use(express.json());
 app.use(cookieParser());
+app.use(requestLogger);
 app.use("/auth", authRoutes);
 app.use("/drafts", draftRoutes);
 app.use("/published-invitations", publishedInvitationRoutes);
 app.use("/upload", uploadRoutes);
+app.use(errorHandler);
 const serverPort = Number(process.env.SERVER_PORT ?? 4000);
 app.listen(serverPort, () => {
-    console.log("Server started");
+    logger.info({ port: serverPort }, "Server started");
 });

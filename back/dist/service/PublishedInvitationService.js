@@ -2,6 +2,7 @@ import prisma from "../config/prisma.js";
 import { getAllInvitationsQuery, getInvitationQuery, createGuestAnswerQuery, getAllGuestAnswersQuery, deleteGuestAnswersQuery, getAllFormQuestionsQuery } from "../queries/InvitationQueries.js";
 import { getInvitationDetails } from "../utils/InvitationUtils.js";
 import { errorResponse } from "../utils/errorUtils.js";
+import logger from "../logger.js";
 export const getInvitation = async (invitationId) => {
     try {
         const invitationInfo = await getInvitationDetails(invitationId, true);
@@ -10,7 +11,7 @@ export const getInvitation = async (invitationId) => {
         return invitationInfo;
     }
     catch (error) {
-        console.log(error);
+        logger.error({ err: error }, "Failed to retrieve invitation");
         return errorResponse("Failed to retrieve invitation");
     }
 };
@@ -51,7 +52,7 @@ export const submitGuestAnswers = async (invitationId, answers, guestName, isCom
         });
     }
     catch (error) {
-        console.error(error);
+        logger.error({ err: error }, "Failed to create guest answer");
         return errorResponse("Failed to create guest answer");
     }
 };
@@ -63,7 +64,7 @@ export const getAllGuestAnswers = async (authorId) => {
         return existingGuestAnswers;
     }
     catch (error) {
-        console.error(error);
+        logger.error({ err: error }, "Failed to retrieve guest answers");
         return errorResponse("Failed to retrieve guest answers");
     }
 };

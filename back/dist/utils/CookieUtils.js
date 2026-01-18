@@ -1,6 +1,6 @@
 export const setAuthCookies = (res, refreshToken, accessToken) => {
     const isSecure = process.env.COOKIE_SECURE === 'true';
-    const sameSite = isSecure ? 'None' : 'Lax';
+    const sameSite = isSecure ? 'none' : 'lax';
     res.cookie('refreshToken', refreshToken, {
         httpOnly: true,
         secure: isSecure,
@@ -18,7 +18,7 @@ export const setAuthCookies = (res, refreshToken, accessToken) => {
 };
 export const clearAuthCookies = (res) => {
     const isSecure = process.env.COOKIE_SECURE === 'true';
-    const sameSite = isSecure ? 'None' : 'Lax';
+    const sameSite = isSecure ? 'none' : 'lax';
     res.cookie('refreshToken', '', {
         httpOnly: true,
         secure: isSecure,

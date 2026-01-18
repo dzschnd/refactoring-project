@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { AuthController } from '../controller/index.js';
 import {verifyAccessToken, verifyRefreshToken, verifyUser} from '../middleware/AuthMiddleware.js';
 import handleValidationErrors from '../middleware/handleValidationErrors.js';
+import asyncHandler from "../middleware/asyncHandler.js";
 import {
     verifyEmailValidation,
     changeEmailValidation,
@@ -19,76 +20,76 @@ const router = Router();
 // refresh tokens: send refresh token -> get new refresh-access pair
 router.post('/refresh',
     verifyRefreshToken, verifyUser,
-    AuthController.refresh);
+    asyncHandler(AuthController.refresh));
 
 // register: send email + password -> create new user, get otp sent to email
 router.post('/register',
     registerValidation, handleValidationErrors,
-    AuthController.register);
+    asyncHandler(AuthController.register));
 
 // request otp: send email -> get otp sent to email
 router.post('/requestOtp',
     requestOtpValidation, handleValidationErrors,
-    AuthController.requestOtp);
+    asyncHandler(AuthController.requestOtp));
 
 // login: send email + password -> get new refresh-access pair
 router.post('/login',
     loginValidation, handleValidationErrors,
-    AuthController.login);
+    asyncHandler(AuthController.login));
 
 // profile: send access token -> get email + id
 router.get('/me',
     verifyAccessToken, verifyUser,
-    AuthController.getProfile);
+    asyncHandler(AuthController.getProfile));
 
 // logout: send access token -> invalidate refresh token
 router.patch('/logout',
     verifyAccessToken, verifyUser,
-    AuthController.logout);
+    asyncHandler(AuthController.logout));
 
 // verify email: send email, otp -> check email
 router.post('/verify-email',
     verifyEmailValidation, handleValidationErrors,
-    AuthController.verifyEmail);
+    asyncHandler(AuthController.verifyEmail));
 
 // activate user: send email, otp -> get user activated
 router.post('/activate',
     verifyEmailValidation, handleValidationErrors,
-    AuthController.activateUser);
+    asyncHandler(AuthController.activateUser));
 
 // request reset password: send email -> get otp sent to email
 router.post('/password/reset',
     requestResetPasswordValidation, handleValidationErrors,
-    AuthController.requestResetPassword);
+    asyncHandler(AuthController.requestResetPassword));
 
 // reset password: send email + otp + new password -> change password
 router.patch('/password/reset',
     resetPasswordValidation, handleValidationErrors,
-    AuthController.resetPassword);
+    asyncHandler(AuthController.resetPassword));
 
 // change password (logged in): send access token + old password + new password -> change password
 router.patch('/me/password',
     verifyAccessToken, verifyUser,
     changePasswordValidation, handleValidationErrors,
-    AuthController.changePassword);
+    asyncHandler(AuthController.changePassword));
 
 // request change email: send access token + current email + new email -> get otp sent to new email
 router.post('/me/email/change-request',
     verifyAccessToken, verifyUser,
     requestChangeEmailValidation, handleValidationErrors,
-    AuthController.requestChangeEmail);
+    asyncHandler(AuthController.requestChangeEmail));
 
 // change email: send access token + otp + new email -> change email
 router.patch('/me/email',
     verifyAccessToken, verifyUser,
     changeEmailValidation,
     handleValidationErrors,
-    AuthController.changeEmail);
+    asyncHandler(AuthController.changeEmail));
 
 router.patch('/me/name',
     verifyAccessToken, verifyUser,
     changeNameValidation,
     handleValidationErrors,
-    AuthController.changeName);
+    asyncHandler(AuthController.changeName));
 
 export default router;
