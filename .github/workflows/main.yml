@@ -45,8 +45,9 @@ jobs:
         working-directory: front
         run: npm run lint --if-present
 
-      - name: Test backend (placeholder)
-        run: echo "Backend tests placeholder"
+      - name: Test backend
+        working-directory: back
+        run: npm test
 
       - name: Test frontend (placeholder)
         run: echo "Frontend tests placeholder"

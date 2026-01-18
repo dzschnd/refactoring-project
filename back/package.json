@@ -10,7 +10,8 @@
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "seed": "prisma db seed",
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest"
   },
   "dependencies": {
     "@prisma/client": "^6.4.1",
@@ -39,11 +40,14 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/express-session": "^1.18.1",
+    "@types/jest": "^29.5.14",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/multer": "^1.4.12",
     "@types/node": "^20.12.8",
     "@types/nodemailer": "^6.4.17",
+    "jest": "^29.7.0",
     "prisma": "^6.4.1",
+    "ts-jest": "^29.4.6",
     "tsx": "^4.19.2",
     "typescript": "^5.6.3"
   },
