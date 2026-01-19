@@ -1,11 +1,11 @@
-import React, { FC, useRef } from "react";
+import { useRef } from "react";
+import type { FC } from "react";
 import FormLayout from "../../../layouts/FormLayout";
 import TextInput from "../Inputs/TextInput";
 import ImageSelector from "../Inputs/ImageSelector";
 import locationIcon from "../../../../../assetsOld/formIcons/location.png";
 import linkIcon from "../../../../../assetsOld/formIcons/link.png";
-import { AppDispatch, RootState } from "../../../../../api/redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../../../api/redux/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
 import { updateDraft } from "../../../../../api/service/DraftService";
@@ -29,10 +29,8 @@ const placeFormSchema = z.object({
 });
 
 const PlaceForm: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { id, place, templateName } = useSelector(
-    (state: RootState) => state.draft,
-  );
+  const dispatch = useAppDispatch();
+  const { id, place, templateName } = useAppSelector((state) => state.draft);
 
   const {
     control,
@@ -61,7 +59,7 @@ const PlaceForm: FC = () => {
     place,
   });
 
-  const handleUpdateLocalDraft = async () => {
+  const handleUpdateLocalDraft = () => {
     const { address, link } = getValues();
 
     dispatch(
@@ -118,9 +116,9 @@ const PlaceForm: FC = () => {
             placeholder={"Введите адрес места"}
             icon={locationIcon}
             label={"Местоположение"}
-            onChange={async (e) => {
+            onChange={(e) => {
               field.onChange(e);
-              await handleUpdateLocalDraft();
+              handleUpdateLocalDraft();
             }}
             onBlur={handleUpdateDraft}
           />
@@ -139,9 +137,9 @@ const PlaceForm: FC = () => {
             placeholder={"https://yandex.ru/maps/..."}
             icon={linkIcon}
             label={"Добавьте ссылку на Yandex или Google карты"}
-            onChange={async (e) => {
+            onChange={(e) => {
               field.onChange(e);
-              await handleUpdateLocalDraft();
+              handleUpdateLocalDraft();
             }}
             onBlur={handleUpdateDraft}
           />

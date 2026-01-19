@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import type { FC } from "react";
 import Header from "../../../components/Header";
 import ProfileNavigation from "../components/ProfileNavigation";
 import Footer from "../../../components/Footer";
@@ -16,38 +17,55 @@ import GuestAnswerSkeleton from "../components/GuestAnswers/GuestAnswerSkeleton"
 
 const MyGuestAnswersPage: FC = () => {
   const location = useLocation();
-  const { id } = location.state || {};
-  const [allGuestAnswers, setAllGuestAnswers] = useState<GuestAnswerResponse[]>([]);
+  const state = location.state as { id?: number | string } | null;
+  const rawId = state?.id;
+  const parsedId =
+    typeof rawId === "string"
+      ? Number.parseInt(rawId, 10)
+      : typeof rawId === "number"
+        ? rawId
+        : 0;
+  const [allGuestAnswers, setAllGuestAnswers] = useState<GuestAnswerResponse[]>(
+    [],
+  );
   const [loading, setLoading] = useState(true);
-  const [allInvitations, setAllInvitations] = useState<InvitationDetailsResponse[]>([]);
-  const [currentId, setCurrentId] = useState<number>(id ? parseInt(id) : 0);
+  const [allInvitations, setAllInvitations] = useState<
+    InvitationDetailsResponse[]
+  >([]);
+  const [currentId, setCurrentId] = useState<number>(parsedId);
   const navigate = useNavigate();
 
-  const fetchGuestAnswers = async () => {
+  const fetchGuestAnswers = useCallback(async () => {
     const result = await getAllGuestAnswers();
     setLoading(false);
     setAllGuestAnswers(Array.isArray(result) ? result : []);
-  };
+  }, []);
 
-  const fetchInvitations = async () => {
+  const fetchInvitations = useCallback(async () => {
     const result = await getAllInvitations();
     const invitations = Array.isArray(result) ? result : [];
     setAllInvitations(invitations);
-    if (!id && invitations.length > 0) setCurrentId(invitations[0].id);
-  };
+    if (!parsedId && invitations.length > 0) setCurrentId(invitations[0].id);
+  }, [parsedId]);
 
   useEffect(() => {
-    fetchInvitations().then(fetchGuestAnswers);
-  }, []);
+    void (async () => {
+      await fetchInvitations();
+      await fetchGuestAnswers();
+    })();
+  }, [fetchInvitations, fetchGuestAnswers]);
 
   const groupAnswersByGuestId = (answers: GuestAnswerResponse[]) => {
-    return answers.reduce<Record<string, GuestAnswerResponse[]>>((acc, answer) => {
-      if (!acc[answer.guestId]) {
-        acc[answer.guestId] = [];
-      }
-      acc[answer.guestId].push(answer);
-      return acc;
-    }, {});
+    return answers.reduce<Record<string, GuestAnswerResponse[]>>(
+      (acc, answer) => {
+        if (!acc[answer.guestId]) {
+          acc[answer.guestId] = [];
+        }
+        acc[answer.guestId].push(answer);
+        return acc;
+      },
+      {},
+    );
   };
 
   const getGuestAnswersByInvitation = (invitationId: number) => {
@@ -143,8 +161,7 @@ const MyGuestAnswersPage: FC = () => {
                                         <dl
                                           className="flex flex-col gap-5 rounded-[20px] bg-green-50 p-5 md:p-[30px]"
                                           style={{
-                                            backgroundColor: answers[0]
-                                              .isComing
+                                            backgroundColor: answers[0].isComing
                                               ? "#A2FDDB40"
                                               : "#FFEBEA",
                                           }}
@@ -171,11 +188,15 @@ const MyGuestAnswersPage: FC = () => {
                                             {Object.entries(
                                               groupAnswersByQuestionId(answers),
                                             ).map(
-                                              ([questionId, groupedAnswers]) => {
+                                              ([
+                                                questionId,
+                                                groupedAnswers,
+                                              ]) => {
                                                 const question =
                                                   invitation.questions?.find(
                                                     (q) =>
-                                                      q.id === Number(questionId),
+                                                      q.id ===
+                                                      Number(questionId),
                                                   );
                                                 return question ? (
                                                   <div

@@ -6,14 +6,13 @@ import {
   DateInput,
   DatePicker,
   DateSegment,
-  DateValue,
   Dialog,
   Group,
   Heading,
   Label,
   Popover,
-  ValidationResult,
 } from "react-aria-components";
+import type { DateValue, ValidationResult } from "react-aria-components";
 import { FieldError } from "react-aria-components";
 import { today, getLocalTimeZone } from "@internationalized/date";
 import arrowLeft from "../../../../../assetsOld/buttonIcons/arrowLeft.png";

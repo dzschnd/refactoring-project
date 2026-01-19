@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import image from "../../../assetsOld/templates/test/namesImage.png";
 const Names: FC = () => {
   return (

@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
 import timerImage from "../../../../assetsOld/templates/redVelvet/timerImage.png";
 import heart from "../../../../assetsOld/templates/redVelvet/heart.png";
 import { getTimeUntilDate } from "../../../../utils/dateUtils";

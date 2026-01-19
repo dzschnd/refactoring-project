@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
 import InvitationCard from "./InvitationCard";
 import { Link, useNavigate } from "react-router-dom";
 import goToIcon from "../../../../assetsOld/buttonIcons/arrowRight.png";
@@ -12,7 +13,7 @@ const MyInvitationsPreview: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchInvitations().then();
+    void fetchInvitations();
   }, []);
 
   const fetchInvitations = async () => {

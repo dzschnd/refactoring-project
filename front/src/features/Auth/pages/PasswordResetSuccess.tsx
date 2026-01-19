@@ -1,12 +1,12 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
-import { AuthPage } from "../../../types";
+import type { Dispatch, FC, SetStateAction } from "react";
+import type { AuthPage } from "../../../types";
 
 type PasswordResetSuccessProps = {
   setCurrentPage: Dispatch<SetStateAction<AuthPage>>;
 };
 
 export const PasswordResetSuccess: FC<PasswordResetSuccessProps> = ({
-  setCurrentPage,
+  setCurrentPage: _setCurrentPage,
 }) => {
   return (
     <div>

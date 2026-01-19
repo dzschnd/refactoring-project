@@ -1,4 +1,5 @@
-import { FC, useState } from "react";
+import { useState } from "react";
+import type { FC } from "react";
 import ConstructorLayout from "../layouts/ConstructorLayout";
 import DresscodeForm from "../components/ConstructorForms/Forms/DresscodeForm";
 

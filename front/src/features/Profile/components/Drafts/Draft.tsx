@@ -1,10 +1,7 @@
-import {FC} from "react";
+import type { FC } from "react";
 
-const Draft:FC = () => {
-    return (
-        <>
-        </>
-    )
-}
+const Draft: FC = () => {
+  return <></>;
+};
 
 export default Draft;

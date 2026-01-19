@@ -1,13 +1,14 @@
-import React, { FC, useState } from "react";
+import { useState } from "react";
+import type { FC, KeyboardEvent } from "react";
 import InputLabel from "../../../Auth/components/InputLabel";
 import InputField from "../../../Auth/components/InputField";
 import lockIcon from "../../../../assetsOld/formIcons/lock.png";
 import SubmitButton from "../../../Auth/components/SubmitButton";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { AppDispatch } from "../../../../api/redux/store";
-import { useDispatch } from "react-redux";
+import type { z } from "zod";
+import { useAppDispatch } from "../../../../api/redux/hooks";
 import { changePassword } from "../../../../api/service/UserService";
 import FormErrorMessage from "../../../../components/FormErrorMessage";
 import { WRONG_PASSWORD } from "../../../../api/messages";
@@ -17,7 +18,7 @@ import type { StateError } from "../../../../types";
 type FormInput = z.infer<typeof changePasswordSchema>;
 
 const ChangePassword: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [error, setError] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
@@ -56,7 +57,7 @@ const ChangePassword: FC = () => {
     }
   };
 
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLFormElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLFormElement>) => {
     if (event.key === "Enter") {
       event.preventDefault();
     }

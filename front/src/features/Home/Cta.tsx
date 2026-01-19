@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import RoundButton from "./components/RoundButton";
 import ctaImage from "../../assets/images/home/ctaImage.avif";
 import { telegramLink } from "../../constants";

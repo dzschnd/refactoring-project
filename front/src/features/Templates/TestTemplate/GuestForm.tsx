@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 const GuestForm: FC = () => {
   return (
     <div className="flex flex-col items-center">

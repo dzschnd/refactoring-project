@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import RoundButton from "./components/RoundButton";
 import heroImage from "../../assets/images/home/heroImageDefault.avif";
 import { Link } from "react-router-dom";

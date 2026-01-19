@@ -8,9 +8,24 @@ const mockPrisma = {
 };
 
 type GetInvitationQuery = (invitationId: number | string, client?: object) => Promise<Invitation[]>;
-type GetAllFormQuestionsQuery = (invitationId: number | string, client?: object) => Promise<FormQuestion[]>;
-type DeleteGuestAnswersQuery = (invitationId: number | string, guestId: string, client?: object) => Promise<[]>;
-type CreateGuestAnswerQuery = (invitationId: number | string, questionId: number, guestName: string, isComing: boolean, answer: string, guestId: string, client?: object) => Promise<[]>;
+type GetAllFormQuestionsQuery = (
+  invitationId: number | string,
+  client?: object,
+) => Promise<FormQuestion[]>;
+type DeleteGuestAnswersQuery = (
+  invitationId: number | string,
+  guestId: string,
+  client?: object,
+) => Promise<[]>;
+type CreateGuestAnswerQuery = (
+  invitationId: number | string,
+  questionId: number,
+  guestName: string,
+  isComing: boolean,
+  answer: string,
+  guestId: string,
+  client?: object,
+) => Promise<[]>;
 type GetAllGuestAnswersQuery = (...args: unknown[]) => Promise<Array<{ id: number }>>;
 type GetAllInvitationsQuery = (...args: unknown[]) => Promise<unknown>;
 
@@ -34,13 +49,18 @@ jest.unstable_mockModule("../../queries/InvitationQueries.js", () => ({
   getAllInvitationsQuery: mockGetAllInvitationsQuery,
 }));
 
-type GetInvitationDetails = (invitationId: number | string, isPublished: boolean, client?: object) => Promise<InvitationDetailsDTO | null>;
+type GetInvitationDetails = (
+  invitationId: number | string,
+  isPublished: boolean,
+  client?: object,
+) => Promise<InvitationDetailsDTO | null>;
 const mockGetInvitationDetails: jest.MockedFunction<GetInvitationDetails> = jest.fn();
 jest.unstable_mockModule("../../utils/InvitationUtils.js", () => ({
   getInvitationDetails: mockGetInvitationDetails,
 }));
 
-const { getInvitation, submitGuestAnswers, getAllGuestAnswers } = await import("../../service/PublishedInvitationService.js");
+const { getInvitation, submitGuestAnswers, getAllGuestAnswers } =
+  await import("../../service/PublishedInvitationService.js");
 
 const makeInvitation = (overrides: Partial<Invitation> = {}): Invitation => ({
   id: 1,
@@ -120,7 +140,7 @@ describe("PublishedInvitationService.submitGuestAnswers", () => {
       ],
       "Guest",
       true,
-      "guest-1"
+      "guest-1",
     );
 
     expect("error" in result).toBe(false);
@@ -141,7 +161,7 @@ describe("PublishedInvitationService.submitGuestAnswers", () => {
       [{ questionPosition: 0, answer: "A1" }],
       "Guest",
       true,
-      "guest-1"
+      "guest-1",
     );
 
     expect("error" in result).toBe(true);

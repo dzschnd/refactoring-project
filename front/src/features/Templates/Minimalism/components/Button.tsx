@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 
 type ButtonProps = {
   buttonText: string;
@@ -11,7 +11,7 @@ export const Button: FC<ButtonProps> = ({ disabled, buttonText, scale }) => {
     <button
       disabled={disabled}
       className={
-        "font-minimalism--tertiary hover:bg-minimalism--tertiary border-minimalism--primary bg-minimalism--primary text-minimalism--secondary w-full rounded-8 border font-medium leading-[1.2]"
+        "w-full rounded-8 border border-minimalism--primary bg-minimalism--primary font-minimalism--tertiary font-medium leading-[1.2] text-minimalism--secondary hover:bg-minimalism--tertiary"
       }
       style={{ fontSize: scale(16), paddingBlock: scale(12) }}
     >

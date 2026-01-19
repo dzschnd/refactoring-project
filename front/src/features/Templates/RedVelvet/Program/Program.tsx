@@ -1,6 +1,4 @@
-import { FC } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../api/redux/store";
+import type { FC } from "react";
 
 interface ProgramProps {
   planItems: {

@@ -1,4 +1,4 @@
-import { DateValue } from "react-aria-components";
+import type { DateValue } from "react-aria-components";
 import { format } from "date-fns/format";
 import { ru } from "date-fns/locale";
 import { isValid } from "date-fns";

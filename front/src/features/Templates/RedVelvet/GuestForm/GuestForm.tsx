@@ -1,5 +1,6 @@
-import { FC, useEffect, useRef, useState } from "react";
-import { QuestionType } from "../../../../types";
+import { useEffect, useRef, useState } from "react";
+import type { FC } from "react";
+import type { QuestionType } from "../../../../types";
 import { submitGuestAnswers } from "../../../../api/service/InvitationService";
 import { GUEST_FORM_EMPTY } from "../../../../api/messages";
 import FormErrorMessage from "../../../../components/FormErrorMessage";
@@ -157,7 +158,7 @@ const GuestForm: FC<GuestFormProps> = ({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit().then();
+            void onSubmit();
           }}
           className="font-grey-500 mt-10 flex max-w-[366px] flex-col gap-10 font-montserrat"
         >

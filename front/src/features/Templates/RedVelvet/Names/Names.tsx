@@ -1,9 +1,4 @@
-import { FC } from "react";
-import defaultCoupleImage from "../../../../assetsOld/templates/redVelvet/namesImage.png";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../api/redux/store";
-import { ISO2TextRu } from "../../../../utils/dateUtils";
-
+import type { FC } from "react";
 interface NamesProps {
   firstPartnerName: string;
   secondPartnerName: string;

@@ -1,7 +1,7 @@
-import { FC, useState } from "react";
+import { useState } from "react";
+import type { FC } from "react";
 import ConstructorLayout from "../layouts/ConstructorLayout";
 import PlaceForm from "../components/ConstructorForms/Forms/PlaceForm";
-import InvitationPreview from "../../Templates/InvitationPreview";
 
 const PlaceConstructor: FC = () => {
   const [calculatedHeight, setCalculatedHeight] = useState<number | null>(null);

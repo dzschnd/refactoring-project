@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { TemplateMinimalProps } from "../../../../types";
+import type { FC } from "react";
+import type { TemplateMinimalProps } from "../../../../types";
 
 export const Signature: FC<TemplateMinimalProps> = ({ scale }) => {
   return (

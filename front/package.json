@@ -44,6 +44,8 @@
     "start": "react-scripts start",
     "test:e2e": "npx playwright test",
     "lint": "npx eslint .",
+    "format": "prettier . --write",
+    "format:check": "prettier . --check",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"

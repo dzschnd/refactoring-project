@@ -1,18 +1,20 @@
 .arrow {
-    transition: transform .4s;
-    transform: rotate(180deg);
+  transition: transform 0.4s;
+  transform: rotate(180deg);
 }
 
 .answer-wrapper {
-    grid-template-rows: 0fr;
-    transition: grid-template-rows .4s, margin-top .4s;
+  grid-template-rows: 0fr;
+  transition:
+    grid-template-rows 0.4s,
+    margin-top 0.4s;
 }
 
-.checkbox:checked~label > .arrow {
-    transform: rotate(0deg);
+.checkbox:checked ~ label > .arrow {
+  transform: rotate(0deg);
 }
 
-.checkbox:checked~.answer-wrapper {
-    grid-template-rows: 1fr;
-    margin-top: 18px;
+.checkbox:checked ~ .answer-wrapper {
+  grid-template-rows: 1fr;
+  margin-top: 18px;
 }

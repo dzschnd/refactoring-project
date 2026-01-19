@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import heart from "../../../assetsOld/templates/test/dateAccentHeart.png";
 const Date: FC = () => {
   return (

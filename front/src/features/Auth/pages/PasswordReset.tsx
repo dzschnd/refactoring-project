@@ -1,25 +1,14 @@
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { useState } from "react";
+import type { Dispatch, FC, SetStateAction } from "react";
 import type { AuthPage, StateError } from "../../../types";
-import { AppDispatch, RootState } from "../../../api/redux/store";
-import { useDispatch, useSelector } from "react-redux";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useAppDispatch, useAppSelector } from "../../../api/redux/hooks";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import {
-  requestPasswordReset,
-  resetPassword,
-} from "../../../api/service/UserService";
-import { SERVER_ERROR, USER_NOT_FOUND } from "../../../api/messages";
-import Loader from "../../../components/Loader";
-import { ArrowBack } from "../../../assets/svg/common/ArrowBack";
+import type { z } from "zod";
+import { resetPassword } from "../../../api/service/UserService";
+import { SERVER_ERROR } from "../../../api/messages";
 import Input from "../../../components/Input";
-import { EmailIcon } from "../../../assets/svg/EmailIcon";
 import SubmitButton from "../components/SubmitButton";
 import { Password } from "../../../assets/svg/auth/Password";
 import { Tooltip } from "../../../components/Tooltip";
@@ -34,12 +23,11 @@ const passwordOnlySchema = resetPasswordSchema.pick({ password: true });
 type FormInput = z.infer<typeof passwordOnlySchema>;
 
 export const PasswordReset: FC<PasswordResetProps> = ({ setCurrentPage }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
   );
-  const [loading, setLoading] = useState<boolean>(false);
-  const { email } = useSelector((state: RootState) => state.user);
+  const { email } = useAppSelector((state) => state.user);
 
   const {
     register,
@@ -65,7 +53,6 @@ export const PasswordReset: FC<PasswordResetProps> = ({ setCurrentPage }) => {
     const response = await dispatch(
       resetPassword({ email: email, password: data.password }),
     );
-    console.log(response);
     if (response.meta.requestStatus === "fulfilled")
       setCurrentPage("PASSWORD_RESET_SUCCESS");
     else {
@@ -103,7 +90,7 @@ export const PasswordReset: FC<PasswordResetProps> = ({ setCurrentPage }) => {
               void passwordOnChange(e);
             }}
             onBlur={passwordOnBlur}
-            error={errors?.password?.message}
+            error={errors?.password?.message ?? errorMessage}
             tooltip={
               <Tooltip
                 edgePosition={isMobile ? "left" : "center"}

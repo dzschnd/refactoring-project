@@ -1,8 +1,9 @@
-import React, { ChangeEvent, FC, useId } from "react";
+import { useId } from "react";
+import type { ChangeEvent, FC } from "react";
 import TextInput from "./TextInput";
 import questionIcon from "../../../../../assetsOld/formIcons/question-circle.png";
 import trashIcon from "../../../../../assetsOld/buttonIcons/trash.png";
-import { QuestionType } from "../../../../../types";
+import type { QuestionType } from "../../../../../types";
 import QuestionTypeSelect from "./QuestionTypeSelect";
 import GuestFormAnswerInput from "./GuestFormAnswerInput";
 import plusIcon from "../../../../../assetsOld/buttonIcons/plus.png";

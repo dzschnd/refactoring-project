@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import { resetPassword } from "../../service/UserService";
 import {
   createDraft,
@@ -6,14 +7,7 @@ import {
   publishDraft,
   updateDraft,
 } from "../../service/DraftService";
-import { DraftState, StateError } from "../../../types";
-import type {
-  AnswerDTO,
-  ColorDTO,
-  PlanItemDTO,
-  QuestionDTO,
-  WishDTO,
-} from "../../../shared/types";
+import type { DraftState, StateError } from "../../../types";
 import { resetImage, uploadImage } from "../../service/UploadService";
 
 const initialState: DraftState = {
@@ -44,33 +38,37 @@ export const draftSlice = createSlice({
   name: "draft",
   initialState,
   reducers: {
-    setLastViewedConstructorBlock: (state, action) => {
+    setLastViewedConstructorBlock: (
+      state,
+      action: PayloadAction<DraftState["lastViewedConstructorBlock"]>,
+    ) => {
       state.lastViewedConstructorBlock = action.payload;
     },
-    updateLocalDraft: (state, action) => {
+    updateLocalDraft: (state, action: PayloadAction<Partial<DraftState>>) => {
+      const next = action.payload;
       return {
         ...state,
-        ...action.payload,
-        wishes: action.payload.wishes
-          ? (action.payload.wishes as WishDTO[]).map((wish) => ({ ...wish }))
+        ...next,
+        wishes: next.wishes
+          ? next.wishes.map((wish) => ({ ...wish }))
           : state.wishes,
-        prevWishes: action.payload.prevWishes
-          ? (action.payload.prevWishes as WishDTO[]).map((wish) => ({ ...wish }))
+        prevWishes: next.prevWishes
+          ? next.prevWishes.map((wish) => ({ ...wish }))
           : state.prevWishes,
-        colors: action.payload.colors
-          ? (action.payload.colors as ColorDTO[]).map((color) => ({ ...color }))
+        colors: next.colors
+          ? next.colors.map((color) => ({ ...color }))
           : state.colors,
-        prevColors: action.payload.prevColors
-          ? (action.payload.prevColors as ColorDTO[]).map((color) => ({ ...color }))
+        prevColors: next.prevColors
+          ? next.prevColors.map((color) => ({ ...color }))
           : state.prevColors,
-        planItems: action.payload.planItems
-          ? (action.payload.planItems as PlanItemDTO[]).map((item) => ({ ...item }))
+        planItems: next.planItems
+          ? next.planItems.map((item) => ({ ...item }))
           : state.planItems,
-        questions: action.payload.questions
-          ? (action.payload.questions as QuestionDTO[]).map((question) => ({ ...question }))
+        questions: next.questions
+          ? next.questions.map((question) => ({ ...question }))
           : state.questions,
-        answers: action.payload.answers
-          ? (action.payload.answers as AnswerDTO[]).map((answer) => ({ ...answer }))
+        answers: next.answers
+          ? next.answers.map((answer) => ({ ...answer }))
           : state.answers,
       };
     },

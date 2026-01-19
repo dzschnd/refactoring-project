@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type EnvelopeProps = {};
+type EnvelopeProps = Record<string, never>;
 
-export const Envelope: FC<EnvelopeProps> = (props) => {
+export const Envelope: FC<EnvelopeProps> = (_props) => {
   return (
     <svg
       width="24"

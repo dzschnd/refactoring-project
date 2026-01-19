@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import goToIcon from "../../../../assetsOld/buttonIcons/arrowRight.png";
 import {
@@ -20,7 +21,10 @@ const MyGuestAnswersPreview: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchInvitations().then(fetchGuestAnswers);
+    void (async () => {
+      await fetchInvitations();
+      await fetchGuestAnswers();
+    })();
   }, []);
 
   const fetchGuestAnswers = async () => {
@@ -50,9 +54,7 @@ const MyGuestAnswersPreview: FC = () => {
     const filteredAnswers = allGuestAnswers.filter(
       (guestAnswer) => guestAnswer.invitationId === invitationId,
     );
-    return groupAnswersByGuestId(
-      filteredAnswers.sort((a, b) => a.id - b.id),
-    );
+    return groupAnswersByGuestId(filteredAnswers.sort((a, b) => a.id - b.id));
   };
 
   const groupAnswersByQuestionId = (answers: GuestAnswerResponse[]) => {

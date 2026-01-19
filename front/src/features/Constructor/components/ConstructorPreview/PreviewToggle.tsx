@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import mobileIcon from "../../../../assetsOld/buttonIcons/smartphone.png";
 import mobileFocusedIcon from "../../../../assetsOld/buttonIcons/smartphoneFocused.png";
 import desktopIcon from "../../../../assetsOld/buttonIcons/monitor.png";

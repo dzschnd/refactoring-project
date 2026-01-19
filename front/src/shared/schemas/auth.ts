@@ -4,9 +4,7 @@ const emailSchema = z.string().email("Некорректный формат по
 const passwordSchema = z
   .string()
   .min(8, "Длина пароля должна быть не менее восьми символов");
-const otpSchema = z
-  .string()
-  .regex(/^\d{6}$/, "Одноразовый код введен неверно");
+const otpSchema = z.string().regex(/^\d{6}$/, "Одноразовый код введен неверно");
 
 export const registerSchema = z.object({
   email: emailSchema,
@@ -52,7 +50,10 @@ export const changeEmailSchema = z.object({
 });
 
 export const changeNameSchema = z.object({
-  newName: z.string().min(1, "Пожалуйста, укажите имя").max(50, "Длина имени не может превышать 50 символов"),
+  newName: z
+    .string()
+    .min(1, "Пожалуйста, укажите имя")
+    .max(50, "Длина имени не может превышать 50 символов"),
 });
 
 export const authSchemas = {

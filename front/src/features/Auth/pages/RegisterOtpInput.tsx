@@ -1,12 +1,7 @@
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
+import type { Dispatch, FC, SetStateAction } from "react";
 import type { AuthPage, StateError } from "../../../types";
-import { AppDispatch, RootState } from "../../../api/redux/store";
+import type { AppDispatch, RootState } from "../../../api/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { requestOtp, verifyEmail } from "../../../api/service/UserService";
 import LinkToLoginOrRegister from "../components/LinkToLoginOrRegister";
@@ -46,7 +41,9 @@ export const RegisterOtpInput: FC<OtpInputProps> = ({ setCurrentPage }) => {
   const onSubmit = async (otp: string) => {
     const otpValidation = verifyEmailSchema.shape.otp.safeParse(otp);
     if (!otpValidation.success) {
-      setError(otpValidation.error.issues[0]?.message ?? INVALID_OTP_TRY_REPEAT);
+      setError(
+        otpValidation.error.issues[0]?.message ?? INVALID_OTP_TRY_REPEAT,
+      );
       return;
     }
     const response = await dispatch(verifyEmail({ email: email, otp: otp }));

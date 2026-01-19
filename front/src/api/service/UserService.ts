@@ -1,4 +1,5 @@
 import axios from "axios";
+import type { AxiosError, AxiosRequestConfig } from "axios";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { parseServiceError } from "../../utils/parseServiceError";
 import { axiosAuthorized, baseURL } from "./config";
@@ -27,10 +28,7 @@ const BASE_URL = `${baseURL}/auth`;
 // register: send email + password -> create new user, get otp sent to email
 export const registerUser = createAsyncThunk(
   `user/register`,
-  async (
-    payload: RegisterRequest,
-    { rejectWithValue },
-  ) => {
+  async (payload: RegisterRequest, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${BASE_URL}/register`, {
         email: payload.email,
@@ -83,18 +81,24 @@ export const loginUser = createAsyncThunk(
 // refresh tokens: send refresh token -> get new refresh-access pair
 axiosAuthorized.interceptors.response.use(
   (response) => response,
-  async (error) => {
-    const originalRequest = error.config;
-    const status = error.response ? error.response.status : null;
+  async (error: AxiosError) => {
+    const originalRequest = error.config as
+      | (AxiosRequestConfig & { _retry?: boolean })
+      | undefined;
+    const status = error.response?.status ?? null;
 
-    if (status === 403 && !originalRequest._retry) {
+    if (status === 403 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
         await axios.post(`${BASE_URL}/refresh`, {}, { withCredentials: true });
 
         return axiosAuthorized(originalRequest);
       } catch (refreshError) {
-        return Promise.reject(refreshError);
+        return Promise.reject(
+          refreshError instanceof Error
+            ? refreshError
+            : new Error("Failed to refresh session"),
+        );
       }
     }
 

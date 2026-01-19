@@ -1,4 +1,5 @@
-import React, { forwardRef, InputHTMLAttributes, ReactNode } from "react";
+import React, { forwardRef } from "react";
+import type { InputHTMLAttributes, ReactNode } from "react";
 import { twMerge } from "tailwind-merge";
 import { HidePassword } from "../assets/svg/auth/HidePassword";
 import { ShowPassword } from "../assets/svg/auth/ShowPassword";
@@ -26,7 +27,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       error,
       iconElement,
       label,
-      tooltip
+      tooltip,
     },
     ref,
   ) => {

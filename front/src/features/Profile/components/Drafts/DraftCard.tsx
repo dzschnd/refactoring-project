@@ -1,7 +1,7 @@
-import React, { FC } from "react";
+import type { FC } from "react";
 import deleteIcon from "../../../../assetsOld/buttonIcons/deleteIcon.png";
 import { useNavigate } from "react-router-dom";
-import { AppDispatch } from "../../../../api/redux/store";
+import type { AppDispatch } from "../../../../api/redux/store";
 import { useDispatch } from "react-redux";
 import { getDraft } from "../../../../api/service/DraftService";
 import redVelvetDefaultImage from "../../../../assetsOld/templates/redVelvet/namesImage.png";

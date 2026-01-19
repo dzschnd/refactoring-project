@@ -1,5 +1,6 @@
-import { FC, useRef } from "react";
-import { TemplateNamesProps } from "../../../../types";
+import { useRef } from "react";
+import type { FC } from "react";
+import type { TemplateNamesProps } from "../../../../types";
 import { useScaleTextToFit } from "../../../../hooks/useScaleTextToFit";
 import clsx from "clsx";
 import { Heart } from "../../../../assets/svg/templates/pinkVibe/Heart";
@@ -11,6 +12,9 @@ export const Names: FC<TemplateNamesProps> = ({
   isMobile,
   coupleImage,
 }) => {
+  const range = (count: number) =>
+    Array.from({ length: count }, (_, idx) => idx);
+
   const scaleToNumber = (value: number) => {
     return parseFloat(scale(value).replace("px", ""));
   };
@@ -35,27 +39,25 @@ export const Names: FC<TemplateNamesProps> = ({
         style={{ height: scale(24) }}
       >
         <div className={"flex h-full"}>
-          {[...Array(2)].map((_, idx) => (
+          {range(2).map((idx) => (
             <div
               key={idx}
               className={"flex h-full animate-marquee items-center"}
               style={{ gap: scale(6), paddingInline: scale(3) }}
             >
-              {[
-                ...Array(
-                  fullWidthRef && fullWidthRef.current
-                    ? Math.ceil(fullWidthRef.current.clientWidth / 130)
-                    : 5,
-                ),
-              ].map((_, idx) => (
+              {range(
+                fullWidthRef && fullWidthRef.current
+                  ? Math.ceil(fullWidthRef.current.clientWidth / 130)
+                  : 5,
+              ).map((itemIdx) => (
                 <div
-                  key={idx}
+                  key={itemIdx}
                   className="flex items-center"
                   style={{ gap: scale(6) }}
                 >
                   <Heart />
                   <span
-                    className="text-pink-vibe--primary text-nowrap font-pink-vibe--secondary font-semibold leading-[1.2]"
+                    className="text-nowrap font-pink-vibe--secondary font-semibold leading-[1.2] text-pink-vibe--primary"
                     style={{ fontSize: scale(10) }}
                   >
                     Приглашение на свадьбу
@@ -101,8 +103,8 @@ export const Names: FC<TemplateNamesProps> = ({
         <img className="h-full w-full object-cover" alt="" src={coupleImage} />
       </div>
       <div className={"mx-auto flex justify-center"} style={{ gap: scale(12) }}>
-        {[...Array(3)].map(() => (
-          <Heart width={16} height={14} inverted />
+        {range(3).map((idx) => (
+          <Heart key={idx} width={16} height={14} inverted />
         ))}
       </div>
     </div>

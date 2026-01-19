@@ -1,4 +1,5 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
 import DraftCard from "../components/Drafts/DraftCard";
 import goBackIcon from "../../../assetsOld/buttonIcons/arrowLeft.png";
 import { Link, useNavigate } from "react-router-dom";
@@ -6,7 +7,7 @@ import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import ProfileNavigation from "../components/ProfileNavigation";
 import { deleteDraft, getAllDrafts } from "../../../api/service/DraftService";
-import { CardInfo } from "../../../types";
+import type { CardInfo } from "../../../types";
 import DraftCardSkeleton from "../components/Drafts/DraftCardSkeleton";
 
 const MyDraftsPage: FC = () => {
@@ -15,7 +16,7 @@ const MyDraftsPage: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchDrafts().then();
+    void fetchDrafts();
   }, []);
 
   const fetchDrafts = async () => {
@@ -26,7 +27,7 @@ const MyDraftsPage: FC = () => {
 
   const handleDelete = async (id: number) => {
     if (window.confirm("УВЕРЕН?")) await deleteDraft(id);
-    fetchDrafts().then();
+    void fetchDrafts();
   };
 
   return (

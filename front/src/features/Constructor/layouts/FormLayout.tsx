@@ -1,4 +1,5 @@
-import { FC, PropsWithChildren, useState } from "react";
+import { useState } from "react";
+import type { FC, PropsWithChildren } from "react";
 import DisableBlockToggle from "../components/DisableBlockToggle";
 import hamburgerMenu from "../../../assetsOld/hamburger-menu.png";
 import arrowLeft from "../../../assetsOld/buttonIcons/arrowLeft.png";
@@ -7,7 +8,7 @@ import { Link } from "react-router-dom";
 import { constructorPages } from "./ConstructorLayout";
 import FormMenu from "../components/ConstructorForms/FormMenu";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../../api/redux/store";
+import type { AppDispatch } from "../../../api/redux/store";
 import { setLastViewedConstructorBlock } from "../../../api/redux/slices/draftSlice";
 
 interface FormLayoutProps extends PropsWithChildren {

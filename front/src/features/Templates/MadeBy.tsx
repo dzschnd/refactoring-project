@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { TemplateMinimalProps } from "../../types";
+import type { FC } from "react";
+import type { TemplateMinimalProps } from "../../types";
 import { Logo } from "../../assets/svg/Logo";
 
 export const MadeBy: FC<TemplateMinimalProps> = ({ scale }) => {

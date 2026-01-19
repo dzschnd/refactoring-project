@@ -1,9 +1,9 @@
-import React, { FC, useState } from "react";
+import { useState } from "react";
+import type { FC, FormEvent } from "react";
 import pencil from "../../../../assetsOld/editPencil.png";
 import cross from "../../../../assetsOld/buttonIcons/cross.png";
 import check from "../../../../assetsOld/formIcons/checkmark.svg";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../api/redux/store";
+import { useAppDispatch, useAppSelector } from "../../../../api/redux/hooks";
 import InputField from "../../../Auth/components/InputField";
 import envelopeIcon from "../../../../assetsOld/formIcons/envelope.png";
 import { useForm } from "react-hook-form";
@@ -14,11 +14,14 @@ import {
 } from "../../../../api/service/UserService";
 import FormErrorMessage from "../../../../components/FormErrorMessage";
 import OtpInput from "./OtpInput";
-import { changeNameSchema, requestChangeEmailSchema } from "../../../../shared/schemas/auth";
+import {
+  changeNameSchema,
+  requestChangeEmailSchema,
+} from "../../../../shared/schemas/auth";
 import type { StateError } from "../../../../types";
 
 const ProfileInfo: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [isEmailInputOpen, setIsEmailInputOpen] = useState<boolean>(false);
   const [isNameInputOpen, setIsNameInputOpen] = useState<boolean>(false);
   const [isOtpInputOpen, setIsOtpInputOpen] = useState<boolean>(false);
@@ -28,14 +31,12 @@ const ProfileInfo: FC = () => {
   const [isInvalidOtpError, setIsInvalidOtpError] = useState("");
   const [isSuccessfulEmailChange, setIsSuccessfulEmailChange] = useState(false);
   const [prevOtpLength, setPrevOtpLength] = useState(0);
-  const { email, name } = useSelector((state: RootState) => state.user);
+  const { email, name } = useAppSelector((state) => state.user);
 
-  const {
-    register,
-    getValues,
-    setValue,
-    formState: { errors },
-  } = useForm<{ email: string; name: string }>({
+  const { register, getValues, setValue } = useForm<{
+    email: string;
+    name: string;
+  }>({
     mode: "onSubmit",
     defaultValues: {
       email: email ? email : "",
@@ -43,14 +44,14 @@ const ProfileInfo: FC = () => {
     },
   });
 
-  const handleRequestChangeEmail = async (e: React.FormEvent) => {
+  const handleRequestChangeEmail = async (e: FormEvent) => {
     e.preventDefault();
     const newEmail = getValues("email");
     if (!email || newEmail === email) {
       return setIsEmailInputOpen(false);
     }
     if (newEmail.trim() === "") {
-      setValue("email", email);
+      setValue("email", email ?? "");
       setIsEmailInputOpen(false);
       return;
     }
@@ -59,7 +60,9 @@ const ProfileInfo: FC = () => {
       newEmail: newEmail.trim(),
     });
     if (!emailValidation.success) {
-      setEmailError(emailValidation.error.issues[0]?.message ?? "Некорректный формат почты");
+      setEmailError(
+        emailValidation.error.issues[0]?.message ?? "Некорректный формат почты",
+      );
       return;
     }
     setIsOtpInputLoading(true);
@@ -74,7 +77,7 @@ const ProfileInfo: FC = () => {
       const errorPayload = response.payload as StateError | undefined;
       setEmailError(errorPayload?.message ?? "Произошла ошибка");
       setIsEmailInputOpen(false);
-      setValue("email", email);
+      setValue("email", email ?? "");
     }
   };
 
@@ -82,7 +85,7 @@ const ProfileInfo: FC = () => {
     setEmailError("");
     const newEmail = getValues("email");
     if (newEmail.trim() === "") {
-      setValue("email", email);
+      setValue("email", email ?? "");
       setIsOtpInputOpen(false);
       setIsEmailInputOpen(false);
       return;
@@ -101,31 +104,35 @@ const ProfileInfo: FC = () => {
       } else if (errorPayload?.status !== 400) {
         setEmailError(errorPayload?.message ?? "Произошла ошибка");
       }
-      if (email) setValue("email", email);
+      setValue("email", email ?? "");
     } else {
       setIsSuccessfulEmailChange(true);
     }
   };
 
-  const handleChangeName = async (e: React.FormEvent) => {
+  const handleChangeName = async (e: FormEvent) => {
     e.preventDefault();
     setNameError("");
     const newName = getValues("name");
     if (newName.trim() === "") {
-      setValue("name", name);
+      setValue("name", name ?? "");
       setIsNameInputOpen(false);
       return;
     }
-    const nameValidation = changeNameSchema.safeParse({ newName: newName.trim() });
+    const nameValidation = changeNameSchema.safeParse({
+      newName: newName.trim(),
+    });
     if (!nameValidation.success) {
-      setNameError(nameValidation.error.issues[0]?.message ?? "Пожалуйста, укажите имя");
+      setNameError(
+        nameValidation.error.issues[0]?.message ?? "Пожалуйста, укажите имя",
+      );
       return;
     }
     const response = await dispatch(changeName({ newName: newName.trim() }));
     if (response.meta.requestStatus !== "fulfilled") {
       const errorPayload = response.payload as StateError | undefined;
       setNameError(errorPayload?.message ?? "Произошла ошибка");
-      if (name) setValue("name", name);
+      setValue("name", name ?? "");
     }
     setIsNameInputOpen(false);
   };
@@ -133,7 +140,7 @@ const ProfileInfo: FC = () => {
   const handleCancelOtpInput = () => {
     setIsOtpInputOpen(false);
     setIsEmailInputOpen(false);
-    if (email) setValue("email", email);
+    setValue("email", email ?? "");
   };
 
   return (
@@ -175,7 +182,7 @@ const ProfileInfo: FC = () => {
                     alt="Edit"
                     className="max-h-6 max-w-6"
                     onClick={() => {
-                      setValue("name", name);
+                      setValue("name", name ?? "");
                       setIsNameInputOpen(false);
                     }}
                   />
@@ -226,7 +233,7 @@ const ProfileInfo: FC = () => {
                   type={"button"}
                   disabled={isOtpInputLoading}
                   onClick={() => {
-                    setValue("email", email);
+                    setValue("email", email ?? "");
                     setIsEmailInputOpen(false);
                   }}
                 >

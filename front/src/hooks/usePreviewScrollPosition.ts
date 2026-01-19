@@ -1,4 +1,5 @@
-import React, { RefObject, useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
+import type { RefObject } from "react";
 
 interface usePreviewScrollPositionProps {
   currentBlock: string;
@@ -47,7 +48,6 @@ export function usePreviewScrollPosition({
   const [programHeight, setProgramHeight] = useState<number>(0);
   const [dresscodeHeight, setDresscodeHeight] = useState<number>(0);
   const [wishesHeight, setWishesHeight] = useState<number>(0);
-  const [guestFormHeight, setGuestFormHeight] = useState<number>(0);
   const [isScrolled, setIsScrolled] = useState<boolean>(false);
 
   useEffect(() => {
@@ -70,9 +70,6 @@ export function usePreviewScrollPosition({
       if (wishesRef.current) {
         setWishesHeight(wishesRef.current.clientHeight);
       }
-      if (guestFormRef.current) {
-        setGuestFormHeight(guestFormRef.current.clientHeight);
-      }
     };
     calculateHeight();
     window.addEventListener("resize", calculateHeight);
@@ -82,7 +79,7 @@ export function usePreviewScrollPosition({
   });
 
   useLayoutEffect(() => {
-    const blockRefs: { [key: string]: React.RefObject<HTMLDivElement> } = {
+    const blockRefs: Record<string, RefObject<HTMLDivElement>> = {
       names: namesRef,
       date: dateRef,
       place: placeRef,

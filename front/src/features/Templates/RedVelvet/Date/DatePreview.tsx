@@ -1,13 +1,12 @@
-import { FC } from "react";
+import type { FC } from "react";
 import dateImage from "../../../../assetsOld/templates/redVelvet/dateImage.png";
 
 interface DateProps {
   eventDate: string;
   scale: (value: number) => string;
-  isMobile: boolean;
 }
 
-const DatePreview: FC<DateProps> = ({ eventDate, scale, isMobile }) => {
+const DatePreview: FC<DateProps> = ({ eventDate, scale }) => {
   return (
     <div
       className="mx-auto flex w-full flex-col items-center font-playfair"

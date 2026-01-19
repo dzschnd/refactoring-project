@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import Date from "./Date";
 import Names from "./Names";
 import Place from "./Place";

@@ -1,4 +1,5 @@
-import React, { FC, useId } from "react";
+import React, { useId } from "react";
+import type { FC } from "react";
 import imageIcon from "../../../../../assetsOld/formIcons/image.png";
 import refreshIcon from "../../../../../assetsOld/buttonIcons/refresh.svg";
 

@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { TemplateProgramProps } from "../../../../types";
+import type { FC } from "react";
+import type { TemplateProgramProps } from "../../../../types";
 
 export const Program: FC<TemplateProgramProps> = ({
   planItems,

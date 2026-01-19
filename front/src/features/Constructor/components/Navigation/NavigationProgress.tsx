@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import type { FC } from "react";
 import NavigationProgressPoint from "./NavigationProgressPoint";
 import { constructorPages } from "../../layouts/ConstructorLayout";
 

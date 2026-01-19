@@ -1,4 +1,5 @@
-import React, { FC, useRef } from "react";
+import { useRef } from "react";
+import type { FC } from "react";
 import { Names } from "./sections/Names";
 import { Place } from "./sections/Place";
 import { Date as EventDate } from "./sections/Date";
@@ -13,7 +14,7 @@ import { MD_SCREEN_WIDTH, MIN_SCREEN_WIDTH } from "../../../constants";
 import background from "../../../assets/images/templates/minimalism/background.avif";
 import { defaultTemplateImages } from "../defaultTemplateImages";
 import clsx from "clsx";
-import { TemplateProps } from "../../../types";
+import type { TemplateProps } from "../../../types";
 import { usePreviewScrollPosition } from "../../../hooks/usePreviewScrollPosition";
 
 export const MinimalismInvitation: FC<TemplateProps> = ({

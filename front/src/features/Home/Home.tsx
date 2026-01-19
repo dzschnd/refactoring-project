@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import Hero from "./Hero";
 import CatalogPreview from "./CatalogPreview";
 import Features from "./Features";

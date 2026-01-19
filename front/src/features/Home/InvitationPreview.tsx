@@ -1,4 +1,5 @@
-import { FC, useState } from "react";
+import { useState } from "react";
+import type { FC } from "react";
 import names from "../../assets/images/home/invitationPreview/names.avif";
 import place from "../../assets/images/home/invitationPreview/place.avif";
 import program from "../../assets/images/home/invitationPreview/program.avif";
@@ -9,11 +10,7 @@ import timer from "../../assets/images/home/invitationPreview/timer.avif";
 import clsx from "clsx";
 import { TabButton } from "./components/TabButton";
 import RoundButton from "./components/RoundButton";
-import { useNavigate } from "react-router-dom";
-import { AppDispatch } from "../../api/redux/store";
-import { useDispatch } from "react-redux";
-import { createDraft } from "../../api/service/DraftService";
-import { defaultTemplateName } from "../../constants";
+
 import {
   Carousel,
   CarouselContent,

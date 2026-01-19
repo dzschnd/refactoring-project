@@ -1,4 +1,5 @@
-import React, { FC, useRef, useEffect, useState, forwardRef } from "react";
+import React, { useRef, useEffect, useState, forwardRef } from "react";
+import type { FC } from "react";
 import trashReverseIcon from "../../../../../assetsOld/buttonIcons/trash-reverse.png";
 import trashIcon from "../../../../../assetsOld/buttonIcons/trash.png";
 

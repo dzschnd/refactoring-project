@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Catalog from "./features/Catalog/Catalog";
 import ProfilePage from "./features/Profile/pages/ProfilePage";
@@ -16,8 +16,7 @@ import WishesConstructor from "./features/Constructor/pages/WishesConstructor";
 import GuestFormConstructor from "./features/Constructor/pages/GuestFormConstructor";
 import PreviewPage from "./features/Constructor/pages/PreviewPage";
 import { I18nProvider } from "@react-aria/i18n";
-import { AppDispatch } from "./api/redux/store";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "./api/redux/hooks";
 import { getUser } from "./api/service/UserService";
 import Invitation from "./features/Templates/Invitation";
 import RedVelvetTemplate from "./features/Templates/RedVelvet/RedVelvetTemplate";
@@ -30,10 +29,10 @@ import { MinimalismTemplate } from "./features/Templates/Minimalism/MinimalismTe
 import { PrivacyPolicy } from "./features/Legal/PrivacyPolicy";
 
 const App = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    dispatch(getUser());
+    void dispatch(getUser());
   }, [dispatch]);
 
   return (

@@ -5,38 +5,38 @@ import { isServiceError } from "../types/service.js";
 import { BadRequestError, ForbiddenError, InternalServerError } from "../errors/index.js";
 
 export const uploadImage = async (req: Request, res: Response): Promise<Response> => {
-    const { file } = req;
-    const { type } = req.body as { type: string };
+  const { file } = req;
+  const { type } = req.body as { type: string };
 
-    if (!file) {
-        throw new BadRequestError("No file uploaded");
-    }
+  if (!file) {
+    throw new BadRequestError("No file uploaded");
+  }
 
-    if (!req.user) {
-        throw new ForbiddenError("Forbidden");
-    }
+  if (!req.user) {
+    throw new ForbiddenError("Forbidden");
+  }
 
-    const result = await uploadImageToDraft(req.params.id, file, type, req.user.id);
+  const result = await uploadImageToDraft(req.params.id, file, type, req.user.id);
 
-    if (isServiceError(result)) {
-        throw new InternalServerError(SERVER_ERROR);
-    }
+  if (isServiceError(result)) {
+    throw new InternalServerError(SERVER_ERROR);
+  }
 
-    return res.status(200).json(result);
+  return res.status(200).json(result);
 };
 
 export const resetImage = async (req: Request, res: Response): Promise<Response> => {
-    const { type } = req.body as { type: string };
+  const { type } = req.body as { type: string };
 
-    if (!req.user) {
-        throw new ForbiddenError("Forbidden");
-    }
+  if (!req.user) {
+    throw new ForbiddenError("Forbidden");
+  }
 
-    const result = await resetDraftImage(req.params.id, type, req.user.id);
+  const result = await resetDraftImage(req.params.id, type, req.user.id);
 
-    if (isServiceError(result)) {
-        throw new InternalServerError(SERVER_ERROR);
-    }
+  if (isServiceError(result)) {
+    throw new InternalServerError(SERVER_ERROR);
+  }
 
-    return res.status(200).json(result);
+  return res.status(200).json(result);
 };

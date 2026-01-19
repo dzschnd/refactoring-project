@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { PageLayout } from "../../layouts/PageLayout";
 import Cta from "../Home/Cta";
 import { templates } from "../../constants";

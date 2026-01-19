@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type mobileCloseProps = {};
+type mobileCloseProps = Record<string, never>;
 
-export const MobileClose: FC<mobileCloseProps> = (props) => {
+export const MobileClose: FC<mobileCloseProps> = (_props) => {
   return (
     <svg
       width="24"

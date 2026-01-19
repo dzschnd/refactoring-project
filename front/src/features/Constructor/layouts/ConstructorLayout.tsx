@@ -1,8 +1,9 @@
-import { FC, ReactNode, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import type { FC, ReactNode } from "react";
 import ConstructorHeader from "../components/ConstructorHeader";
 import PreviewLayout from "./PreviewLayout";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../api/redux/store";
+import type { RootState } from "../../../api/redux/store";
 import { useNavigate } from "react-router-dom";
 
 interface ConstructorLayoutProps {
@@ -42,22 +43,22 @@ const ConstructorLayout: FC<ConstructorLayoutProps> = ({
   const [isMobile, setIsMobile] = useState<boolean>(true);
   const previewContainerRef = useRef<HTMLDivElement | null>(null);
 
-  const calculateHeight = () => {
+  const calculateHeight = useCallback(() => {
     if (previewContainerRef.current) {
       const parentHeight = previewContainerRef.current.clientHeight;
       const paddingToSubtract = 100;
       const height = parentHeight - paddingToSubtract;
       setCalculatedHeight(height);
     }
-  };
-  const calculateWidth = () => {
+  }, [setCalculatedHeight]);
+  const calculateWidth = useCallback(() => {
     if (previewContainerRef.current) {
       const parentWidth = previewContainerRef.current.clientWidth;
       const paddingToSubtract = 0;
       const width = parentWidth - paddingToSubtract;
       setCalculatedWidth(width);
     }
-  };
+  }, [setCalculatedWidth]);
 
   useEffect(() => {
     if (!templateName) {
@@ -74,7 +75,7 @@ const ConstructorLayout: FC<ConstructorLayoutProps> = ({
       window.removeEventListener("resize", calculateHeight);
       window.removeEventListener("resize", calculateWidth);
     };
-  }, []);
+  }, [calculateHeight, calculateWidth]);
 
   return (
     <div className="flex h-screen flex-col">

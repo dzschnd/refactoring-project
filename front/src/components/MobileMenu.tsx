@@ -1,4 +1,5 @@
-import { Dispatch, FC, SetStateAction, useRef } from "react";
+import { useRef } from "react";
+import type { Dispatch, FC, SetStateAction } from "react";
 import { Link } from "react-router-dom";
 import Button from "./Button";
 import { WhatsappIcon } from "../assets/svg/WhatsappIcon";

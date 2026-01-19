@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type TooltipProps = {};
+type TooltipProps = Record<string, never>;
 
-export const TooltipIcon: FC<TooltipProps> = (props) => {
+export const TooltipIcon: FC<TooltipProps> = (_props) => {
   return (
     <svg
       width="16"

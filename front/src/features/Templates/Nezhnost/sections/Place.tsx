@@ -1,6 +1,6 @@
-import { FC, useState } from "react";
-import { TemplatePlaceProps } from "../../../../types";
-import clsx from "clsx";
+import { useState } from "react";
+import type { FC } from "react";
+import type { TemplatePlaceProps } from "../../../../types";
 import { RoundButton } from "../components/RoundButton";
 
 export const Place: FC<TemplatePlaceProps> = ({

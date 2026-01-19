@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type TooltipCloudEdgeProps = {};
+type TooltipCloudEdgeProps = Record<string, never>;
 
-export const TooltipCloudEdge: FC<TooltipCloudEdgeProps> = (props) => {
+export const TooltipCloudEdge: FC<TooltipCloudEdgeProps> = (_props) => {
   return (
     <svg
       width="13"

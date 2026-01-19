@@ -1,7 +1,6 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../api/redux/store";
+import { useAppDispatch } from "../../api/redux/hooks";
 import { createDraft } from "../../api/service/DraftService";
 import Button from "../../components/Button";
 import type { StateError } from "../../types";
@@ -18,11 +17,11 @@ const TemplateCard: FC<TemplateCardProps> = ({
   name,
   displayedName,
   link,
-                                               price,
-                                               previewImage,
+  price,
+  previewImage,
 }) => {
   const navigate = useNavigate();
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleChooseTemplate = async () => {
     const response = await dispatch(createDraft({ templateName: name }));
     const error = response.payload as StateError | undefined;
@@ -65,7 +64,7 @@ const TemplateCard: FC<TemplateCardProps> = ({
           message={"В конструктор"}
           inverted
           onClick={() => {
-            handleChooseTemplate().then();
+            void handleChooseTemplate();
           }}
         />
       </div>

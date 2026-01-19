@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import wishesImage from "../../../../assetsOld/templates/redVelvet/dresscodeImage.png";
 interface DresscodeProps {
   colors: {

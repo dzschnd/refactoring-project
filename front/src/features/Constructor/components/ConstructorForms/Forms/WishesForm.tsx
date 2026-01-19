@@ -1,10 +1,11 @@
-import React, { FC, useState } from "react";
+import { useState } from "react";
+import type { FC } from "react";
 import FormLayout from "../../../layouts/FormLayout";
 import WishInput from "../Inputs/WishInput";
 import plusIcon from "../../../../../assetsOld/buttonIcons/plus.png";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../../api/redux/store";
+import type { AppDispatch, RootState } from "../../../../../api/redux/store";
 import { updateDraft } from "../../../../../api/service/DraftService";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
 import { zodResolver } from "@hookform/resolvers/zod";

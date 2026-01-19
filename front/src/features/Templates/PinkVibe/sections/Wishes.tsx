@@ -1,5 +1,6 @@
-import { FC, useState } from "react";
-import { TemplateWishesProps } from "../../../../types";
+import { useState } from "react";
+import type { FC } from "react";
+import type { TemplateWishesProps } from "../../../../types";
 import { ArrowIcon } from "../../../../assets/svg/templates/nezhnost/ArrowIcon";
 import clsx from "clsx";
 

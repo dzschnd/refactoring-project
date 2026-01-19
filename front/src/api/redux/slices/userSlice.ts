@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
+import type { PayloadAction } from "@reduxjs/toolkit";
 import {
   activateUser,
   changeEmail,
+  changeName,
   getUser,
   loginUser,
   logoutUser,
@@ -13,13 +15,14 @@ import {
   verifyEmail,
 } from "../../service/UserService";
 
-interface StateError {
+export interface StateError {
   message: string;
   status: number;
 }
 
-interface UserState {
+export interface UserState {
   email: string | null;
+  name: string | null;
   verified: boolean;
   loading: boolean;
   error: StateError | null;
@@ -27,6 +30,7 @@ interface UserState {
 
 const initialState: UserState = {
   email: null,
+  name: null,
   verified: false,
   loading: false,
   error: null,
@@ -36,7 +40,7 @@ export const userSlice = createSlice({
   name: "user",
   initialState,
   reducers: {
-    setEmail: (state, action) => {
+    setEmail: (state, action: PayloadAction<string | null>) => {
       state.email = action.payload;
     },
   },
@@ -97,8 +101,8 @@ export const userSlice = createSlice({
       })
 
       .addCase(registerUser.fulfilled, (state, action) => {
-        console.log(action.payload);
         state.email = action.payload.email;
+        state.name = action.payload.name ?? null;
         state.error = null;
         state.loading = false;
       })
@@ -121,6 +125,20 @@ export const userSlice = createSlice({
         state.error = action.payload as StateError;
       })
       .addCase(changeEmail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+
+      .addCase(changeName.fulfilled, (state, action) => {
+        state.loading = false;
+        state.error = null;
+        state.name = action.payload.newName ?? state.name;
+      })
+      .addCase(changeName.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as StateError;
+      })
+      .addCase(changeName.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
@@ -153,6 +171,7 @@ export const userSlice = createSlice({
 
       .addCase(loginUser.fulfilled, (state, action) => {
         state.email = action.payload.email;
+        state.name = action.payload.name ?? null;
         state.verified = true;
         state.loading = false;
         state.error = null;
@@ -170,6 +189,7 @@ export const userSlice = createSlice({
         state.loading = false;
         state.error = null;
         state.email = action.payload.email;
+        state.name = action.payload.name ?? null;
       })
       .addCase(getUser.rejected, (state, action) => {
         state.loading = false;
@@ -182,12 +202,14 @@ export const userSlice = createSlice({
 
       .addCase(logoutUser.fulfilled, (state) => {
         state.email = null;
+        state.name = null;
         state.verified = false;
         state.loading = false;
         state.error = null;
       })
       .addCase(logoutUser.rejected, (state, action) => {
         state.email = null;
+        state.name = null;
         state.loading = false;
         state.error = action.payload as StateError;
       })

@@ -1,13 +1,12 @@
-import { FC } from "react";
+import type { FC } from "react";
 import logoutIcon from "../../../../assetsOld/logout.png";
-import { AppDispatch } from "../../../../api/redux/store";
-import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../../../../api/redux/hooks";
 import { logoutUser } from "../../../../api/service/UserService";
 
 const LogoutButton: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const handleLogout = () => {
-    dispatch(logoutUser());
+    void dispatch(logoutUser());
   };
 
   return (

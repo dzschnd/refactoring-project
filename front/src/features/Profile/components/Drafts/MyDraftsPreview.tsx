@@ -1,22 +1,20 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import goToIcon from "../../../../assetsOld/buttonIcons/arrowRight.png";
 import DraftCard from "./DraftCard";
-import { AppDispatch, RootState } from "../../../../api/redux/store";
-import { useDispatch, useSelector } from "react-redux";
 import {
   deleteDraft,
   getAllDrafts,
 } from "../../../../api/service/DraftService";
-import { CardInfo } from "../../../../types";
-import { getAllInvitations } from "../../../../api/service/InvitationService";
+import type { CardInfo } from "../../../../types";
 
 const MyDraftsPreview: FC = () => {
   const [allDrafts, setAllDrafts] = useState<CardInfo[]>([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchDrafts().then();
+    void fetchDrafts();
   }, []);
 
   const fetchDrafts = async () => {
@@ -26,7 +24,7 @@ const MyDraftsPreview: FC = () => {
 
   const handleDelete = async (id: number) => {
     if (window.confirm("УВЕРЕН?")) await deleteDraft(id);
-    fetchDrafts().then();
+    void fetchDrafts();
   };
 
   return (

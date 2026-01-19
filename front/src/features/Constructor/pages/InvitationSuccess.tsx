@@ -1,10 +1,7 @@
-import {FC} from "react";
+import type { FC } from "react";
 
-const InvitationSuccess:FC = () => {
-    return (
-        <>
-        </>
-    )
-}
+const InvitationSuccess: FC = () => {
+  return <></>;
+};
 
 export default InvitationSuccess;

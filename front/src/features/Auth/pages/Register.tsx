@@ -1,16 +1,11 @@
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
+import type { Dispatch, FC, SetStateAction } from "react";
 import type { AuthPage, StateError } from "../../../types";
-import { AppDispatch } from "../../../api/redux/store";
-import { useDispatch } from "react-redux";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useAppDispatch } from "../../../api/redux/hooks";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import type { z } from "zod";
 import { registerUser } from "../../../api/service/UserService";
 import { EMAIL_TAKEN, SERVER_ERROR } from "../../../api/messages";
 import Input from "../../../components/Input";
@@ -39,7 +34,7 @@ export const Register: FC<RegisterProps> = ({
   inputValues,
   setIsWidePopup,
 }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
   );
@@ -97,7 +92,7 @@ export const Register: FC<RegisterProps> = ({
 
   useEffect(() => {
     reset(inputValues);
-  }, []);
+  }, [inputValues, reset]);
 
   return (
     <div>

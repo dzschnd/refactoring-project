@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type ArrowBackProps = {};
+type ArrowBackProps = Record<string, never>;
 
-export const ArrowBack: FC<ArrowBackProps> = (props) => {
+export const ArrowBack: FC<ArrowBackProps> = (_props) => {
   return (
     <svg
       width="24"

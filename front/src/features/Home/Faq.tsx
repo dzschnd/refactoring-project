@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import Accordion from "./components/Accordion/Accordion";
 
 const Faq: FC = () => {

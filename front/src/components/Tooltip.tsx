@@ -1,4 +1,5 @@
-import { FC, ReactNode, useState } from "react";
+import { useState } from "react";
+import type { FC, ReactNode } from "react";
 import { TooltipIcon } from "../assets/svg/common/TooltipIcon";
 import { TooltipCloudEdge } from "../assets/svg/common/TooltipCloudEdge";
 import clsx from "clsx";

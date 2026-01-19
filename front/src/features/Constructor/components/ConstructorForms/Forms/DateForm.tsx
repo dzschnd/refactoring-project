@@ -1,13 +1,13 @@
-import React, { FC, useRef } from "react";
+import { useRef } from "react";
+import type { FC } from "react";
 import FormLayout from "../../../layouts/FormLayout";
 import calendarIcon from "../../../../../assetsOld/formIcons/calendar.png";
 import ConstructorDateInput from "../Inputs/ConstructorDateInput";
-import { AppDispatch, RootState } from "../../../../../api/redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../../../api/redux/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { updateDraft } from "../../../../../api/service/DraftService";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
-import { DateValue } from "react-aria-components";
+import type { DateValue } from "react-aria-components";
 import { parseDate } from "@internationalized/date";
 import { dateValue2ISO } from "../../../../../utils/dateUtils";
 import { z } from "zod";
@@ -27,8 +27,8 @@ const dateFormSchema = z.object({
 });
 
 const DateForm: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { id, eventDate } = useSelector((state: RootState) => state.draft);
+  const dispatch = useAppDispatch();
+  const { id, eventDate } = useAppSelector((state) => state.draft);
 
   const {
     control,
@@ -44,7 +44,7 @@ const DateForm: FC = () => {
 
   const savedValuesRef = useRef({ eventDate });
 
-  const handleUpdateLocalDraft = async () => {
+  const handleUpdateLocalDraft = () => {
     const { eventDateValue } = getValues();
 
     if (
@@ -101,9 +101,9 @@ const DateForm: FC = () => {
             {...field}
             label={"Дата"}
             icon={calendarIcon}
-            onChange={async (e) => {
+            onChange={(e) => {
               field.onChange(e);
-              await handleUpdateLocalDraft();
+              handleUpdateLocalDraft();
             }}
             onBlur={handleUpdateDraft}
           />

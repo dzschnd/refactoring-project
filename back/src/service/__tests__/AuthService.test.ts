@@ -5,17 +5,39 @@ const mockPrisma = {
   $transaction: async <T>(callback: (tx: object) => Promise<T>): Promise<T> => callback({}),
 };
 
-type GetRefreshTokenQuery = (refreshToken: string, userId: number, client?: object) => Promise<RefreshToken[]>;
+type GetRefreshTokenQuery = (
+  refreshToken: string,
+  userId: number,
+  client?: object,
+) => Promise<RefreshToken[]>;
 type GetUserByEmailQuery = (email: string, client?: object) => Promise<User[]>;
 type GetUserQuery = (userId: number, client?: object) => Promise<User[]>;
-type GetOtpQuery = (otp: string, userId: number, client?: object) => Promise<EmailVerificationOtp[]>;
-type CreateRefreshTokenQuery = (refreshToken: string, userId: number, expiresAt: Date, client?: object) => Promise<RefreshToken[]>;
+type GetOtpQuery = (
+  otp: string,
+  userId: number,
+  client?: object,
+) => Promise<EmailVerificationOtp[]>;
+type CreateRefreshTokenQuery = (
+  refreshToken: string,
+  userId: number,
+  expiresAt: Date,
+  client?: object,
+) => Promise<RefreshToken[]>;
 type CreateUserQuery = (email: string, hashedPassword: string, client?: object) => Promise<[User]>;
-type CreateOtpQuery = (otp: string, userId: number, expiresAt: Date, client?: object) => Promise<EmailVerificationOtp[]>;
+type CreateOtpQuery = (
+  otp: string,
+  userId: number,
+  expiresAt: Date,
+  client?: object,
+) => Promise<EmailVerificationOtp[]>;
 type UpdateRefreshTokenQuery = (expiresAt: Date, userId: number, client?: object) => Promise<[]>;
 type UpdateUserByEmailQuery = (email: string, userId: number, client?: object) => Promise<[]>;
 type UpdateUserByNameQuery = (name: string, userId: number, client?: object) => Promise<[]>;
-type UpdateUserByPasswordQuery = (hashedPassword: string, userId: number, client?: object) => Promise<[]>;
+type UpdateUserByPasswordQuery = (
+  hashedPassword: string,
+  userId: number,
+  client?: object,
+) => Promise<[]>;
 type ActivateUserQuery = (userId: number, client?: object) => Promise<[]>;
 type DeleteOtpQuery = (userId: number, client?: object) => Promise<number>;
 
@@ -88,7 +110,10 @@ jest.unstable_mockModule("path", () => ({
 
 jest.unstable_mockModule("../../utils/TokenUtils.js", () => ({
   signAccessToken: () => "access-token",
-  signRefreshToken: () => ({ refreshToken: "refresh-token", expiresAt: new Date("2030-01-01T00:00:00Z") }),
+  signRefreshToken: () => ({
+    refreshToken: "refresh-token",
+    expiresAt: new Date("2030-01-01T00:00:00Z"),
+  }),
 }));
 
 jest.unstable_mockModule("../../utils/TimeUtils.js", () => ({
@@ -97,7 +122,8 @@ jest.unstable_mockModule("../../utils/TimeUtils.js", () => ({
   getExpirationTimeHours: () => new Date("2024-01-01T01:00:00Z"),
 }));
 
-const { register, login, refreshTokens, verifyEmail } = await import("../../service/AuthService.js");
+const { register, login, refreshTokens, verifyEmail } =
+  await import("../../service/AuthService.js");
 
 const makeUser = (overrides: Partial<User> = {}): User => ({
   id: 1,
@@ -229,7 +255,9 @@ describe("AuthService.verifyEmail", () => {
   it("returns user when otp is valid", async () => {
     const user = makeUser({ verified: false });
     mockGetUserByEmailQuery.mockResolvedValueOnce([user]);
-    mockGetOtpQuery.mockResolvedValueOnce([makeOtp({ expiresAt: new Date("2030-01-01T00:00:00Z") })]);
+    mockGetOtpQuery.mockResolvedValueOnce([
+      makeOtp({ expiresAt: new Date("2030-01-01T00:00:00Z") }),
+    ]);
     mockActivateUserQuery.mockResolvedValueOnce([]);
     mockDeleteOtpQuery.mockResolvedValueOnce(1);
 
@@ -243,7 +271,9 @@ describe("AuthService.verifyEmail", () => {
 
   it("returns error when otp expired", async () => {
     mockGetUserByEmailQuery.mockResolvedValueOnce([makeUser()]);
-    mockGetOtpQuery.mockResolvedValueOnce([makeOtp({ expiresAt: new Date("2000-01-01T00:00:00Z") })]);
+    mockGetOtpQuery.mockResolvedValueOnce([
+      makeOtp({ expiresAt: new Date("2000-01-01T00:00:00Z") }),
+    ]);
 
     const result = await verifyEmail("user@example.com", "123456");
 

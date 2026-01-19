@@ -8,7 +8,11 @@ const throwValidation = (message: string, field?: string): never => {
   throw new ValidationError(details);
 };
 
-export const validateDraftUpdate = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
+export const validateDraftUpdate = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+): Promise<void> => {
   const result = await draftUpdateSchema.safeParseAsync(req.body);
   if (!result.success) {
     const details = result.error.issues.map((issue) => ({
@@ -50,7 +54,7 @@ export const validateDraftUpdate = async (req: Request, _res: Response, next: Ne
         if (question.type === "TEXT" && answerMap.has(question.position)) {
           throwValidation(
             `Question at position ${question.position} is of type TEXT and must not have an associated answer.`,
-            "answers"
+            "answers",
           );
         }
       });
@@ -63,7 +67,11 @@ export const validateDraftUpdate = async (req: Request, _res: Response, next: Ne
   }
 };
 
-export const validateDraftPublish = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
+export const validateDraftPublish = async (
+  req: Request,
+  _res: Response,
+  next: NextFunction,
+): Promise<void> => {
   const result = await draftPublishSchema.safeParseAsync(req.body);
   if (!result.success) {
     const details = result.error.issues.map((issue) => ({

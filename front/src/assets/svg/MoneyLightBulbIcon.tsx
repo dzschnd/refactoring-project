@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type MoneyLIghtBulbIconProps = {};
+type MoneyLIghtBulbIconProps = Record<string, never>;
 
-export const MoneyLightBulbIcon: FC<MoneyLIghtBulbIconProps> = (props) => {
+export const MoneyLightBulbIcon: FC<MoneyLIghtBulbIconProps> = (_props) => {
   return (
     <svg
       width="38"

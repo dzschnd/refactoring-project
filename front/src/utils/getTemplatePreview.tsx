@@ -1,29 +1,15 @@
 import { NezhnostInvitation } from "../features/Templates/Nezhnost/NezhnostInvitation";
 import { MinimalismInvitation } from "../features/Templates/Minimalism/MinimalismInvitation";
+import type { TemplateProps } from "../types";
+
+type TemplatePreviewProps = Omit<TemplateProps, "width" | "height"> & {
+  templateWidth: number;
+  templateHeight: number;
+};
 
 export const getTemplatePreview = (
   templateName: string,
-  props: {
-    firstPartnerName: string;
-    secondPartnerName: string;
-    coupleImage: string;
-    eventDate: string;
-    place: {
-      address: string;
-      placeImage: string;
-      link: string;
-    };
-    colors: any;
-    planItems: any[];
-    wishes: any[];
-    questions: any[];
-    answers: any[];
-    templateWidth: number;
-    templateHeight: number;
-    isMobile: boolean;
-    isPreview: boolean;
-    block: string;
-  },
+  props: TemplatePreviewProps,
 ) => {
   switch (templateName) {
     case "nezhnost":

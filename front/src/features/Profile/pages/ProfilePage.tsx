@@ -1,4 +1,5 @@
-import { FC, useEffect } from "react";
+import { useEffect } from "react";
+import type { FC } from "react";
 import Header from "../../../components/Header";
 import ProfileNavigation from "../components/ProfileNavigation";
 import ProfileInfo from "../components/Profile/ProfileInfo";
@@ -10,7 +11,7 @@ import MyGuestAnswersPreview from "../components/GuestAnswers/MyGuestAnswersPrev
 import MyDraftsPreview from "../components/Drafts/MyDraftsPreview";
 import MyInvitationsPreview from "../components/Invitations/MyInvitationsPreview";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../api/redux/store";
+import type { RootState } from "../../../api/redux/store";
 
 const Register: FC = () => {
   const navigate = useNavigate();

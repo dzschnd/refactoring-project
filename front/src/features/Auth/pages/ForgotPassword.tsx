@@ -1,40 +1,25 @@
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
+import type { Dispatch, FC, SetStateAction } from "react";
 import type { AuthPage, StateError } from "../../../types";
-import { AppDispatch } from "../../../api/redux/store";
-import { useDispatch } from "react-redux";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import {
-  loginUser,
-  requestPasswordReset,
-} from "../../../api/service/UserService";
-import { setEmail } from "../../../api/redux/slices/userSlice";
-import {
-  INVALID_CREDENTIALS,
-  SERVER_ERROR,
-  USER_NOT_FOUND,
-} from "../../../api/messages";
+import type { z } from "zod";
+import { requestPasswordReset } from "../../../api/service/UserService";
+import { SERVER_ERROR, USER_NOT_FOUND } from "../../../api/messages";
 import Input from "../../../components/Input";
 import { EmailIcon } from "../../../assets/svg/EmailIcon";
 import SubmitButton from "../components/SubmitButton";
 import LinkToLoginOrRegister from "../components/LinkToLoginOrRegister";
 import { ArrowBack } from "../../../assets/svg/common/ArrowBack";
 import Loader from "../../../components/Loader";
-import { flushSync } from "react-dom";
 import { requestResetPasswordSchema } from "../../../shared/schemas/auth";
+import { useAppDispatch } from "../../../api/redux/hooks";
 
 type ForgotPasswordProps = {
   setCurrentPage: Dispatch<SetStateAction<AuthPage>>;
   inputValues: { email: string };
   setInputValues: Dispatch<SetStateAction<{ email: string }>>;
-  setIsWidePopup: Dispatch<SetStateAction<boolean>>;
 };
 
 type FormInput = z.infer<typeof requestResetPasswordSchema>;
@@ -43,9 +28,8 @@ export const ForgotPassword: FC<ForgotPasswordProps> = ({
   setCurrentPage,
   setInputValues,
   inputValues,
-  setIsWidePopup,
 }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
   );
@@ -92,7 +76,7 @@ export const ForgotPassword: FC<ForgotPasswordProps> = ({
 
   useEffect(() => {
     reset(inputValues);
-  }, []);
+  }, [inputValues, reset]);
 
   return (
     <div className={"flex h-full flex-col justify-center"}>

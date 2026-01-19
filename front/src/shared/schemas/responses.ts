@@ -41,7 +41,7 @@ export const invitationDetailsSchema = z.object({
       z.object({
         colorCode: z.string(),
         position: z.number().int(),
-      })
+      }),
     )
     .nullable(),
   place: z
@@ -57,7 +57,7 @@ export const invitationDetailsSchema = z.object({
         eventTime: z.string(),
         description: z.string(),
         position: z.number().int(),
-      })
+      }),
     )
     .nullable(),
   wishes: z
@@ -65,7 +65,7 @@ export const invitationDetailsSchema = z.object({
       z.object({
         wish: z.string(),
         position: z.number().int(),
-      })
+      }),
     )
     .nullable(),
   questions: z
@@ -75,7 +75,7 @@ export const invitationDetailsSchema = z.object({
         question: z.string(),
         position: z.number().int(),
         type: QuestionTypeSchema,
-      })
+      }),
     )
     .nullable(),
   answers: z
@@ -84,7 +84,7 @@ export const invitationDetailsSchema = z.object({
         answer: z.string(),
         questionPosition: z.number().int(),
         position: z.number().int(),
-      })
+      }),
     )
     .nullable(),
 });

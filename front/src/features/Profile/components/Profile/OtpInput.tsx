@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import type { FC } from "react";
 import success from "../../../../assetsOld/success.png";
 import OTPInputField from "../../../Auth/components/OTPInputField";
 import FormErrorMessage from "../../../../components/FormErrorMessage";

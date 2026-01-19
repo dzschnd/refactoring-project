@@ -1,5 +1,5 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
-import { AuthPage } from "../../../types";
+import type { Dispatch, FC, SetStateAction } from "react";
+import type { AuthPage } from "../../../types";
 import { Spark } from "../../../assets/svg/auth/Spark";
 
 type RegisterSuccessProps = {
@@ -7,7 +7,7 @@ type RegisterSuccessProps = {
 };
 
 export const RegisterSuccess: FC<RegisterSuccessProps> = ({
-  setCurrentPage,
+  setCurrentPage: _setCurrentPage,
 }) => {
   return (
     <div

@@ -1,6 +1,6 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type IphoneMockupProps = {};
+type IphoneMockupProps = Record<string, never>;
 
 export const IphoneMockup: FC<IphoneMockupProps> = () => {
   return (

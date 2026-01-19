@@ -1,5 +1,6 @@
-import { FC, useState } from "react";
-import { TemplateDresscodeProps } from "../../../../types";
+import { useState } from "react";
+import type { FC } from "react";
+import type { TemplateDresscodeProps } from "../../../../types";
 
 export const Dresscode: FC<TemplateDresscodeProps> = ({
   colors,
@@ -12,7 +13,7 @@ export const Dresscode: FC<TemplateDresscodeProps> = ({
     <div className={"flex flex-col items-center"} style={{ gap: scale(20) }}>
       <h2
         className={
-          "text-minimalism--primary font-minimalism--primary font-light leading-[1.2]"
+          "font-minimalism--primary font-light leading-[1.2] text-minimalism--primary"
         }
         style={{ fontSize: scale(32) }}
       >
@@ -20,7 +21,7 @@ export const Dresscode: FC<TemplateDresscodeProps> = ({
       </h2>
       <p
         className={
-          "text-minimalism--primary font-minimalism--tertiary text-center font-light leading-[1.6] tracking-[-0.02em]"
+          "text-center font-minimalism--tertiary font-light leading-[1.6] tracking-[-0.02em] text-minimalism--primary"
         }
         style={{ fontSize: scale(16), width: scale(286) }}
       >

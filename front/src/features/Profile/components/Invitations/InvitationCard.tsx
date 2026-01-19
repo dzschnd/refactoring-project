@@ -1,6 +1,6 @@
-import React, { FC } from "react";
+import type { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { getInvitation } from "../../../../api/service/InvitationService";
+
 import redVelvetDefaultImage from "../../../../assetsOld/templates/redVelvet/namesImage.png";
 
 interface InvitationCardProps {

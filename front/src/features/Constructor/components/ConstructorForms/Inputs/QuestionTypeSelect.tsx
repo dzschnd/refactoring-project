@@ -1,7 +1,7 @@
-import { FC, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import type { FC } from "react";
 import {
   Button,
-  Key,
   Label,
   ListBox,
   ListBoxItem,
@@ -9,11 +9,12 @@ import {
   Select,
   SelectValue,
 } from "react-aria-components";
+import type { Key } from "react-aria-components";
 import checkboxIcon from "../../../../../assetsOld/formIcons/check-square.png";
 import arrowRightIcon from "../../../../../assetsOld/buttonIcons/arrowRight.png";
 import radioIcon from "../../../../../assetsOld/formIcons/radio-circle.png";
 import textIcon from "../../../../../assetsOld/formIcons/text-input.png";
-import { QuestionType } from "../../../../../types";
+import type { QuestionType } from "../../../../../types";
 
 interface QuestionTypeSelectProps {
   value: QuestionType;

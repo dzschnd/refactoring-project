@@ -1,4 +1,5 @@
-import { useEffect, RefObject, Dispatch, SetStateAction } from "react";
+import { useEffect } from "react";
+import type { RefObject, Dispatch, SetStateAction } from "react";
 
 export function useCloseOnClickOutside({
   popupRef,

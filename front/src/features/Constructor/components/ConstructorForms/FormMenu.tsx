@@ -1,11 +1,12 @@
-import { FC, PropsWithChildren, useState } from "react";
+import { useState } from "react";
+import type { FC, PropsWithChildren } from "react";
 import cross from "../../../../assetsOld/buttonIcons/cross.png";
 import arrowRight from "../../../../assetsOld/buttonIcons/arrowRight.png";
 import templatePreview from "../../../../assetsOld/templates/redVelvet/templatePreview.png";
 import { Link } from "react-router-dom";
 import { constructorPages } from "../../layouts/ConstructorLayout";
 import { updateDraft } from "../../../../api/service/DraftService";
-import { AppDispatch, RootState } from "../../../../api/redux/store";
+import type { AppDispatch, RootState } from "../../../../api/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { templates } from "../../../../constants";
 

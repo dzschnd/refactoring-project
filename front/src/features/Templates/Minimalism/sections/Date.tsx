@@ -1,6 +1,6 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { ISO2TextRu } from "../../../../utils/dateUtils";
-import { TemplateDateProps } from "../../../../types";
+import type { TemplateDateProps } from "../../../../types";
 import { Branches } from "../../../../assets/svg/templates/minimalism/Branches";
 
 export const Date: FC<TemplateDateProps> = ({

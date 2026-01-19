@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { LinkArrowIcon } from "../../../assets/svg/LinkArrowIcon";
 
 type RoundButtonProps = {

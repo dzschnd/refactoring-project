@@ -1,7 +1,7 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
 import { useParams } from "react-router-dom";
 import { getInvitation } from "../../api/service/InvitationService";
-import { QuestionType } from "../../types";
 import type { InvitationDetailsResponse } from "../../shared/types";
 import type { StateError } from "../../types";
 import { NezhnostInvitation } from "./Nezhnost/NezhnostInvitation";
@@ -27,7 +27,7 @@ const Invitation: FC = () => {
         document.title = `${invitation.firstPartnerName} и ${invitation.secondPartnerName}`;
     };
 
-    getCurrentInvitation().then();
+    void getCurrentInvitation();
   }, [id]);
 
   const displayedFirstPartnerName = invitationData?.firstPartnerName

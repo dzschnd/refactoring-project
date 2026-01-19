@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import Names from "./Names/Names";
 import EventDate from "./Date/Date";
 import Place from "./Place/Place";
@@ -8,7 +8,7 @@ import Wishes from "./Wishes/Wishes";
 import GuestForm from "./GuestForm/GuestForm";
 import Signature from "../Signature/Signature";
 import Timer from "./Timer/Timer";
-import { QuestionType } from "../../../types";
+import type { QuestionType } from "../../../types";
 import { ISO2TextRu } from "../../../utils/dateUtils";
 import defaultCoupleImage from "../../../assetsOld/templates/redVelvet/namesImage.png";
 import defaultPlaceImage from "../../../assetsOld/templates/redVelvet/placeImage.png";

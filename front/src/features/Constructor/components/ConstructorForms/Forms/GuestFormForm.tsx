@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 import FormLayout from "../../../layouts/FormLayout";
 import plusIcon from "../../../../../assetsOld/buttonIcons/plus.png";
-import { QuestionType } from "../../../../../types";
-import { AppDispatch, RootState } from "../../../../../api/redux/store";
+import type { QuestionType } from "../../../../../types";
+import type { AppDispatch, RootState } from "../../../../../api/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
@@ -303,11 +303,13 @@ const GuestFormForm: FC = () => {
                 const updatedAnswers = currentAnswers
                   .filter((answer) => answer.questionPosition !== index)
                   .concat(
-                    (value.answers ?? []).map((answer: AnswerFormValue, answerIndex: number) => ({
-                      ...answer,
-                      questionPosition: index,
-                      position: answerIndex,
-                    })),
+                    (value.answers ?? []).map(
+                      (answer: AnswerFormValue, answerIndex: number) => ({
+                        ...answer,
+                        questionPosition: index,
+                        position: answerIndex,
+                      }),
+                    ),
                   );
 
                 setValue(`answers`, updatedAnswers);

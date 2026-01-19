@@ -1,10 +1,10 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { PageLayout } from "../../layouts/PageLayout";
 import { WineGlasses } from "../../assets/svg/WineGlasses";
 
-type BlogProps = {};
+type BlogProps = Record<string, never>;
 
-export const Blog: FC<BlogProps> = (props) => {
+export const Blog: FC<BlogProps> = (_props) => {
   return (
     <PageLayout className={"pb-[160px] pt-[120px]"}>
       <div

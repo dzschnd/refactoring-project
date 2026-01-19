@@ -1,5 +1,6 @@
-import React, { FC, useEffect, useRef, useState } from "react";
-import { QuestionType } from "../../../types";
+import React, { useEffect, useRef, useState } from "react";
+import type { FC } from "react";
+import type { QuestionType } from "../../../types";
 import NamesPreview from "./Names/NamesPreview";
 import DatePreview from "./Date/DatePreview";
 import PlacePreview from "./Place/PlacePreview";

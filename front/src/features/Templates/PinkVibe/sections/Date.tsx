@@ -1,6 +1,6 @@
-import { FC } from "react";
+import type { FC } from "react";
 import { ISO2TextRu } from "../../../../utils/dateUtils";
-import { TemplateDateProps } from "../../../../types";
+import type { TemplateDateProps } from "../../../../types";
 import { WavesBackground } from "../../../../assets/svg/templates/pinkVibe/WavesBackground";
 
 export const Date: FC<TemplateDateProps> = ({ eventDate, scale, isMobile }) => {
@@ -28,8 +28,8 @@ export const Date: FC<TemplateDateProps> = ({ eventDate, scale, isMobile }) => {
             maxWidth: isMobile ? scale(330) : scale(414),
           }}
         >
-          В нашей жизни предстоят счастливые перемены! Мы хотим, чтобы в этот
-          день рядом с нами были близкие и дорогие для нас люди. Будем рады
+          В нашей жизни предстоят счастливые перемены! Мы хотим, чтобы в этот
+          день рядом с нами были близкие и дорогие для нас люди. Будем рады
           разделить с вами в день нашей свадьбы, которая состоится:
         </p>
         <span

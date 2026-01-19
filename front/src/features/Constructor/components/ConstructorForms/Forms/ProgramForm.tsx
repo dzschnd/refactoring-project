@@ -1,9 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 import FormLayout from "../../../layouts/FormLayout";
 import ProgramEventInput from "../Inputs/ProgramEventInput";
 import plusIcon from "../../../../../assetsOld/buttonIcons/plus.png";
-import { AppDispatch, RootState } from "../../../../../api/redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../../../api/redux/hooks";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
 import { updateDraft } from "../../../../../api/service/DraftService";
@@ -28,10 +27,21 @@ const timeToString = (value: Time) => {
   return `${hours}:${minutes}`;
 };
 
+type FormPlanItem = {
+  eventTime: Time | null;
+  description: string | null;
+  position: number;
+};
+
+const isFormPlanItem = (value: unknown): value is FormPlanItem => {
+  if (typeof value !== "object" || value === null) return false;
+  return "position" in value;
+};
+
 const programFormSchema = z.object({
-  planItems: z.preprocess((value) => {
+  planItems: z.preprocess((value: unknown) => {
     if (!Array.isArray(value)) return value;
-    return value.map((planItem) => ({
+    return value.filter(isFormPlanItem).map((planItem) => ({
       ...planItem,
       eventTime: planItem.eventTime ? timeToString(planItem.eventTime) : "",
       description: planItem.description ?? "",
@@ -40,8 +50,8 @@ const programFormSchema = z.object({
 });
 
 const ProgramForm: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { id, planItems } = useSelector((state: RootState) => state.draft);
+  const dispatch = useAppDispatch();
+  const { id, planItems } = useAppSelector((state) => state.draft);
 
   const { control, getValues, setValue } = useForm<FormInput>({
     resolver: zodResolver(programFormSchema),

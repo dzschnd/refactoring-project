@@ -1,12 +1,12 @@
-import React, { Dispatch, FC, SetStateAction } from "react";
-import { Link } from "react-router-dom";
-import { AuthPage } from "../../../types";
+import type { Dispatch, FC, SetStateAction } from "react";
+
+import type { AuthPage } from "../../../types";
 import clsx from "clsx";
 
 const AuthLayout: FC<{
   toLogin: boolean;
   setCurrentPage: Dispatch<SetStateAction<AuthPage>>;
-  onRegisterPopup?: boolean
+  onRegisterPopup?: boolean;
 }> = ({ toLogin, setCurrentPage, onRegisterPopup }) => {
   return (
     <div

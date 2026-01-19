@@ -1,6 +1,7 @@
-import { FC, useEffect, useRef, useState } from "react";
-import { TemplateGuestFormProps } from "../../../../types";
-import { QuestionType } from "../../../../types";
+import { useEffect, useRef, useState } from "react";
+import type { FC } from "react";
+import type { TemplateGuestFormProps } from "../../../../types";
+import type { QuestionType } from "../../../../types";
 import { getScrollbarWidth } from "../../../../utils/getScrollbarWidth";
 import { submitGuestAnswers } from "../../../../api/service/InvitationService";
 import { useCloseOnClickOutside } from "../../../../hooks/useCloseOnClickOutside";
@@ -126,14 +127,14 @@ export const GuestForm: FC<TemplateGuestFormProps> = ({
       >
         <div>
           <h2
-            className="text-minimalism--primary text-center font-minimalism--primary font-light leading-[1.2]"
+            className="text-center font-minimalism--primary font-light leading-[1.2] text-minimalism--primary"
             style={{ fontSize: scale(32), marginBottom: scale(30) }}
           >
             Анкета гостя
           </h2>
           {/*TODO: ask if text wrapping is okay*/}
           <p
-            className="font-minimalism--tertiary text-minimalism--primary text-center font-light leading-[1.6] tracking-[-0.02em]"
+            className="text-center font-minimalism--tertiary font-light leading-[1.6] tracking-[-0.02em] text-minimalism--primary"
             style={{
               fontSize: scale(16),
             }}
@@ -152,7 +153,7 @@ export const GuestForm: FC<TemplateGuestFormProps> = ({
         <form
           onSubmit={(e) => {
             e.preventDefault();
-            onSubmit().then();
+            void onSubmit();
           }}
           className="flex flex-col"
           style={{ gap: scale(40) }}
@@ -160,13 +161,13 @@ export const GuestForm: FC<TemplateGuestFormProps> = ({
           <div className="relative flex flex-col" style={{ gap: scale(20) }}>
             <label
               htmlFor="names-input"
-              className="text-minimalism--primary font-minimalism--secondary font-semibold leading-[1.4] tracking-[-0.02em]"
+              className="font-minimalism--secondary font-semibold leading-[1.4] tracking-[-0.02em] text-minimalism--primary"
               style={{ fontSize: scale(16) }}
             >
               Имя и Фамилия
             </label>
             <p
-              className="text-minimalism--primary font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02em]"
+              className="font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02em] text-minimalism--primary"
               style={{ fontSize: scale(16) }}
             >
               Если будете с парой или семьей, напишите их имена
@@ -192,7 +193,7 @@ export const GuestForm: FC<TemplateGuestFormProps> = ({
           <div className="relative flex flex-col" style={{ gap: scale(20) }}>
             <label
               htmlFor="names-input"
-              className="text-minimalism--primary font-minimalism--secondary font-semibold leading-[1.4] tracking-[-0.02em]"
+              className="font-minimalism--secondary font-semibold leading-[1.4] tracking-[-0.02em] text-minimalism--primary"
               style={{ fontSize: scale(16) }}
             >
               Присутствие на торжестве
@@ -217,7 +218,7 @@ export const GuestForm: FC<TemplateGuestFormProps> = ({
                 />
                 <label
                   htmlFor="attendance-true-radio"
-                  className="text-minimalism--primary cursor-pointer font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02em]"
+                  className="cursor-pointer font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02em] text-minimalism--primary"
                   style={{ paddingLeft: scale(10), fontSize: scale(16) }}
                 >
                   Да, мы придем
@@ -242,7 +243,7 @@ export const GuestForm: FC<TemplateGuestFormProps> = ({
                 />
                 <label
                   htmlFor="attendance-false-radio"
-                  className="text-minimalism--primary cursor-pointer font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02em]"
+                  className="cursor-pointer font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02em] text-minimalism--primary"
                   style={{ paddingLeft: scale(10), fontSize: scale(16) }}
                 >
                   К сожалению, не получится
@@ -262,7 +263,7 @@ export const GuestForm: FC<TemplateGuestFormProps> = ({
                 >
                   <label
                     htmlFor={`question-${question.position}`}
-                    className="text-minimalism--primary whitespace-normal break-words font-semibold leading-[1.4] tracking-[-0.02]"
+                    className="whitespace-normal break-words font-semibold leading-[1.4] tracking-[-0.02] text-minimalism--primary"
                     style={{ fontSize: scale(16) }}
                   >
                     {question.question}
@@ -343,7 +344,7 @@ export const GuestForm: FC<TemplateGuestFormProps> = ({
                             )}
                             <label
                               htmlFor={`${answer.questionPosition}-${answer.position}`}
-                              className="text-minimalism--primary cursor-pointer break-words font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02]"
+                              className="cursor-pointer break-words font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02] text-minimalism--primary"
                               style={{
                                 paddingLeft: scale(10),
                                 fontSize: scale(16),

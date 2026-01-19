@@ -1,5 +1,6 @@
-import React, { FC, useState } from "react";
-import { FieldValues } from "react-hook-form";
+import { useState } from "react";
+import type { FC, TouchEvent } from "react";
+import type { FieldValues } from "react-hook-form";
 import trashIcon from "../../../../../assetsOld/buttonIcons/trash.png";
 import trashReverseIcon from "../../../../../assetsOld/buttonIcons/trash-reverse.png";
 import TextInput from "./TextInput";
@@ -34,11 +35,11 @@ const ProgramEventInput: FC<ProgramEventInputProps> = ({
   const [startX, setStartX] = useState(0);
   const swipeDistance: number = 20;
 
-  const handleTouchStart = (e: React.TouchEvent) => {
+  const handleTouchStart = (e: TouchEvent) => {
     setStartX(e.touches[0].clientX);
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
+  const handleTouchMove = (e: TouchEvent) => {
     const deltaX = startX - e.touches[0].clientX;
     if (deltaX > swipeDistance) {
       setIsSwiped(true);

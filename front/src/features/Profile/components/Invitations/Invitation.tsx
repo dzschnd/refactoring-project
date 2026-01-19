@@ -1,10 +1,7 @@
-import {FC} from "react";
+import type { FC } from "react";
 
-const Invitation:FC = () => {
-    return (
-        <>
-        </>
-    )
-}
+const Invitation: FC = () => {
+  return <></>;
+};
 
 export default Invitation;

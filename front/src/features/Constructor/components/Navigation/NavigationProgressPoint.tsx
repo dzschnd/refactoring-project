@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import type { FC } from "react";
 import { Link } from "react-router-dom";
 import currentPageIcon from "../../../../assetsOld/navIcons/blockSelected.png";
 interface Props {

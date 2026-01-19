@@ -1,4 +1,5 @@
-import React, { ChangeEvent, FC, useId } from "react";
+import { useId } from "react";
+import type { ChangeEvent, FC } from "react";
 import crossIcon from "../../../../../assetsOld/buttonIcons/cross.png";
 
 interface GuestFormAnswerInputProps {

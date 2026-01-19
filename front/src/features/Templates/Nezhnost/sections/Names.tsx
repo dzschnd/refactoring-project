@@ -1,5 +1,6 @@
-import { FC, useRef } from "react";
-import { TemplateNamesProps } from "../../../../types";
+import { useRef } from "react";
+import type { FC } from "react";
+import type { TemplateNamesProps } from "../../../../types";
 import { useScaleTextToFit } from "../../../../hooks/useScaleTextToFit";
 import clsx from "clsx";
 
@@ -21,7 +22,7 @@ export const Names: FC<TemplateNamesProps> = ({
     maxWidth: isMobile ? scaleToNumber(330) : scaleToNumber(598),
     scaleToNumber: scaleToNumber,
     texts: [firstPartnerName, secondPartnerName],
-    baseFontSize: 32
+    baseFontSize: 32,
   });
 
   return (

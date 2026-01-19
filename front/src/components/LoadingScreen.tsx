@@ -1,10 +1,7 @@
-import {FC} from "react";
+import type { FC } from "react";
 
-const LoadingScreen:FC = () => {
-    return (
-        <>
-        </>
-    )
-}
+const LoadingScreen: FC = () => {
+  return <></>;
+};
 
 export default LoadingScreen;

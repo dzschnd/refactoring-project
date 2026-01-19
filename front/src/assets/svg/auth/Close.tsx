@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type closeProps = {};
+type closeProps = Record<string, never>;
 
-export const Close: FC<closeProps> = (props) => {
+export const Close: FC<closeProps> = (_props) => {
   return (
     <div
       className={

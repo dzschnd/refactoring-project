@@ -1,7 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { parseServiceError } from "../../utils/parseServiceError";
-import { UpdateDraftPayload } from "../../types";
-import type { CreateDraftRequest, DraftUpdateRequest } from "../../shared/types";
+import type { UpdateDraftPayload } from "../../types";
+import type {
+  CreateDraftRequest,
+  DraftUpdateRequest,
+} from "../../shared/types";
 import { responseSchemas } from "../../shared/schemas/responses";
 import { axiosAuthorized, baseURL } from "./config";
 

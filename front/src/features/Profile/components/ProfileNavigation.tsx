@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import profile from "../../../assetsOld/navIcons/profile.png";
 import pencil from "../../../assetsOld/navIcons/pencil.png";
 import envelopeOpened from "../../../assetsOld/navIcons/envelopeOpened.png";

@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { AppDispatch, RootState } from "../../../api/redux/store";
+import type { FC } from "react";
+import type { AppDispatch, RootState } from "../../../api/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { updateDraft } from "../../../api/service/DraftService";
 import { updateLocalDraft } from "../../../api/redux/slices/draftSlice";

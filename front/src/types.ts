@@ -1,10 +1,18 @@
-import { CSSProperties } from "react";
+import type { CSSProperties } from "react";
 import type { DraftUpdateRequest } from "./shared/types";
-import { QuestionType } from "./shared/types";
+import type { QuestionType } from "./shared/types";
 
 export { QuestionType };
 
-export type AuthPage = "LOGIN" | "REGISTER" | "REGISTER_OTP_INPUT" | "PASSWORD_RESET_OTP_INPUT" | "REGISTER_SUCCESS" | "FORGOT_PASSWORD" | "PASSWORD_RESET" | "PASSWORD_RESET_SUCCESS";
+export type AuthPage =
+  | "LOGIN"
+  | "REGISTER"
+  | "REGISTER_OTP_INPUT"
+  | "PASSWORD_RESET_OTP_INPUT"
+  | "REGISTER_SUCCESS"
+  | "FORGOT_PASSWORD"
+  | "PASSWORD_RESET"
+  | "PASSWORD_RESET_SUCCESS";
 
 export interface Color {
   colorCode: string;

@@ -1,4 +1,4 @@
-import { AxiosError } from "axios";
+import type { AxiosError } from "axios";
 
 type ErrorDetails = Array<{ field?: string; message: string }>;
 type ErrorResponse =
@@ -11,7 +11,10 @@ export const parseServiceError = (error: unknown) => {
   if (castedError.response) {
     const errorData = castedError.response.data;
     if (typeof errorData.error === "string") {
-      return { message: errorData.error || "Unknown error", status: castedError.response.status };
+      return {
+        message: errorData.error || "Unknown error",
+        status: castedError.response.status,
+      };
     }
     return {
       message: errorData.error.message || "Unknown error",

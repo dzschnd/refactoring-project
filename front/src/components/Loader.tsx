@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type LoaderProps = {};
+type LoaderProps = Record<string, never>;
 
-const Loader: FC<LoaderProps> = (props) => {
+const Loader: FC<LoaderProps> = (_props) => {
   return (
     <svg
       className={"animate-spin"}

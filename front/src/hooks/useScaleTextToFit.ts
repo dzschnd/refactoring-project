@@ -1,4 +1,5 @@
-import { RefObject, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { RefObject } from "react";
 
 interface useScaleTextToFitProps {
   scaleToNumber: (value: number) => number;
@@ -17,6 +18,8 @@ export function useScaleTextToFit({
 }: useScaleTextToFitProps) {
   const [fontSize, setFontSize] = useState(scaleToNumber(baseFontSize));
 
+  const textsKey = texts.join("|");
+
   useEffect(() => {
     const el = textRef.current;
     if (!el) return;
@@ -30,7 +33,7 @@ export function useScaleTextToFit({
     }
 
     setFontSize(currentFontSize);
-  }, [textRef, baseFontSize, maxWidth, scaleToNumber, ...texts]);
+  }, [textRef, baseFontSize, maxWidth, scaleToNumber, textsKey]);
 
   return fontSize;
 }

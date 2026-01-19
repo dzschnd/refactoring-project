@@ -1,11 +1,11 @@
-import { FC, useState } from "react";
+import { useState } from "react";
+import type { FC } from "react";
 import FormLayout from "../../../layouts/FormLayout";
 import { useForm, Controller, useFieldArray } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../../../api/redux/store";
+import { useAppDispatch, useAppSelector } from "../../../../../api/redux/hooks";
 import { updateDraft } from "../../../../../api/service/DraftService";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
-import { Color } from "../../../../../types";
+import type { Color } from "../../../../../types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { draftUpdateBaseSchema } from "../../../../../shared/schemas/draft";
 
@@ -21,10 +21,8 @@ interface FormInput {
 const dresscodeFormSchema = draftUpdateBaseSchema.pick({ colors: true });
 
 const DresscodeForm: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
-  const { id, colors, prevColors } = useSelector(
-    (state: RootState) => state.draft,
-  );
+  const dispatch = useAppDispatch();
+  const { id, colors, prevColors } = useAppSelector((state) => state.draft);
 
   const [isBlockDisabled, setIsBlockDisabled] = useState<boolean>(
     colors === null || colors.length === 0,

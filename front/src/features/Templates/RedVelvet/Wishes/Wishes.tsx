@@ -1,7 +1,4 @@
-import { FC } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../api/redux/store";
-import wishesImage from "../../../../assetsOld/templates/redVelvet/dresscodeImage.png";
+import type { FC } from "react";
 
 interface WishesProps {
   wishes: {

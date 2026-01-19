@@ -1,7 +1,7 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type PrivacyPolicyProps = {};
+type PrivacyPolicyProps = Record<string, never>;
 
-export const PrivacyPolicy: FC<PrivacyPolicyProps> = (props) => {
+export const PrivacyPolicy: FC<PrivacyPolicyProps> = (_props) => {
   return <div className={"p-4"}>Здесь будет политика конфиденциальности</div>;
 };

@@ -1,4 +1,4 @@
-import { FC, Ref } from "react";
+import type { FC, Ref } from "react";
 import heart from "../../assetsOld/guestFormHeart.svg";
 
 type GuestFormSentPopupProps = {

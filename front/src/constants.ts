@@ -1,4 +1,4 @@
-import { TemplateInfo } from "./types";
+import type { TemplateInfo } from "./types";
 import nezhnostPreview from "./assets/images/templates/nezhnost/preview.avif";
 import navsegdaPreview from "./assets/images/templates/navsegda/preview.avif";
 import pinkVibePreview from "./assets/images/templates/pinkVibe/preview.avif";

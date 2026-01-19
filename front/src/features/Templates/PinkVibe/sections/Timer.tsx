@@ -1,5 +1,6 @@
-import { FC, useEffect, useState } from "react";
-import { TemplateTimerProps } from "../../../../types";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
+import type { TemplateTimerProps } from "../../../../types";
 import timer from "../../../../assets/images/templates/nezhnost/timer.avif";
 import { getTimeUntilDate } from "../../../../utils/dateUtils";
 

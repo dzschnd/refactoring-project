@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type ClockHeartIconProps = {};
+type ClockHeartIconProps = Record<string, never>;
 
-export const ClockHeartIcon: FC<ClockHeartIconProps> = (props) => {
+export const ClockHeartIcon: FC<ClockHeartIconProps> = (_props) => {
   return (
     <svg
       width="38"

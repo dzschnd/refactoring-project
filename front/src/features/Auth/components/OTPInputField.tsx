@@ -1,7 +1,8 @@
-import { FC, useEffect, useState } from "react";
-import { OTPInput, REGEXP_ONLY_DIGITS, SlotProps } from "input-otp";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
+import { OTPInput, REGEXP_ONLY_DIGITS } from "input-otp";
+import type { SlotProps } from "input-otp";
 import clsx from "clsx";
-import { twMerge } from "tailwind-merge";
 
 interface ErrorableSlotProps extends SlotProps {
   isError: boolean;

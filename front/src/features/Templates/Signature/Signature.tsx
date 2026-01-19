@@ -1,4 +1,4 @@
-import { FC } from "react";
+import type { FC } from "react";
 import logo from "../../../assetsOld/brand/logo.png";
 
 const Signature: FC = () => {

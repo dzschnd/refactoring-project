@@ -1,10 +1,11 @@
-import { FC, useState } from "react";
-import { TemplateDresscodeProps } from "../../../../types";
+import { useState } from "react";
+import type { FC } from "react";
+import type { TemplateDresscodeProps } from "../../../../types";
 
 export const Dresscode: FC<TemplateDresscodeProps> = ({
   colors,
   scale,
-  isMobile,
+  isMobile: _isMobile,
 }) => {
   const [hoveredColorIndex, setHoveredColorIndex] = useState<number>(-1);
 

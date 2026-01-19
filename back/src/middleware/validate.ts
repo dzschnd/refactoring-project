@@ -15,7 +15,8 @@ export const validateBody = (schema: ZodTypeAny) => {
     if (!result.success) {
       return next(new ValidationError(toDetails(result.error)));
     }
-    req.body = result.data;
+    const parsed = result.data as unknown;
+    req.body = parsed as Record<string, unknown>;
     next();
   };
 };

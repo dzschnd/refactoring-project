@@ -1,10 +1,10 @@
-import React, { FC, useRef } from "react";
+import { useRef } from "react";
+import type { FC } from "react";
 import heartIcon from "../../../../../assetsOld/formIcons/heart.png";
 import ImageSelector from "../Inputs/ImageSelector";
 import TextInput from "../Inputs/TextInput";
 import FormLayout from "../../../layouts/FormLayout";
-import { AppDispatch, RootState } from "../../../../../api/redux/store";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../../../../../api/redux/hooks";
 import { Controller, useForm } from "react-hook-form";
 import { updateDraft } from "../../../../../api/service/DraftService";
 import { updateLocalDraft } from "../../../../../api/redux/slices/draftSlice";
@@ -27,9 +27,9 @@ const namesFormSchema = draftUpdateBaseSchema.pick({
 });
 
 const NamesForm: FC = () => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const { id, firstPartnerName, secondPartnerName, coupleImage, templateName } =
-    useSelector((state: RootState) => state.draft);
+    useAppSelector((state) => state.draft);
 
   let defaultImage;
 
@@ -59,7 +59,7 @@ const NamesForm: FC = () => {
     secondPartnerName,
   });
 
-  const handleUpdateLocalDraft = async () => {
+  const handleUpdateLocalDraft = () => {
     const { firstPartnerName, secondPartnerName } = getValues();
 
     dispatch(
@@ -118,9 +118,9 @@ const NamesForm: FC = () => {
             label={"Как зовут невесту?"}
             placeholder={"Невеста"}
             icon={heartIcon}
-            onChange={async (e) => {
+            onChange={(e) => {
               field.onChange(e);
-              await handleUpdateLocalDraft();
+              handleUpdateLocalDraft();
             }}
             onBlur={handleUpdateDraft}
           />
@@ -139,9 +139,9 @@ const NamesForm: FC = () => {
             label={"Как зовут жениха?"}
             placeholder={"Жених"}
             icon={heartIcon}
-            onChange={async (e) => {
+            onChange={(e) => {
               field.onChange(e);
-              await handleUpdateLocalDraft();
+              handleUpdateLocalDraft();
             }}
             onBlur={handleUpdateDraft}
           />

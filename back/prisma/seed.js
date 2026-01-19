@@ -2,14 +2,7 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const templates = [
-  "navsegda",
-  "pinkVibe",
-  "minimalism",
-  "nezhnost",
-  "red_velvet",
-  "test",
-];
+const templates = ["navsegda", "pinkVibe", "minimalism", "nezhnost", "red_velvet", "test"];
 
 async function main() {
   for (const name of templates) {

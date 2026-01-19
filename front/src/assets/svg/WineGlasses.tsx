@@ -1,6 +1,6 @@
-import { FC, SVGProps } from "react";
+import type { FC, SVGProps } from "react";
 
-export const WineGlasses: FC<SVGProps<SVGSVGElement>> = (props) => {
+export const WineGlasses: FC<SVGProps<SVGSVGElement>> = (_props) => {
   return (
     <svg
       {...props}

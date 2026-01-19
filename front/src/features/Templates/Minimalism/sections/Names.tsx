@@ -1,5 +1,6 @@
-import { FC, useRef } from "react";
-import { TemplateNamesProps } from "../../../../types";
+import { useRef } from "react";
+import type { FC } from "react";
+import type { TemplateNamesProps } from "../../../../types";
 import { useScaleTextToFit } from "../../../../hooks/useScaleTextToFit";
 import clsx from "clsx";
 import { Branches } from "../../../../assets/svg/templates/minimalism/Branches";
@@ -43,7 +44,7 @@ export const Names: FC<TemplateNamesProps> = ({
         ref={namesTextRef}
         className={clsx(
           "flex justify-center text-center",
-          "[&>span]:text-minimalism--primary [&>span]:font-minimalism--primary [&>span]:font-light [&>span]:leading-[1.2]",
+          "[&>span]:font-minimalism--primary [&>span]:font-light [&>span]:leading-[1.2] [&>span]:text-minimalism--primary",
         )}
         style={{
           fontSize: namesFontSize,

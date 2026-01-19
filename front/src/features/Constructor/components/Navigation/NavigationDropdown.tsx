@@ -1,4 +1,5 @@
-import React, { FC, useState } from "react";
+import { useState } from "react";
+import type { FC } from "react";
 import { Link } from "react-router-dom";
 import arrowDown from "../../../../assetsOld/buttonIcons/arrowDown.png";
 import { constructorPages } from "../../layouts/ConstructorLayout";

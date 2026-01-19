@@ -1,10 +1,7 @@
-import {FC} from "react";
+import type { FC } from "react";
 
-const Payment:FC = () => {
-    return (
-        <>
-        </>
-    )
-}
+const Payment: FC = () => {
+  return <></>;
+};
 
 export default Payment;

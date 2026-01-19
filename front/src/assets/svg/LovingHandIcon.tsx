@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type LovingHandProps = {};
+type LovingHandProps = Record<string, never>;
 
-export const LovingHandIcon: FC<LovingHandProps> = (props) => {
+export const LovingHandIcon: FC<LovingHandProps> = (_props) => {
   return (
     <svg
       width="38"

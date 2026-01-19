@@ -7,27 +7,93 @@ const mockPrisma = {
 };
 
 type GetTemplateIdQuery = (templateName: string, client?: object) => Promise<Array<{ id: number }>>;
-type CreateDraftQuery = (authorId: number, templateId: number, client?: object) => Promise<[Invitation]>;
+type CreateDraftQuery = (
+  authorId: number,
+  templateId: number,
+  client?: object,
+) => Promise<[Invitation]>;
 type CreateColorQuery = (colorCode: string, client?: object) => Promise<Array<{ id: number }>>;
 type GetColorIdQuery = (colorCode: string, client?: object) => Promise<Array<{ id: number }>>;
-type CreateInvitationColorQuery = (invitationId: number | string, colorId: number, position: number, client?: object) => Promise<[]>;
-type CreateWishQuery = (wish: string, position: number, invitationId: number | string, client?: object) => Promise<[]>;
-type GetDraftQuery = (invitationId: number | string, authorId: number, client?: object) => Promise<Invitation[]>;
-type PublishInvitationQuery = (invitationId: number | string, authorId: number | string, client?: object) => Promise<[]>;
-type GetInvitationPlaceIdQuery = (invitationId: number | string, client?: object) => Promise<Array<{ placeId: number | null }>>;
-type UpdatePlaceQuery = (address: string | null, placeImage: string | null, link: string | null, placeId: number, client?: object) => Promise<[]>;
-type CreatePlaceQuery = (address: string | null, placeImage: string | null, link: string | null, client?: object) => Promise<Array<{ id: number }>>;
-type UpdateInvitationPlaceIdQuery = (placeId: number, invitationId: number | string, client?: object) => Promise<[]>;
+type CreateInvitationColorQuery = (
+  invitationId: number | string,
+  colorId: number,
+  position: number,
+  client?: object,
+) => Promise<[]>;
+type CreateWishQuery = (
+  wish: string,
+  position: number,
+  invitationId: number | string,
+  client?: object,
+) => Promise<[]>;
+type GetDraftQuery = (
+  invitationId: number | string,
+  authorId: number,
+  client?: object,
+) => Promise<Invitation[]>;
+type PublishInvitationQuery = (
+  invitationId: number | string,
+  authorId: number | string,
+  client?: object,
+) => Promise<[]>;
+type GetInvitationPlaceIdQuery = (
+  invitationId: number | string,
+  client?: object,
+) => Promise<Array<{ placeId: number | null }>>;
+type UpdatePlaceQuery = (
+  address: string | null,
+  placeImage: string | null,
+  link: string | null,
+  placeId: number,
+  client?: object,
+) => Promise<[]>;
+type CreatePlaceQuery = (
+  address: string | null,
+  placeImage: string | null,
+  link: string | null,
+  client?: object,
+) => Promise<Array<{ id: number }>>;
+type UpdateInvitationPlaceIdQuery = (
+  placeId: number,
+  invitationId: number | string,
+  client?: object,
+) => Promise<[]>;
 type DeleteInvitationColorsQuery = (invitationId: number | string, client?: object) => Promise<[]>;
 type DeletePlanItemsQuery = (invitationId: number | string, client?: object) => Promise<[]>;
 type DeleteWishesQuery = (invitationId: number | string, client?: object) => Promise<[]>;
 type DeleteFormQuestionsQuery = (invitationId: number | string, client?: object) => Promise<[]>;
 type DeleteFormAnswersQuery = (invitationId: number | string, client?: object) => Promise<[]>;
-type CreatePlanItemQuery = (eventTime: string, description: string, position: number, invitationId: number | string, client?: object) => Promise<[]>;
-type CreateFormQuestionQuery = (question: string, type: QuestionType, position: number, invitationId: number | string, client?: object) => Promise<Array<{ id: number }>>;
-type GetFormQuestionByPositionQuery = (invitationId: number | string, position: number, client?: object) => Promise<Array<{ id: number }>>;
-type CreateFormAnswerQuery = (answer: string, questionId: number, position: number, invitationId: number | string, client?: object) => Promise<[]>;
-type DeleteInvitation = (invitationId: number | string, authorId: number | string, client?: object) => Promise<number>;
+type CreatePlanItemQuery = (
+  eventTime: string,
+  description: string,
+  position: number,
+  invitationId: number | string,
+  client?: object,
+) => Promise<[]>;
+type CreateFormQuestionQuery = (
+  question: string,
+  type: QuestionType,
+  position: number,
+  invitationId: number | string,
+  client?: object,
+) => Promise<Array<{ id: number }>>;
+type GetFormQuestionByPositionQuery = (
+  invitationId: number | string,
+  position: number,
+  client?: object,
+) => Promise<Array<{ id: number }>>;
+type CreateFormAnswerQuery = (
+  answer: string,
+  questionId: number,
+  position: number,
+  invitationId: number | string,
+  client?: object,
+) => Promise<[]>;
+type DeleteInvitation = (
+  invitationId: number | string,
+  authorId: number | string,
+  client?: object,
+) => Promise<number>;
 type GetAllInvitationsQuery = (...args: unknown[]) => Promise<unknown>;
 
 const mockGetTemplateIdQuery: jest.MockedFunction<GetTemplateIdQuery> = jest.fn();
@@ -41,7 +107,8 @@ const mockPublishInvitationQuery: jest.MockedFunction<PublishInvitationQuery> = 
 const mockGetInvitationPlaceIdQuery: jest.MockedFunction<GetInvitationPlaceIdQuery> = jest.fn();
 const mockUpdatePlaceQuery: jest.MockedFunction<UpdatePlaceQuery> = jest.fn();
 const mockCreatePlaceQuery: jest.MockedFunction<CreatePlaceQuery> = jest.fn();
-const mockUpdateInvitationPlaceIdQuery: jest.MockedFunction<UpdateInvitationPlaceIdQuery> = jest.fn();
+const mockUpdateInvitationPlaceIdQuery: jest.MockedFunction<UpdateInvitationPlaceIdQuery> =
+  jest.fn();
 const mockDeleteInvitationColorsQuery: jest.MockedFunction<DeleteInvitationColorsQuery> = jest.fn();
 const mockDeletePlanItemsQuery: jest.MockedFunction<DeletePlanItemsQuery> = jest.fn();
 const mockDeleteWishesQuery: jest.MockedFunction<DeleteWishesQuery> = jest.fn();
@@ -49,7 +116,8 @@ const mockDeleteFormQuestionsQuery: jest.MockedFunction<DeleteFormQuestionsQuery
 const mockDeleteFormAnswersQuery: jest.MockedFunction<DeleteFormAnswersQuery> = jest.fn();
 const mockCreatePlanItemQuery: jest.MockedFunction<CreatePlanItemQuery> = jest.fn();
 const mockCreateFormQuestionQuery: jest.MockedFunction<CreateFormQuestionQuery> = jest.fn();
-const mockGetFormQuestionByPositionQuery: jest.MockedFunction<GetFormQuestionByPositionQuery> = jest.fn();
+const mockGetFormQuestionByPositionQuery: jest.MockedFunction<GetFormQuestionByPositionQuery> =
+  jest.fn();
 const mockCreateFormAnswerQuery: jest.MockedFunction<CreateFormAnswerQuery> = jest.fn();
 const mockDeleteInvitation: jest.MockedFunction<DeleteInvitation> = jest.fn();
 const mockGetAllInvitationsQuery: jest.MockedFunction<GetAllInvitationsQuery> = jest.fn();
@@ -84,7 +152,11 @@ jest.unstable_mockModule("../../queries/InvitationQueries.js", () => ({
   getAllInvitationsQuery: mockGetAllInvitationsQuery,
 }));
 
-type GetInvitationDetails = (invitationId: number | string, isPublished: boolean, client?: object) => Promise<InvitationDetailsDTO | null>;
+type GetInvitationDetails = (
+  invitationId: number | string,
+  isPublished: boolean,
+  client?: object,
+) => Promise<InvitationDetailsDTO | null>;
 const mockGetInvitationDetails: jest.MockedFunction<GetInvitationDetails> = jest.fn();
 jest.unstable_mockModule("../../utils/InvitationUtils.js", () => ({
   getInvitationDetails: mockGetInvitationDetails,
@@ -97,7 +169,8 @@ jest.unstable_mockModule("../../utils/R2Utils.js", () => ({
   cleanupAllImages: async () => {},
 }));
 
-const { createDraft, updateDraft, publishDraft, getDraft } = await import("../../service/DraftService.js");
+const { createDraft, updateDraft, publishDraft, getDraft } =
+  await import("../../service/DraftService.js");
 
 const makeInvitation = (overrides: Partial<Invitation> = {}): Invitation => ({
   id: 1,
@@ -171,9 +244,13 @@ describe("DraftService.updateDraft", () => {
     mockGetDraftQuery.mockResolvedValueOnce([makeInvitation()]);
     mockGetFormQuestionByPositionQuery.mockResolvedValueOnce([]);
 
-    const result = await updateDraft(1, {
-      answers: [{ answer: "Yes", position: 0, questionPosition: 1 }],
-    }, 1);
+    const result = await updateDraft(
+      1,
+      {
+        answers: [{ answer: "Yes", position: 0, questionPosition: 1 }],
+      },
+      1,
+    );
 
     expect("error" in result).toBe(true);
     if ("error" in result) {

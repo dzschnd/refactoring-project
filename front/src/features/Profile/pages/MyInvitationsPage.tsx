@@ -1,15 +1,13 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
 import Header from "../../../components/Header";
 import ProfileNavigation from "../components/ProfileNavigation";
-import ProfileInfo from "../components/Profile/ProfileInfo";
 import Footer from "../../../components/Footer";
 import InvitationCard from "../components/Invitations/InvitationCard";
 import { Link, useNavigate } from "react-router-dom";
 import goBackIcon from "../../../assetsOld/buttonIcons/arrowLeft.png";
-import DraftCard from "../components/Drafts/DraftCard";
 import { getAllInvitations } from "../../../api/service/InvitationService";
 import type { InvitationDetailsResponse } from "../../../shared/types";
-import { getAllDrafts } from "../../../api/service/DraftService";
 import InivitationCardSkeleton from "../components/Invitations/InivitationCardSkeleton";
 
 const MyInvitationsPage: FC = () => {
@@ -20,7 +18,7 @@ const MyInvitationsPage: FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchInvitations().then();
+    void fetchInvitations();
   }, []);
 
   const fetchInvitations = async () => {

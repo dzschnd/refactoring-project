@@ -1,26 +1,19 @@
-import { FC, useEffect, useRef, useState } from "react";
-import TestTemplate from "../../Templates/TestTemplate/TestTemplate";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../api/redux/store";
-import RedVelvetInvitation from "../../Templates/RedVelvet/RedVelvetInvitation";
+import { useEffect, useRef, useState } from "react";
+import type { FC } from "react";
+import { useAppSelector } from "../../../api/redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import cross from "../../../assetsOld/buttonIcons/cross.png";
 import PreviewToggle from "../components/ConstructorPreview/PreviewToggle";
 import profile from "../../../assetsOld/navIcons/profile.png";
-import InvitationPreview from "../../Templates/InvitationPreview";
 import PreviewLayout from "../layouts/PreviewLayout";
 import { getScrollbarWidth } from "../../../utils/getScrollbarWidth";
-import { NezhnostInvitation } from "../../Templates/Nezhnost/NezhnostInvitation";
 import useIsMobile from "../../../hooks/useIsMobile";
-import defaultCoupleImage from "../../../assetsOld/templates/redVelvet/namesImage.png";
-import defaultPlaceImage from "../../../assetsOld/templates/redVelvet/placeImage.png";
-import { ISO2TextRu } from "../../../utils/dateUtils";
+
 import {
   calculatePreviewHeight,
   calculatePreviewWidth,
 } from "../../../utils/previewUtils";
-import RedVelvetPreview from "../../Templates/RedVelvet/RedVelvetPreview";
-import TestNames from "../../Templates/TestTemplate/Names";
+
 import { SM_SCREEN_WIDTH } from "../../../constants";
 import { getTemplatePreview } from "../../../utils/getTemplatePreview";
 
@@ -28,7 +21,6 @@ const PreviewPage: FC = () => {
   const scrollbarWidth = getScrollbarWidth();
   const navigate = useNavigate();
   const {
-    id,
     templateName,
     firstPartnerName,
     secondPartnerName,
@@ -40,7 +32,7 @@ const PreviewPage: FC = () => {
     questions,
     answers,
     colors,
-  } = useSelector((state: RootState) => state.draft);
+  } = useAppSelector((state) => state.draft);
   const [isMobilePreview, setIsMobilePreview] = useState(false);
   const [isMobileScreen, setIsMobileScreen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(true);
@@ -91,8 +83,6 @@ const PreviewPage: FC = () => {
   }
 
   const isMobile = useIsMobile();
-  const displayedFirstPartnerName = firstPartnerName ? firstPartnerName : "";
-  const displayedSecondPartnerName = secondPartnerName ? secondPartnerName : "";
   const displayedDate = eventDate ? eventDate : "";
   const displayedCoupleImage =
     coupleImage &&
@@ -103,12 +93,6 @@ const PreviewPage: FC = () => {
     place.placeImage &&
     "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
       place.placeImage.split(".com")[1];
-  const displayedAddress = place && place.address ? place.address : "";
-  const displayedLink =
-    place && place.link ? place.link : "https://yandex.ru/maps";
-  const displayedPlanItems = planItems ? planItems : [];
-  const displayedQuestions = questions ? questions : [];
-  const displayedAnswers = answers ? answers : [];
 
   const templateWidth =
     isMobilePreview && !isMobileScreen && !loadingDimensions
@@ -126,49 +110,6 @@ const PreviewPage: FC = () => {
           isMobilePreview,
         )
       : window.innerWidth;
-  const template =
-    templateName === "red_velvet" ? (
-      <RedVelvetInvitation
-        guestFormDisabled={true}
-        id={id}
-        answers={answers}
-        questions={questions}
-        wishes={wishes}
-        colors={colors}
-        planItems={planItems}
-        eventDate={eventDate}
-        coupleImage={coupleImage}
-        secondPartnerName={secondPartnerName}
-        firstPartnerName={firstPartnerName}
-        place={place}
-      />
-    ) : templateName === "nezhnost" ? (
-      <NezhnostInvitation
-        firstPartnerName={firstPartnerName}
-        secondPartnerName={secondPartnerName}
-        coupleImage={displayedCoupleImage}
-        eventDate={displayedDate}
-        place={{
-          address: place.address,
-          placeImage: displayedPlaceImage,
-          link: place.link,
-        }}
-        colors={colors}
-        planItems={planItems}
-        wishes={wishes}
-        questions={questions}
-        answers={answers}
-        width={templateWidth}
-        height={templateHeight}
-        isMobile={isMobile}
-        isPreview={isMobilePreview && !isMobileScreen && !loadingDimensions}
-        guestFormDisabled={true}
-        block={"names"}
-      />
-    ) : (
-      <TestTemplate />
-    );
-
   return (
     <div
       className={`${isMobilePreview && !isMobileScreen ? "flex justify-center" : ""} relative pt-[84px]`}

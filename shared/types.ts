@@ -1,6 +1,6 @@
-import { z } from "zod";
+import type { z } from "zod";
 import { QuestionType as QuestionTypeConst, QuestionTypeSchema } from "./schemas/common";
-import {
+import type {
   colorSchema,
   placeSchema,
   planItemSchema,
@@ -11,7 +11,7 @@ import {
   draftPublishSchema,
   createDraftSchema,
 } from "./schemas/draft";
-import {
+import type {
   registerSchema,
   requestOtpSchema,
   loginSchema,
@@ -23,8 +23,8 @@ import {
   changeEmailSchema,
   changeNameSchema,
 } from "./schemas/auth";
-import { guestAnswerSchema, submitGuestAnswersSchema } from "./schemas/invitation";
-import {
+import type { guestAnswerSchema, submitGuestAnswersSchema } from "./schemas/invitation";
+import type {
   userResponseSchema,
   messageResponseSchema,
   requestPasswordResetResponseSchema,

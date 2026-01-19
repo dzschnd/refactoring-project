@@ -1,8 +1,8 @@
-import React, { FC, forwardRef, ReactNode } from "react";
+import React, { forwardRef } from "react";
+import type { FC, ReactNode } from "react";
 import eyeIcon from "../../../assetsOld/formIcons/eye.png";
 import eyeClosedIcon from "../../../assetsOld/formIcons/eye-closed.png";
 import FormErrorMessage from "../../../components/FormErrorMessage";
-import clsx from "clsx";
 import { twMerge } from "tailwind-merge";
 
 interface InputFieldProps {

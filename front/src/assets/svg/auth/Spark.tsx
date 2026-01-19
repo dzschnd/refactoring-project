@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type SparkProps = {};
+type SparkProps = Record<string, never>;
 
-export const Spark: FC<SparkProps> = (props) => {
+export const Spark: FC<SparkProps> = (_props) => {
   return (
     <svg
       width="54"

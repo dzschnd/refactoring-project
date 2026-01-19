@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type PlusIconProps = {};
+type PlusIconProps = Record<string, never>;
 
-export const PlusIcon: FC<PlusIconProps> = (props) => {
+export const PlusIcon: FC<PlusIconProps> = (_props) => {
   return (
     <div className={"min-w-[15px]"}>
       <svg

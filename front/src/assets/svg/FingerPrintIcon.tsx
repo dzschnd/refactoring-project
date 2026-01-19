@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type FingerPrintIconProps = {};
+type FingerPrintIconProps = Record<string, never>;
 
-export const FingerPrintIcon: FC<FingerPrintIconProps> = (props) => {
+export const FingerPrintIcon: FC<FingerPrintIconProps> = (_props) => {
   return (
     <svg
       width="38"

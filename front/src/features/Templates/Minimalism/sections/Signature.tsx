@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { TemplateMinimalProps } from "../../../../types";
+import type { FC } from "react";
+import type { TemplateMinimalProps } from "../../../../types";
 import { Branches } from "../../../../assets/svg/templates/minimalism/Branches";
 
 export const Signature: FC<TemplateMinimalProps> = ({ isMobile, scale }) => {

@@ -1,16 +1,10 @@
-import {
-  Dispatch,
-  FC,
-  ReactNode,
-  SetStateAction,
-  useRef,
-  useState,
-} from "react";
+import { useRef, useState } from "react";
+import type { Dispatch, FC, ReactNode, SetStateAction } from "react";
 import clsx from "clsx";
 import { MobileClose } from "../../../assets/svg/auth/MobileClose";
 import { Close } from "../../../assets/svg/auth/Close";
 import { useCloseOnClickOutside } from "../../../hooks/useCloseOnClickOutside";
-import { AuthPage } from "../../../types";
+import type { AuthPage } from "../../../types";
 import { Login } from "../pages/Login";
 import { Register } from "../pages/Register";
 import { RegisterOtpInput } from "../pages/RegisterOtpInput";
@@ -48,7 +42,7 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
   setForgotPasswordInputValues,
 }) => {
   const overlayRef = useRef<HTMLDivElement>(null);
-  const [isWidePopup, setIsWidePopup] = useState<boolean>(false);
+  const [, setIsWidePopup] = useState<boolean>(false);
 
   const renderPage = (): ReactNode => {
     switch (currentPage) {
@@ -122,7 +116,6 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
           className={"absolute right-4 top-[-34px] sm:hidden"}
           onClick={() => {
             setIsAuthOpen(false);
-            console.log(loginInputValues);
           }}
         >
           <MobileClose />
@@ -132,7 +125,6 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
           className={"absolute right-[30px] top-[30px] hidden sm:block"}
           onClick={() => {
             setIsAuthOpen(false);
-            console.log(loginInputValues);
           }}
         >
           <Close />

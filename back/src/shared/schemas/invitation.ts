@@ -6,7 +6,10 @@ export const guestAnswerSchema = z.object({
 });
 
 export const submitGuestAnswersSchema = z.object({
-  guestName: z.string().min(1, "Guest name cannot be empty").max(50, "Guest name must be below 50 characters"),
+  guestName: z
+    .string()
+    .min(1, "Guest name cannot be empty")
+    .max(50, "Guest name must be below 50 characters"),
   answers: z.array(guestAnswerSchema),
   isComing: z.boolean(),
 });

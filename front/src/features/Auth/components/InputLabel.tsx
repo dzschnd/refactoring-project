@@ -1,5 +1,4 @@
-import { FC } from "react";
-import eyeIcon from "../../../assetsOld/formIcons/eye.png";
+import type { FC } from "react";
 
 interface InputLabelProps {
   id: string;

@@ -1,7 +1,7 @@
-import { FC, useState } from "react";
+import { useState } from "react";
+import type { FC } from "react";
 import ConstructorLayout from "../layouts/ConstructorLayout";
 import ProgramForm from "../components/ConstructorForms/Forms/ProgramForm";
-import InvitationPreview from "../../Templates/InvitationPreview";
 
 const ProgramConstructor: FC = () => {
   const [calculatedHeight, setCalculatedHeight] = useState<number | null>(null);

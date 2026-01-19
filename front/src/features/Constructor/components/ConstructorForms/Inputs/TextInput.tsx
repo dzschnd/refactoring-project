@@ -1,4 +1,5 @@
-import { ChangeEvent, FC, forwardRef, useId } from "react";
+import { forwardRef, useId } from "react";
+import type { ChangeEvent, FC } from "react";
 
 interface InputProps {
   placeholder: string;

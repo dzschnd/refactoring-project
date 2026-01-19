@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { TemplatePlaceProps } from "../../../../types";
+import type { FC } from "react";
+import type { TemplatePlaceProps } from "../../../../types";
 import { Button } from "../components/Button";
 
 export const Place: FC<TemplatePlaceProps> = ({
@@ -14,7 +14,7 @@ export const Place: FC<TemplatePlaceProps> = ({
       <div className={"flex flex-col"} style={{ gap: scale(12) }}>
         <h2
           className={
-            "text-minimalism--primary text-center font-minimalism--primary font-light leading-[1.2]"
+            "text-center font-minimalism--primary font-light leading-[1.2] text-minimalism--primary"
           }
           style={{ fontSize: scale(32) }}
         >
@@ -22,7 +22,7 @@ export const Place: FC<TemplatePlaceProps> = ({
         </h2>
         <p
           className={
-            "text-minimalism--primary break-words text-center font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02em]"
+            "break-words text-center font-minimalism--secondary font-light leading-[1.6] tracking-[-0.02em] text-minimalism--primary"
           }
           style={{
             fontSize: scale(16),

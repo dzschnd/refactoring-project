@@ -1,13 +1,12 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../api/redux/store";
+import { useAppDispatch } from "../api/redux/hooks";
 import { createDraft } from "../api/service/DraftService";
 import { defaultTemplateName } from "../constants";
 import type { StateError } from "../types";
 
 const useCreateDefaultDraft = () => {
   const navigate = useNavigate();
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   return async () => {
     const response = await dispatch(

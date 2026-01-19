@@ -1,4 +1,5 @@
-import { FC, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import type { FC } from "react";
 import logo from "../../../assetsOld/brand/logo.png";
 import logoHeart from "../../../assetsOld/brand/logoHeart.png";
 import cloudIcon from "../../../assetsOld/cloudIcon.png";
@@ -6,7 +7,7 @@ import profile from "../../../assetsOld/navIcons/profile.png";
 import { Link, useNavigate } from "react-router-dom";
 import PreviewToggle from "./ConstructorPreview/PreviewToggle";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../api/redux/store";
+import type { AppDispatch, RootState } from "../../../api/redux/store";
 import { publishDraft, validateDraft } from "../../../api/service/DraftService";
 import cross from "../../../assetsOld/buttonIcons/cross.png";
 import { useCloseOnClickOutside } from "../../../hooks/useCloseOnClickOutside";

@@ -1,4 +1,5 @@
-import React, { FC, useRef } from "react";
+import { useRef } from "react";
+import type { FC } from "react";
 import { Names } from "./sections/Names";
 import { Place } from "./sections/Place";
 import { Date as EventDate } from "./sections/Date";
@@ -12,7 +13,7 @@ import { MadeBy } from "./sections/MadeBy";
 import { MD_SCREEN_WIDTH, MIN_SCREEN_WIDTH } from "../../../constants";
 import { defaultTemplateImages } from "../defaultTemplateImages";
 import clsx from "clsx";
-import { TemplateProps } from "../../../types";
+import type { TemplateProps } from "../../../types";
 import { usePreviewScrollPosition } from "../../../hooks/usePreviewScrollPosition";
 
 export const PinkVibeInvitation: FC<TemplateProps> = ({
@@ -78,7 +79,7 @@ export const PinkVibeInvitation: FC<TemplateProps> = ({
       }}
     >
       <div
-        className="bg-pink-vibe--primary flex h-full w-full flex-col items-center overflow-x-hidden"
+        className="flex h-full w-full flex-col items-center overflow-x-hidden bg-pink-vibe--primary"
         style={{
           gap: isMobile ? scale(120) : scale(140),
           paddingInline: scale(15),

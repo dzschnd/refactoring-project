@@ -1,23 +1,10 @@
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
+import type { Dispatch, FC, SetStateAction } from "react";
 import type { AuthPage, StateError } from "../../../types";
-import { AppDispatch, RootState } from "../../../api/redux/store";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../../../api/redux/hooks";
+
 import { requestOtp, verifyEmail } from "../../../api/service/UserService";
-import InputLabel from "../components/InputLabel";
-import InputField from "../components/InputField";
-import { EmailIcon } from "../../../assets/svg/EmailIcon";
-import { LockIcon } from "../../../assets/svg/LockIcon";
-import SubmitButton from "../components/SubmitButton";
-import LinkToLoginOrRegister from "../components/LinkToLoginOrRegister";
 import OTPInputField from "../components/OTPInputField";
-import FormErrorMessage from "../../../components/FormErrorMessage";
 import {
   INVALID_OTP_TRY_REPEAT,
   OTP_EXPIRED,
@@ -34,8 +21,8 @@ type OtpInputProps = {
 export const PasswordResetOtpInput: FC<OtpInputProps> = ({
   setCurrentPage,
 }) => {
-  const dispatch: AppDispatch = useDispatch();
-  const { email } = useSelector((state: RootState) => state.user);
+  const dispatch = useAppDispatch();
+  const { email } = useAppSelector((state) => state.user);
   const [resetOtp, setResetOtp] = useState(false);
   const [error, setError] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -56,7 +43,9 @@ export const PasswordResetOtpInput: FC<OtpInputProps> = ({
   const onSubmit = async (otp: string) => {
     const otpValidation = verifyEmailSchema.shape.otp.safeParse(otp);
     if (!otpValidation.success) {
-      setError(otpValidation.error.issues[0]?.message ?? INVALID_OTP_TRY_REPEAT);
+      setError(
+        otpValidation.error.issues[0]?.message ?? INVALID_OTP_TRY_REPEAT,
+      );
       return;
     }
     const response = await dispatch(verifyEmail({ email: email, otp: otp }));

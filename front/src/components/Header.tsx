@@ -1,7 +1,8 @@
-import { FC, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import type { FC } from "react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { RootState } from "../api/redux/store";
+import type { RootState } from "../api/redux/store";
 import Button from "./Button";
 import { Logo } from "../assets/svg/Logo";
 import { BurgerMenuIcon } from "../assets/svg/BurgerMenuIcon";
@@ -11,7 +12,7 @@ import clsx from "clsx";
 import { CloseMenuIcon } from "../assets/svg/CloseMenuIcon";
 import useCreateDefaultDraft from "../utils/useCreateDefaultDraft";
 import AuthLayout from "../features/Auth/layouts/AuthLayout";
-import { AuthPage } from "../types";
+import type { AuthPage } from "../types";
 
 const Header: FC = () => {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);

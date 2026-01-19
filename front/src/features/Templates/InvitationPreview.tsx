@@ -1,7 +1,6 @@
-import { FC } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../api/redux/store";
-import { PreviewProps } from "../../types";
+import type { FC } from "react";
+import { useAppSelector } from "../../api/redux/hooks";
+import type { PreviewProps } from "../../types";
 import { getTemplatePreview } from "../../utils/getTemplatePreview";
 
 const InvitationPreview: FC<PreviewProps> = ({
@@ -22,7 +21,7 @@ const InvitationPreview: FC<PreviewProps> = ({
     wishes,
     questions,
     answers,
-  } = useSelector((state: RootState) => state.draft);
+  } = useAppSelector((state) => state.draft);
 
   const displayedFirstPartnerName = firstPartnerName ? firstPartnerName : "";
   const displayedSecondPartnerName = secondPartnerName ? secondPartnerName : "";

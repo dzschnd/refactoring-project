@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type PasswordProps = {};
+type PasswordProps = Record<string, never>;
 
-export const Password: FC<PasswordProps> = (props) => {
+export const Password: FC<PasswordProps> = (_props) => {
   return (
     <svg
       width="24"

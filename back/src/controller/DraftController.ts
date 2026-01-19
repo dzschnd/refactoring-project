@@ -2,102 +2,112 @@ import type { Request, Response } from "express";
 import * as DraftService from "../service/DraftService.js";
 import { SERVER_ERROR } from "../messages/messages.js";
 import { isServiceError } from "../types/service.js";
+import type { CreateDraftRequest, DraftUpdateDTO } from "../types/dto.js";
+import { draftSchemas } from "../shared/schemas/draft.js";
 import {
-    BadRequestError,
-    ForbiddenError,
-    InternalServerError,
-    NotFoundError,
+  BadRequestError,
+  ForbiddenError,
+  InternalServerError,
+  NotFoundError,
 } from "../errors/index.js";
 
-export const createDraft = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.user) {
-        throw new ForbiddenError("Forbidden");
+export const createDraft = async (
+  req: Request<Record<string, string>, unknown, CreateDraftRequest>,
+  res: Response,
+): Promise<Response> => {
+  if (!req.user) {
+    throw new ForbiddenError("Forbidden");
+  }
+  const { templateName } = draftSchemas.create.parse(req.body);
+  const draftInfo = await DraftService.createDraft(req.user.id, templateName);
+  if (isServiceError(draftInfo)) {
+    if (draftInfo.error === "Template not found") {
+      throw new NotFoundError("Template not found");
     }
-    const draftInfo = await DraftService.createDraft(req.user.id, req.body.templateName);
-    if (isServiceError(draftInfo)) {
-        if (draftInfo.error === 'Template not found') {
-            throw new NotFoundError("Template not found");
-        }
-        throw new InternalServerError(SERVER_ERROR);
-    }
-    return res.status(200).json(draftInfo);
+    throw new InternalServerError(SERVER_ERROR);
+  }
+  return res.status(200).json(draftInfo);
 };
 
-export const updateDraft = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.user) {
-        throw new ForbiddenError("Forbidden");
+export const updateDraft = async (
+  req: Request<Record<string, string>, unknown, DraftUpdateDTO>,
+  res: Response,
+): Promise<Response> => {
+  if (!req.user) {
+    throw new ForbiddenError("Forbidden");
+  }
+  const data = req.body;
+  const draftInfo = await DraftService.updateDraft(req.params.id, data, req.user.id);
+  if (isServiceError(draftInfo)) {
+    if (draftInfo.error === "Draft not found") {
+      throw new NotFoundError("Draft not found");
     }
-    const draftInfo = await DraftService.updateDraft(req.params.id, req.body, req.user.id);
-    if (isServiceError(draftInfo)) {
-        if (draftInfo.error === 'Draft not found') {
-            throw new NotFoundError("Draft not found");
-        }
-        if (draftInfo.error === 'Template not found') {
-            throw new NotFoundError("Template not found");
-        }
-        if (draftInfo.error === 'Question for some of the answers not found') {
-            throw new BadRequestError("Question for some of the answers not found");
-        }
-        throw new InternalServerError(SERVER_ERROR);
+    if (draftInfo.error === "Template not found") {
+      throw new NotFoundError("Template not found");
     }
-    return res.status(200).json(draftInfo);
+    if (draftInfo.error === "Question for some of the answers not found") {
+      throw new BadRequestError("Question for some of the answers not found");
+    }
+    throw new InternalServerError(SERVER_ERROR);
+  }
+  return res.status(200).json(draftInfo);
 };
 
 export const publishDraft = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.user) {
-        throw new ForbiddenError("Forbidden");
-    }
-    const { id: invitationId } = req.params;
+  if (!req.user) {
+    throw new ForbiddenError("Forbidden");
+  }
+  const { id: invitationId } = req.params;
 
-    const invitationInfo = await DraftService.publishDraft(invitationId, req.user.id);
-    if (isServiceError(invitationInfo)) {
-        if (invitationInfo.error === 'Draft not found') {
-            throw new NotFoundError("Draft not found");
-        }
-        throw new InternalServerError(SERVER_ERROR);
+  const invitationInfo = await DraftService.publishDraft(invitationId, req.user.id);
+  if (isServiceError(invitationInfo)) {
+    if (invitationInfo.error === "Draft not found") {
+      throw new NotFoundError("Draft not found");
     }
-    return res.status(200).json(invitationInfo);
+    throw new InternalServerError(SERVER_ERROR);
+  }
+  return res.status(200).json(invitationInfo);
 };
 
-export const validateDraft = async (_req: Request, res: Response): Promise<Response> => {
-    return res.status(200).json({message: 'Draft is valid'});
+export const validateDraft = (_req: Request, res: Response): Response => {
+  return res.status(200).json({ message: "Draft is valid" });
 };
 
 export const getDraft = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.user) {
-        throw new ForbiddenError("Forbidden");
+  if (!req.user) {
+    throw new ForbiddenError("Forbidden");
+  }
+  const draftInfo = await DraftService.getDraft(req.params.id, req.user.id);
+  if (isServiceError(draftInfo)) {
+    if (draftInfo.error === "Draft not found") {
+      throw new NotFoundError("Draft not found");
     }
-    const draftInfo = await DraftService.getDraft(req.params.id, req.user.id);
-    if (isServiceError(draftInfo)) {
-        if (draftInfo.error === 'Draft not found') {
-            throw new NotFoundError("Draft not found");
-        }
-        throw new InternalServerError(SERVER_ERROR);
-    }
-    return res.status(200).json(draftInfo);
+    throw new InternalServerError(SERVER_ERROR);
+  }
+  return res.status(200).json(draftInfo);
 };
 
 export const getAllDrafts = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.user) {
-        throw new ForbiddenError("Forbidden");
-    }
-    const allDraftsInfo = await DraftService.getAllDrafts(req.user.id);
-    if (isServiceError(allDraftsInfo)) {
-        throw new InternalServerError(SERVER_ERROR);
-    }
-    return res.status(200).json(allDraftsInfo);
+  if (!req.user) {
+    throw new ForbiddenError("Forbidden");
+  }
+  const allDraftsInfo = await DraftService.getAllDrafts(req.user.id);
+  if (isServiceError(allDraftsInfo)) {
+    throw new InternalServerError(SERVER_ERROR);
+  }
+  return res.status(200).json(allDraftsInfo);
 };
 
 export const deleteDraft = async (req: Request, res: Response): Promise<Response> => {
-    if (!req.user) {
-        throw new ForbiddenError("Forbidden");
+  if (!req.user) {
+    throw new ForbiddenError("Forbidden");
+  }
+  const deleteResponse = await DraftService.deleteDraft(req.params.id, req.user.id);
+  if (isServiceError(deleteResponse)) {
+    if (deleteResponse.error === "Draft not found") {
+      throw new NotFoundError("Draft not found");
     }
-    const deleteResponse = await DraftService.deleteDraft(req.params.id, req.user.id);
-    if (isServiceError(deleteResponse)) {
-        if (deleteResponse.error === 'Draft not found') {
-            throw new NotFoundError("Draft not found");
-        }
-        throw new InternalServerError(SERVER_ERROR);
-    }
-    return res.status(200).json(deleteResponse);
+    throw new InternalServerError(SERVER_ERROR);
+  }
+  return res.status(200).json(deleteResponse);
 };

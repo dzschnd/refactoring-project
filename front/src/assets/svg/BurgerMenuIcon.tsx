@@ -1,8 +1,8 @@
-import { FC } from "react";
+import type { FC } from "react";
 
-type BurgerMenuProps = {};
+type BurgerMenuProps = Record<string, never>;
 
-export const BurgerMenuIcon: FC<BurgerMenuProps> = (props) => {
+export const BurgerMenuIcon: FC<BurgerMenuProps> = (_props) => {
   return (
     <svg
       width="24"

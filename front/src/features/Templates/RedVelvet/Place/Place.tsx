@@ -1,7 +1,4 @@
-import { FC } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../../api/redux/store";
-import defaultPlaceImage from "../../../../assetsOld/templates/redVelvet/placeImage.png";
+import type { FC } from "react";
 
 interface PlaceProps {
   address: string;

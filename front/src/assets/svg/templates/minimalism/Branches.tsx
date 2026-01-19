@@ -1,4 +1,5 @@
-import { FC, useId } from "react";
+import { useId } from "react";
+import type { FC } from "react";
 
 type BranchesProps = {
   width: number;
@@ -12,7 +13,7 @@ export const Branches: FC<BranchesProps> = ({ width }) => {
   return (
     <svg
       width={width}
-      height={width * 58 / 188}
+      height={(width * 58) / 188}
       viewBox={`0 0 188 58`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

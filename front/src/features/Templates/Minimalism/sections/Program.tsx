@@ -1,16 +1,16 @@
-import { FC } from "react";
-import { TemplateProgramProps } from "../../../../types";
+import type { FC } from "react";
+import type { TemplateProgramProps } from "../../../../types";
 
 export const Program: FC<TemplateProgramProps> = ({
   planItems,
   scale,
-  isMobile,
+  isMobile: _isMobile,
 }) => {
   return (
     <div>
       <h2
         className={
-          "text-minimalism--primary text-center font-minimalism--primary font-light leading-[1.2]"
+          "text-center font-minimalism--primary font-light leading-[1.2] text-minimalism--primary"
         }
         style={{ marginBottom: scale(30), fontSize: scale(32) }}
       >
@@ -22,7 +22,7 @@ export const Program: FC<TemplateProgramProps> = ({
           <div
             key={index}
             className={
-              "[&>span]:text-minimalism--primary flex flex-col items-center [&>span]:font-light"
+              "flex flex-col items-center [&>span]:font-light [&>span]:text-minimalism--primary"
             }
             style={{ gap: scale(12) }}
           >
@@ -36,7 +36,7 @@ export const Program: FC<TemplateProgramProps> = ({
             </span>
             <span
               className={
-                "font-minimalism--tertiary break-words leading-[1.6] tracking-[-0.02em]"
+                "break-words font-minimalism--tertiary leading-[1.6] tracking-[-0.02em]"
               }
               style={{ fontSize: scale(16) }}
             >

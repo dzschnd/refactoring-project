@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import type { FC } from "react";
 import deleteIcon from "../../../../assetsOld/buttonIcons/deleteIcon.png";
 
 const DraftCardSkeleton: FC = () => {

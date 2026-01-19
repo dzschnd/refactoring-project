@@ -1,8 +1,7 @@
-import { FC } from "react";
-import { ISO2TextRu } from "../../../utils/dateUtils";
-import { QuestionType } from "../../../types";
-import defaultCoupleImage from "../../../assets/images/templates/nezhnost/couple.avif";
-import defaultPlaceImage from "../../../assets/images/templates/nezhnost/place.avif";
+import type { FC } from "react";
+
+import type { QuestionType } from "../../../types";
+
 import useIsMobile from "../../../hooks/useIsMobile";
 import { NezhnostInvitation } from "./NezhnostInvitation";
 import useCurrentDimensions from "../../../hooks/useCurrentDimensions";

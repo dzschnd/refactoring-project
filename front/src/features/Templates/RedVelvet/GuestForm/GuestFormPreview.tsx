@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { QuestionType } from "../../../../types";
+import type { FC } from "react";
+import type { QuestionType } from "../../../../types";
 
 interface GuestFormProps {
   questions: {

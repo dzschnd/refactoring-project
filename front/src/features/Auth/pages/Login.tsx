@@ -1,16 +1,11 @@
-import React, {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useState,
-} from "react";
+import { useEffect, useState } from "react";
+import type { Dispatch, FC, SetStateAction } from "react";
 import type { AuthPage, StateError } from "../../../types";
-import { AppDispatch } from "../../../api/redux/store";
-import { useDispatch } from "react-redux";
-import { SubmitHandler, useForm } from "react-hook-form";
+import { useAppDispatch } from "../../../api/redux/hooks";
+import { useForm } from "react-hook-form";
+import type { SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import type { z } from "zod";
 import { loginUser } from "../../../api/service/UserService";
 import { setEmail } from "../../../api/redux/slices/userSlice";
 import { INVALID_CREDENTIALS, SERVER_ERROR } from "../../../api/messages";
@@ -36,7 +31,7 @@ export const Login: FC<LoginProps> = ({
   inputValues,
   setInputValues,
 }) => {
-  const dispatch: AppDispatch = useDispatch();
+  const dispatch = useAppDispatch();
   const [errorMessage, setErrorMessage] = useState<string | undefined>(
     undefined,
   );
@@ -93,7 +88,7 @@ export const Login: FC<LoginProps> = ({
 
   useEffect(() => {
     reset(inputValues);
-  }, []);
+  }, [inputValues, reset]);
 
   return (
     <div
