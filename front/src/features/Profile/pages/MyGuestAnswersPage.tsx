@@ -1,19 +1,17 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import type { FC } from "react";
 import Header from "../../../components/Header";
 import ProfileNavigation from "../components/ProfileNavigation";
 import Footer from "../../../components/Footer";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import goBackIcon from "../../../assetsOld/buttonIcons/arrowLeft.png";
-import {
-  getAllGuestAnswers,
-  getAllInvitations,
-} from "../../../api/service/InvitationService";
 import type {
   GuestAnswerResponse,
   InvitationDetailsResponse,
 } from "../../../shared/types";
 import GuestAnswerSkeleton from "../components/GuestAnswers/GuestAnswerSkeleton";
+import { useGuestAnswers } from "../../../hooks/useGuestAnswers";
+import { useInvitations } from "../../../hooks/useInvitations";
 
 const MyGuestAnswersPage: FC = () => {
   const location = useLocation();
@@ -25,35 +23,17 @@ const MyGuestAnswersPage: FC = () => {
       : typeof rawId === "number"
         ? rawId
         : 0;
-  const [allGuestAnswers, setAllGuestAnswers] = useState<GuestAnswerResponse[]>(
-    [],
-  );
-  const [loading, setLoading] = useState(true);
-  const [allInvitations, setAllInvitations] = useState<
-    InvitationDetailsResponse[]
-  >([]);
+  const { guestAnswers, loading: guestAnswersLoading } = useGuestAnswers();
+  const { invitations, loading: invitationsLoading } = useInvitations();
   const [currentId, setCurrentId] = useState<number>(parsedId);
   const navigate = useNavigate();
-
-  const fetchGuestAnswers = useCallback(async () => {
-    const result = await getAllGuestAnswers();
-    setLoading(false);
-    setAllGuestAnswers(Array.isArray(result) ? result : []);
-  }, []);
-
-  const fetchInvitations = useCallback(async () => {
-    const result = await getAllInvitations();
-    const invitations = Array.isArray(result) ? result : [];
-    setAllInvitations(invitations);
-    if (!parsedId && invitations.length > 0) setCurrentId(invitations[0].id);
-  }, [parsedId]);
+  const loading = guestAnswersLoading || invitationsLoading;
 
   useEffect(() => {
-    void (async () => {
-      await fetchInvitations();
-      await fetchGuestAnswers();
-    })();
-  }, [fetchInvitations, fetchGuestAnswers]);
+    if (!parsedId && invitations.length > 0) {
+      setCurrentId(invitations[0].id);
+    }
+  }, [parsedId, invitations]);
 
   const groupAnswersByGuestId = (answers: GuestAnswerResponse[]) => {
     return answers.reduce<Record<string, GuestAnswerResponse[]>>(
@@ -69,7 +49,7 @@ const MyGuestAnswersPage: FC = () => {
   };
 
   const getGuestAnswersByInvitation = (invitationId: number) => {
-    const filteredAnswers = allGuestAnswers.filter(
+    const filteredAnswers = guestAnswers.filter(
       (guestAnswer) => guestAnswer.invitationId === invitationId,
     );
 
@@ -113,14 +93,14 @@ const MyGuestAnswersPage: FC = () => {
               <GuestAnswerSkeleton />
             ) : (
               <div className="mt-10">
-                {allInvitations &&
-                Array.isArray(allInvitations) &&
-                allInvitations.length > 0 ? (
+                {invitations &&
+                Array.isArray(invitations) &&
+                invitations.length > 0 ? (
                   <>
                     <div className="scrollbar-hide flex gap-[30px] overflow-x-auto pb-[3px]">
-                      {allInvitations &&
-                        Array.isArray(allInvitations) &&
-                        allInvitations.map((invitation) => (
+                      {invitations &&
+                        Array.isArray(invitations) &&
+                        invitations.map((invitation: InvitationDetailsResponse) => (
                           <div key={invitation.id}>
                             <button onClick={() => setCurrentId(invitation.id)}>
                               <span
@@ -136,15 +116,15 @@ const MyGuestAnswersPage: FC = () => {
                     </div>
 
                     <div>
-                      {allInvitations &&
-                      Array.isArray(allInvitations) &&
-                      allGuestAnswers.length > 0 ? (
-                        allInvitations.map((invitation) => (
+                      {invitations &&
+                      Array.isArray(invitations) &&
+                      guestAnswers.length > 0 ? (
+                        invitations.map((invitation: InvitationDetailsResponse) => (
                           <div key={invitation.id}>
                             {invitation.id === currentId &&
-                              allGuestAnswers &&
-                              Array.isArray(allGuestAnswers) &&
-                              allGuestAnswers.length > 0 && (
+                              guestAnswers &&
+                              Array.isArray(guestAnswers) &&
+                              guestAnswers.length > 0 && (
                                 <div>
                                   {Object.entries(
                                     getGuestAnswersByInvitation(invitation.id),

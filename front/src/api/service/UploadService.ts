@@ -4,7 +4,7 @@ import { axiosAuthorized, baseURL } from "./config";
 import type { UploadImageType } from "../../shared/types";
 import { responseSchemas } from "../../shared/schemas/responses";
 
-const BASE_URL: string = `${baseURL}/upload`;
+const BASE_URL: string = "upload";
 
 export const uploadImage = createAsyncThunk(
   "draft/upload",

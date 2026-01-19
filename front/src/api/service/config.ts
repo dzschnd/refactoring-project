@@ -1,7 +1,4 @@
-import axios from "axios";
+import { api, apiAuth, baseURL } from "../http";
 
-export const axiosAuthorized = axios.create({
-  withCredentials: true,
-});
-
-export const baseURL = `${process.env.REACT_APP_SERVER_DOMAIN}`;
+export const axiosAuthorized = apiAuth;
+export { api, baseURL };

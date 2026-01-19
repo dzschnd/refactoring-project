@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { FC } from "react";
 import type { TemplateGuestFormProps } from "../../../../types";
-import type { QuestionType } from "../../../../types";
+import { QuestionType } from "../../../../types";
 import { getScrollbarWidth } from "../../../../utils/getScrollbarWidth";
 import { submitGuestAnswers } from "../../../../api/service/InvitationService";
 import { useCloseOnClickOutside } from "../../../../hooks/useCloseOnClickOutside";

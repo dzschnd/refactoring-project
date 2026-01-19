@@ -32,6 +32,10 @@ export const RegisterOtpInput: FC<OtpInputProps> = ({ setCurrentPage }) => {
   );
 
   const handleRequestOtp = async () => {
+    if (!email) {
+      setError(SERVER_ERROR);
+      return;
+    }
     await dispatch(requestOtp({ email: email }));
     setError("");
     setResetOtp(true);
@@ -44,6 +48,10 @@ export const RegisterOtpInput: FC<OtpInputProps> = ({ setCurrentPage }) => {
       setError(
         otpValidation.error.issues[0]?.message ?? INVALID_OTP_TRY_REPEAT,
       );
+      return;
+    }
+    if (!email) {
+      setError(SERVER_ERROR);
       return;
     }
     const response = await dispatch(verifyEmail({ email: email, otp: otp }));

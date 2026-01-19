@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import type { FC } from "react";
 import Header from "../../../components/Header";
 import ProfileNavigation from "../components/ProfileNavigation";
@@ -6,26 +5,13 @@ import Footer from "../../../components/Footer";
 import InvitationCard from "../components/Invitations/InvitationCard";
 import { Link, useNavigate } from "react-router-dom";
 import goBackIcon from "../../../assetsOld/buttonIcons/arrowLeft.png";
-import { getAllInvitations } from "../../../api/service/InvitationService";
 import type { InvitationDetailsResponse } from "../../../shared/types";
 import InivitationCardSkeleton from "../components/Invitations/InivitationCardSkeleton";
+import { useInvitations } from "../../../hooks/useInvitations";
 
 const MyInvitationsPage: FC = () => {
-  const [allInvitations, setAllInvitations] = useState<
-    InvitationDetailsResponse[]
-  >([]);
-  const [loading, setLoading] = useState(true);
+  const { invitations, loading } = useInvitations();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    void fetchInvitations();
-  }, []);
-
-  const fetchInvitations = async () => {
-    const result = await getAllInvitations();
-    setAllInvitations(Array.isArray(result) ? result : []);
-    setLoading(false);
-  };
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -54,10 +40,10 @@ const MyInvitationsPage: FC = () => {
                   <InivitationCardSkeleton />
                   <InivitationCardSkeleton />
                 </>
-              ) : allInvitations &&
-                Array.isArray(allInvitations) &&
-                allInvitations.length > 0 ? (
-                allInvitations.map((invitation) => (
+              ) : invitations &&
+                Array.isArray(invitations) &&
+                invitations.length > 0 ? (
+                invitations.map((invitation: InvitationDetailsResponse) => (
                   <InvitationCard
                     key={invitation.id}
                     id={invitation.id}

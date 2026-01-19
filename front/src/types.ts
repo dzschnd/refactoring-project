@@ -1,8 +1,12 @@
 import type { CSSProperties } from "react";
-import type { DraftUpdateRequest } from "./shared/types";
-import type { QuestionType } from "./shared/types";
+import type {
+  DraftUpdateRequest,
+  QuestionType as QuestionTypeType,
+} from "./shared/types";
+import { QuestionType as QuestionTypeConst } from "./shared/types";
 
-export { QuestionType };
+export const QuestionType = QuestionTypeConst;
+export type QuestionTypeValue = QuestionTypeType;
 
 export type AuthPage =
   | "LOGIN"
@@ -73,7 +77,7 @@ export interface DraftState {
   questions:
     | {
         question: string;
-        type: QuestionType;
+        type: QuestionTypeType;
         position: number;
       }[]
     | null;
@@ -134,7 +138,7 @@ export interface TemplateProps {
     | null;
   questions: {
     question: string;
-    type: QuestionType;
+    type: QuestionTypeType;
     position: number;
   }[];
   answers: {
@@ -221,7 +225,7 @@ export interface TemplateWishesProps {
 export interface TemplateGuestFormProps {
   questions: {
     question: string;
-    type: QuestionType;
+    type: QuestionTypeType;
     position: number;
   }[];
   answers: {

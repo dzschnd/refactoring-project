@@ -69,7 +69,7 @@ export const publishDraft = async (req: Request, res: Response): Promise<Respons
   return res.status(200).json(invitationInfo);
 };
 
-export const validateDraft = (_req: Request, res: Response): Response => {
+export const validateDraft = async (_req: Request, res: Response): Promise<Response> => {
   return res.status(200).json({ message: "Draft is valid" });
 };
 

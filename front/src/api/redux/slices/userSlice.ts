@@ -190,8 +190,12 @@ export const userSlice = createSlice({
         state.error = null;
         state.email = action.payload.email;
         state.name = action.payload.name ?? null;
+        state.verified = action.payload.verified;
       })
       .addCase(getUser.rejected, (state, action) => {
+        state.email = null;
+        state.name = null;
+        state.verified = false;
         state.loading = false;
         state.error = action.payload as StateError;
       })

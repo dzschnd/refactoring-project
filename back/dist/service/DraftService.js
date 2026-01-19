@@ -1,5 +1,6 @@
 import prisma from "../config/prisma.js";
-import { createDraftQuery, createColorQuery, createFormAnswerQuery, createFormQuestionQuery, createInvitationColorQuery, createPlaceQuery, createPlanItemQuery, createWishQuery, deleteFormAnswersQuery, deleteFormQuestionsQuery, deleteInvitationColorsQuery, deletePlanItemsQuery, deleteWishesQuery, getAllInvitationsQuery, getColorIdQuery, getFormQuestionByPositionQuery, getInvitationPlaceIdQuery, getTemplateIdQuery, updateInvitationPlaceIdQuery, updatePlaceQuery, publishInvitationQuery, deleteInvitation, getDraftQuery } from "../queries/InvitationQueries.js";
+import { createDraftQuery, createColorQuery, createFormAnswerQuery, createFormQuestionQuery, createInvitationColorQuery, createPlaceQuery, createPlanItemQuery, createWishQuery, deleteFormAnswersQuery, deleteFormQuestionsQuery, deleteInvitationColorsQuery, deletePlanItemsQuery, deleteWishesQuery, getAllInvitationsQuery, getColorIdQuery, getFormQuestionByPositionQuery, getInvitationPlaceIdQuery, getTemplateIdQuery, updateInvitationPlaceIdQuery, updatePlaceQuery, publishInvitationQuery, deleteInvitation, getDraftQuery, } from "../queries/InvitationQueries.js";
+import { deleteGuestAnswersByInvitationQuery } from "../queries/InvitationQueries.js";
 import { getInvitationDetails } from "../utils/InvitationUtils.js";
 import { errorResponse } from "../utils/errorUtils.js";
 import logger from "../logger.js";
@@ -39,12 +40,20 @@ export const createDraft = async (userId, templateName) => {
                     break;
             }
             const defaultWishes = [
-                { wish: "Будем очень признательны, если Вы воздержитесь от криков «Горько». Ведь поцелуй – это знак выражения чувств, и он не может быть по заказу.", position: 0 },
-                { wish: "Мы с теплотой относимся к детям любого возраста. Но для свадьбы выбрали формат 18+.", position: 1 }
+                {
+                    wish: "Будем очень признательны, если Вы воздержитесь от криков «Горько». Ведь поцелуй – это знак выражения чувств, и он не может быть по заказу.",
+                    position: 0,
+                },
+                {
+                    wish: "Мы с теплотой относимся к детям любого возраста. Но для свадьбы выбрали формат 18+.",
+                    position: 1,
+                },
             ];
             for (const { colorCode, position } of defaultColors) {
                 const existingColor = await getColorIdQuery(colorCode, tx);
-                const colorId = existingColor.length ? existingColor[0].id : (await createColorQuery(colorCode, tx))[0].id;
+                const colorId = existingColor.length
+                    ? existingColor[0].id
+                    : (await createColorQuery(colorCode, tx))[0].id;
                 await createInvitationColorQuery(draft[0].id, colorId, position, tx);
             }
             for (const wish of defaultWishes) {
@@ -78,7 +87,9 @@ export const uploadImageToDraft = async (draftId, file, type, userId) => {
         currentPlace = draft.place;
     }
     const safePlace = currentPlace ?? { address: null, placeImage: null, link: null };
-    const updateResult = await updateDraft(draftId, type === "coupleImage" ? { coupleImage: imageUrl } : { place: { ...safePlace, placeImage: imageUrl } }, userId);
+    const updateResult = await updateDraft(draftId, type === "coupleImage"
+        ? { coupleImage: imageUrl }
+        : { place: { ...safePlace, placeImage: imageUrl } }, userId);
     if ("error" in updateResult) {
         await r2.deleteObject(params).promise();
         return errorResponse("Failed to upload image");
@@ -91,7 +102,9 @@ export const uploadImageToDraft = async (draftId, file, type, userId) => {
 export const resetDraftImage = async (draftId, type, userId) => {
     if (!(type === "coupleImage" || type === "placeImage"))
         return errorResponse("Invalid type");
-    const updateResult = await updateDraft(draftId, type === "coupleImage" ? { coupleImage: null } : { place: { address: null, placeImage: null, link: null } }, userId);
+    const updateResult = await updateDraft(draftId, type === "coupleImage"
+        ? { coupleImage: null }
+        : { place: { address: null, placeImage: null, link: null } }, userId);
     if ("error" in updateResult) {
         return errorResponse("Failed to upload image");
     }
@@ -107,7 +120,7 @@ export const updateDraft = async (draftId, data, userId) => {
             if (draft.length === 0) {
                 return errorResponse("Draft not found");
             }
-            const { firstPartnerName: firstPartnerName, secondPartnerName: secondPartnerName, coupleImage: coupleImage, eventDate: eventDate, templateName: templateName, colors: colors, place: place, planItems: planItems, wishes: wishes, questions: questions, answers: answers } = data;
+            const { firstPartnerName: firstPartnerName, secondPartnerName: secondPartnerName, coupleImage: coupleImage, eventDate: eventDate, templateName: templateName, colors: colors, place: place, planItems: planItems, wishes: wishes, questions: questions, answers: answers, } = data;
             const updateData = {};
             if (firstPartnerName) {
                 updateData.partner1Name = firstPartnerName;
@@ -131,7 +144,7 @@ export const updateDraft = async (draftId, data, userId) => {
             if (Object.keys(updateData).length > 0) {
                 await tx.invitation.update({
                     where: { id: Number(draftId) },
-                    data: updateData
+                    data: updateData,
                 });
             }
             if (place) {
@@ -148,7 +161,9 @@ export const updateDraft = async (draftId, data, userId) => {
                 await deleteInvitationColorsQuery(draftId, tx);
                 for (const { colorCode, position } of colors) {
                     const existingColor = await getColorIdQuery(colorCode, tx);
-                    const colorId = existingColor.length ? existingColor[0].id : (await createColorQuery(colorCode, tx))[0].id;
+                    const colorId = existingColor.length
+                        ? existingColor[0].id
+                        : (await createColorQuery(colorCode, tx))[0].id;
                     await createInvitationColorQuery(draftId, colorId, position, tx);
                 }
             }
@@ -177,7 +192,8 @@ export const updateDraft = async (draftId, data, userId) => {
                 await deleteFormAnswersQuery(draftId, tx);
                 for (const answer of answers) {
                     const question = await getFormQuestionByPositionQuery(draftId, answer.questionPosition, tx);
-                    if (questionsList.filter((q) => q.position === answer.questionPosition).length === 0 && question.length === 0) {
+                    if (questionsList.filter((q) => q.position === answer.questionPosition).length === 0 &&
+                        question.length === 0) {
                         return errorResponse("Question for some of the answers not found");
                     }
                     question.push(...insertedQuestions);
@@ -230,7 +246,7 @@ export const getDraft = async (draftId, userId) => {
 export const getAllDrafts = async (userId) => {
     try {
         const drafts = await getAllInvitationsQuery(userId, false);
-        const details = await Promise.all(drafts.map(draft => getInvitationDetails(draft.id, false)));
+        const details = await Promise.all(drafts.map((draft) => getInvitationDetails(draft.id, false)));
         return details.filter((draft) => draft !== null);
     }
     catch (error) {
@@ -243,7 +259,15 @@ export const deleteDraft = async (draftId, userId) => {
         const draft = await getDraftQuery(draftId, userId);
         if (draft.length === 0)
             return errorResponse("Draft not found");
-        await deleteInvitation(draftId, userId);
+        await prisma.$transaction(async (tx) => {
+            await deleteInvitationColorsQuery(draftId, tx);
+            await deletePlanItemsQuery(draftId, tx);
+            await deleteWishesQuery(draftId, tx);
+            await deleteFormAnswersQuery(draftId, tx);
+            await deleteFormQuestionsQuery(draftId, tx);
+            await deleteGuestAnswersByInvitationQuery(draftId, tx);
+            await deleteInvitation(draftId, userId, tx);
+        });
         return { message: "Draft deleted successfully" };
     }
     catch (error) {

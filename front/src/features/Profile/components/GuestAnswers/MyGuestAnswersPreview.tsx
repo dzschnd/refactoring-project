@@ -1,41 +1,19 @@
-import { useEffect, useState } from "react";
 import type { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import goToIcon from "../../../../assetsOld/buttonIcons/arrowRight.png";
-import {
-  getAllGuestAnswers,
-  getAllInvitations,
-} from "../../../../api/service/InvitationService";
 import type {
   GuestAnswerResponse,
   InvitationDetailsResponse,
 } from "../../../../shared/types";
+import { useGuestAnswers } from "../../../../hooks/useGuestAnswers";
+import { useInvitations } from "../../../../hooks/useInvitations";
+import Loader from "../../../../components/Loader";
 
 const MyGuestAnswersPreview: FC = () => {
-  const [allGuestAnswers, setAllGuestAnswers] = useState<GuestAnswerResponse[]>(
-    [],
-  );
-  const [allInvitations, setAllInvitations] = useState<
-    InvitationDetailsResponse[]
-  >([]);
+  const { guestAnswers, loading: loadingAnswers } = useGuestAnswers();
+  const { invitations, loading: loadingInvitations } = useInvitations();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    void (async () => {
-      await fetchInvitations();
-      await fetchGuestAnswers();
-    })();
-  }, []);
-
-  const fetchGuestAnswers = async () => {
-    const result = await getAllGuestAnswers();
-    setAllGuestAnswers(Array.isArray(result) ? result : []);
-  };
-
-  const fetchInvitations = async () => {
-    const result = await getAllInvitations();
-    setAllInvitations(Array.isArray(result) ? result : []);
-  };
+  const loading = loadingAnswers || loadingInvitations;
 
   const groupAnswersByGuestId = (answers: GuestAnswerResponse[]) => {
     return answers.reduce<Record<string, GuestAnswerResponse[]>>(
@@ -51,7 +29,7 @@ const MyGuestAnswersPreview: FC = () => {
   };
 
   const getGuestAnswersByInvitation = (invitationId: number) => {
-    const filteredAnswers = allGuestAnswers.filter(
+    const filteredAnswers = guestAnswers.filter(
       (guestAnswer) => guestAnswer.invitationId === invitationId,
     );
     return groupAnswersByGuestId(filteredAnswers.sort((a, b) => a.id - b.id));
@@ -79,14 +57,18 @@ const MyGuestAnswersPreview: FC = () => {
           </div>
         </Link>
       </button>
-      {allGuestAnswers &&
-      allInvitations &&
-      allGuestAnswers.length > 0 &&
-      allInvitations.length > 0 ? (
+      {loading ? (
+        <div className="mt-10 flex w-full justify-center">
+          <Loader />
+        </div>
+      ) : guestAnswers &&
+      invitations &&
+      guestAnswers.length > 0 &&
+      invitations.length > 0 ? (
         <div className="mt-10 max-w-[326px]">
-          {allInvitations.map((invitation) => (
+          {invitations.map((invitation: InvitationDetailsResponse) => (
             <div key={invitation.id} className="mb-10">
-              {allGuestAnswers.filter(
+              {guestAnswers.filter(
                 (guestAnswer) => guestAnswer.invitationId === invitation.id,
               ).length > 0 && (
                 <>

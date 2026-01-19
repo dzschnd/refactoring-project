@@ -72,24 +72,26 @@ const NamesForm: FC = () => {
 
   const handleUpdateDraft = async () => {
     const { firstPartnerName, secondPartnerName } = getValues();
+    const normalizedFirstPartnerName = firstPartnerName?.trim() ?? null;
+    const normalizedSecondPartnerName = secondPartnerName?.trim() ?? null;
 
     if (
-      firstPartnerName?.trim() !==
+      normalizedFirstPartnerName !==
         savedValuesRef.current.firstPartnerName?.trim() ||
-      secondPartnerName?.trim() !==
+      normalizedSecondPartnerName !==
         savedValuesRef.current.secondPartnerName?.trim()
     ) {
       await dispatch(
         updateDraft({
           id: id,
-          firstPartnerName: firstPartnerName?.trim(),
-          secondPartnerName: secondPartnerName?.trim(),
+          firstPartnerName: normalizedFirstPartnerName,
+          secondPartnerName: normalizedSecondPartnerName,
         }),
       );
 
       savedValuesRef.current = {
-        firstPartnerName: firstPartnerName?.trim(),
-        secondPartnerName: secondPartnerName?.trim(),
+        firstPartnerName: normalizedFirstPartnerName,
+        secondPartnerName: normalizedSecondPartnerName,
       };
     }
   };

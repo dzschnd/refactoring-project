@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import type { FC } from "react";
-import type { QuestionType } from "../../../types";
+import type { QuestionTypeValue } from "../../../types";
 import NamesPreview from "./Names/NamesPreview";
 import DatePreview from "./Date/DatePreview";
 import PlacePreview from "./Place/PlacePreview";
@@ -40,7 +40,7 @@ interface PreviewProps {
     | null;
   questions: {
     question: string;
-    type: QuestionType;
+    type: QuestionTypeValue;
     position: number;
   }[];
   answers: {
@@ -213,7 +213,7 @@ const RedVelvetPreview: FC<PreviewProps> = ({
       </div>
 
       <div ref={dateRef} className={"w-full"}>
-        <DatePreview eventDate={eventDate} scale={scale} isMobile={isMobile} />
+        <DatePreview eventDate={eventDate} scale={scale} />
       </div>
 
       <div ref={placeRef} className={"w-full"}>

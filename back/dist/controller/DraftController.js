@@ -1,14 +1,16 @@
 import * as DraftService from "../service/DraftService.js";
 import { SERVER_ERROR } from "../messages/messages.js";
 import { isServiceError } from "../types/service.js";
+import { draftSchemas } from "../shared/schemas/draft.js";
 import { BadRequestError, ForbiddenError, InternalServerError, NotFoundError, } from "../errors/index.js";
 export const createDraft = async (req, res) => {
     if (!req.user) {
         throw new ForbiddenError("Forbidden");
     }
-    const draftInfo = await DraftService.createDraft(req.user.id, req.body.templateName);
+    const { templateName } = draftSchemas.create.parse(req.body);
+    const draftInfo = await DraftService.createDraft(req.user.id, templateName);
     if (isServiceError(draftInfo)) {
-        if (draftInfo.error === 'Template not found') {
+        if (draftInfo.error === "Template not found") {
             throw new NotFoundError("Template not found");
         }
         throw new InternalServerError(SERVER_ERROR);
@@ -19,15 +21,16 @@ export const updateDraft = async (req, res) => {
     if (!req.user) {
         throw new ForbiddenError("Forbidden");
     }
-    const draftInfo = await DraftService.updateDraft(req.params.id, req.body, req.user.id);
+    const data = req.body;
+    const draftInfo = await DraftService.updateDraft(req.params.id, data, req.user.id);
     if (isServiceError(draftInfo)) {
-        if (draftInfo.error === 'Draft not found') {
+        if (draftInfo.error === "Draft not found") {
             throw new NotFoundError("Draft not found");
         }
-        if (draftInfo.error === 'Template not found') {
+        if (draftInfo.error === "Template not found") {
             throw new NotFoundError("Template not found");
         }
-        if (draftInfo.error === 'Question for some of the answers not found') {
+        if (draftInfo.error === "Question for some of the answers not found") {
             throw new BadRequestError("Question for some of the answers not found");
         }
         throw new InternalServerError(SERVER_ERROR);
@@ -41,7 +44,7 @@ export const publishDraft = async (req, res) => {
     const { id: invitationId } = req.params;
     const invitationInfo = await DraftService.publishDraft(invitationId, req.user.id);
     if (isServiceError(invitationInfo)) {
-        if (invitationInfo.error === 'Draft not found') {
+        if (invitationInfo.error === "Draft not found") {
             throw new NotFoundError("Draft not found");
         }
         throw new InternalServerError(SERVER_ERROR);
@@ -49,7 +52,7 @@ export const publishDraft = async (req, res) => {
     return res.status(200).json(invitationInfo);
 };
 export const validateDraft = async (_req, res) => {
-    return res.status(200).json({ message: 'Draft is valid' });
+    return res.status(200).json({ message: "Draft is valid" });
 };
 export const getDraft = async (req, res) => {
     if (!req.user) {
@@ -57,7 +60,7 @@ export const getDraft = async (req, res) => {
     }
     const draftInfo = await DraftService.getDraft(req.params.id, req.user.id);
     if (isServiceError(draftInfo)) {
-        if (draftInfo.error === 'Draft not found') {
+        if (draftInfo.error === "Draft not found") {
             throw new NotFoundError("Draft not found");
         }
         throw new InternalServerError(SERVER_ERROR);
@@ -80,7 +83,7 @@ export const deleteDraft = async (req, res) => {
     }
     const deleteResponse = await DraftService.deleteDraft(req.params.id, req.user.id);
     if (isServiceError(deleteResponse)) {
-        if (deleteResponse.error === 'Draft not found') {
+        if (deleteResponse.error === "Draft not found") {
             throw new NotFoundError("Draft not found");
         }
         throw new InternalServerError(SERVER_ERROR);

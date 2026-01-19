@@ -1,3 +1,3 @@
 export const errorResponse = (message) => ({
-    error: message
+    error: message,
 });

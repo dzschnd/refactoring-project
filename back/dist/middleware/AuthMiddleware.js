@@ -2,10 +2,10 @@ import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 import { getUserQuery } from "../queries/AuthQueries.js";
 import logger from "../logger.js";
-import { ForbiddenError, InternalServerError, NotFoundError, UnauthorizedError } from "../errors/index.js";
+import { ForbiddenError, InternalServerError, NotFoundError, UnauthorizedError, } from "../errors/index.js";
 dotenv.config();
-export const verifyAccessToken = (req, res, next) => {
-    const token = req.cookies.accessToken;
+export const verifyAccessToken = (req, _res, next) => {
+    const token = req.cookies?.accessToken;
     const secret = process.env.ACCESS_TOKEN_SECRET;
     if (!token) {
         return next(new ForbiddenError("Forbidden"));
@@ -22,8 +22,8 @@ export const verifyAccessToken = (req, res, next) => {
         next(new UnauthorizedError("Forbidden"));
     }
 };
-export const verifyRefreshToken = async (req, res, next) => {
-    const token = req.cookies.refreshToken;
+export const verifyRefreshToken = (req, _res, next) => {
+    const token = req.cookies?.refreshToken;
     const secret = process.env.REFRESH_TOKEN_SECRET;
     if (!token) {
         return next(new ForbiddenError("Forbidden"));

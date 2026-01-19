@@ -8,7 +8,7 @@ import Wishes from "./Wishes/Wishes";
 import GuestForm from "./GuestForm/GuestForm";
 import Signature from "../Signature/Signature";
 import Timer from "./Timer/Timer";
-import type { QuestionType } from "../../../types";
+import type { QuestionTypeValue } from "../../../types";
 import { ISO2TextRu } from "../../../utils/dateUtils";
 import defaultCoupleImage from "../../../assetsOld/templates/redVelvet/namesImage.png";
 import defaultPlaceImage from "../../../assetsOld/templates/redVelvet/placeImage.png";
@@ -47,7 +47,7 @@ interface TemplateProps {
   questions:
     | {
         question: string;
-        type: QuestionType;
+        type: QuestionTypeValue;
         position: number;
       }[]
     | null;

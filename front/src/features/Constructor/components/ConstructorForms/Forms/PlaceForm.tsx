@@ -61,12 +61,14 @@ const PlaceForm: FC = () => {
 
   const handleUpdateLocalDraft = () => {
     const { address, link } = getValues();
+    const normalizedAddress = address?.trim() ?? null;
+    const normalizedLink = link?.trim() ?? null;
 
     dispatch(
       updateLocalDraft({
         place: {
-          address: address?.trim(),
-          link: link?.trim(),
+          address: normalizedAddress,
+          link: normalizedLink,
           placeImage: place.placeImage,
         },
       }),
@@ -75,14 +77,16 @@ const PlaceForm: FC = () => {
 
   const handleUpdateDraft = async () => {
     const { address, link } = getValues();
+    const normalizedAddress = address?.trim() ?? null;
+    const normalizedLink = link?.trim() ?? null;
 
     if (place !== savedValuesRef.current.place) {
       await dispatch(
         updateDraft({
           id: id,
           place: {
-            address: address && address.trim(),
-            link: link && link.trim(),
+            address: normalizedAddress,
+            link: normalizedLink,
             placeImage: place.placeImage,
           },
         }),

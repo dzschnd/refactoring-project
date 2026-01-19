@@ -1,9 +1,9 @@
-import axios from "axios";
+import { api } from "./config";
 import { parseServiceError } from "../../utils/parseServiceError";
 import { axiosAuthorized, baseURL } from "./config";
 import type { SubmitGuestAnswersRequest } from "../../shared/types";
 import { responseSchemas } from "../../shared/schemas/responses";
-const BASE_URL: string = `${baseURL}/published-invitations`;
+const BASE_URL: string = "published-invitations";
 
 // router.post('/guest-answers/:id',
 //     PublishedInvitationController.createGuestAnswer);
@@ -14,7 +14,7 @@ export const submitGuestAnswers = async (
   answers: SubmitGuestAnswersRequest["answers"],
 ) => {
   try {
-    const response = await axios.post(
+    const response = await api.post(
       `${BASE_URL}/guest-answers/${id}`,
       {
         answers: answers,
@@ -49,7 +49,7 @@ export const getAllGuestAnswers = async () => {
 //     PublishedInvitationController.getInvitation);
 export const getInvitation = async (id: number) => {
   try {
-    const response = await axios.get(`${BASE_URL}/${id}`);
+    const response = await api.get(`${BASE_URL}/${id}`);
     return responseSchemas.invitationDetails.parse(response.data);
   } catch (error) {
     return parseServiceError(error);

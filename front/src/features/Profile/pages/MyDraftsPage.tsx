@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import type { FC } from "react";
 import DraftCard from "../components/Drafts/DraftCard";
 import goBackIcon from "../../../assetsOld/buttonIcons/arrowLeft.png";
@@ -6,28 +5,18 @@ import { Link, useNavigate } from "react-router-dom";
 import Header from "../../../components/Header";
 import Footer from "../../../components/Footer";
 import ProfileNavigation from "../components/ProfileNavigation";
-import { deleteDraft, getAllDrafts } from "../../../api/service/DraftService";
+import { deleteDraft } from "../../../api/service/DraftService";
 import type { CardInfo } from "../../../types";
 import DraftCardSkeleton from "../components/Drafts/DraftCardSkeleton";
+import { useDrafts } from "../../../hooks/useDrafts";
 
 const MyDraftsPage: FC = () => {
-  const [allDrafts, setAllDrafts] = useState<CardInfo[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { drafts, loading, refresh } = useDrafts();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    void fetchDrafts();
-  }, []);
-
-  const fetchDrafts = async () => {
-    const result = await getAllDrafts();
-    setAllDrafts(Array.isArray(result) ? result : []);
-    setLoading(false);
-  };
 
   const handleDelete = async (id: number) => {
     if (window.confirm("УВЕРЕН?")) await deleteDraft(id);
-    void fetchDrafts();
+    void refresh();
   };
 
   return (
@@ -57,10 +46,10 @@ const MyDraftsPage: FC = () => {
                   <DraftCardSkeleton />
                   <DraftCardSkeleton />
                 </>
-              ) : allDrafts &&
-                Array.isArray(allDrafts) &&
-                allDrafts.length > 0 ? (
-                allDrafts.map((draft: CardInfo) => (
+              ) : drafts &&
+                Array.isArray(drafts) &&
+                drafts.length > 0 ? (
+                drafts.map((draft: CardInfo) => (
                   <DraftCard
                     key={draft.id}
                     id={draft.id}

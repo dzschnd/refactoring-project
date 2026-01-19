@@ -50,6 +50,10 @@ export const PasswordReset: FC<PasswordResetProps> = ({ setCurrentPage }) => {
   } = register("password");
 
   const onSubmit: SubmitHandler<FormInput> = async (data) => {
+    if (!email) {
+      setErrorMessage(SERVER_ERROR);
+      return;
+    }
     const response = await dispatch(
       resetPassword({ email: email, password: data.password }),
     );

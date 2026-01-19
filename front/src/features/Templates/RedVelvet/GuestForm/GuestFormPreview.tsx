@@ -1,10 +1,10 @@
 import type { FC } from "react";
-import type { QuestionType } from "../../../../types";
+import { QuestionType, type QuestionTypeValue } from "../../../../types";
 
 interface GuestFormProps {
   questions: {
     question: string;
-    type: QuestionType;
+    type: QuestionTypeValue;
     position: number;
   }[];
   answers: {

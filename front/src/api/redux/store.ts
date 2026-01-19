@@ -6,6 +6,8 @@ import { draftReducer } from "./slices/draftSlice";
 import type { DraftState } from "../../types";
 import type { UserState } from "./slices/userSlice";
 import { userReducer } from "./slices/userSlice";
+import { uiReducer } from "./slices/uiSlice";
+import { setApiDispatch } from "../http";
 import {
   FLUSH,
   PAUSE,
@@ -29,6 +31,7 @@ export const store = configureStore({
   reducer: {
     user: persistReducer<UserState>(userPersistConfig, userReducer),
     draft: persistReducer<DraftState>(draftPersistConfig, draftReducer),
+    ui: uiReducer,
   },
   middleware: (getDefaultMiddleware) => {
     return getDefaultMiddleware({
@@ -39,6 +42,7 @@ export const store = configureStore({
   },
 });
 export const persistor = persistStore(store);
+setApiDispatch(store.dispatch);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

@@ -1,25 +1,14 @@
-import { useEffect, useState } from "react";
 import type { FC } from "react";
 import InvitationCard from "./InvitationCard";
 import { Link, useNavigate } from "react-router-dom";
 import goToIcon from "../../../../assetsOld/buttonIcons/arrowRight.png";
-import { getAllInvitations } from "../../../../api/service/InvitationService";
 import type { InvitationDetailsResponse } from "../../../../shared/types";
+import { useInvitations } from "../../../../hooks/useInvitations";
+import Loader from "../../../../components/Loader";
 
 const MyInvitationsPreview: FC = () => {
-  const [allInvitations, setAllInvitations] = useState<
-    InvitationDetailsResponse[]
-  >([]);
+  const { invitations, loading } = useInvitations();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    void fetchInvitations();
-  }, []);
-
-  const fetchInvitations = async () => {
-    const result = await getAllInvitations();
-    setAllInvitations(Array.isArray(result) ? result : []);
-  };
 
   return (
     <div className="sm:hidden">
@@ -37,9 +26,13 @@ const MyInvitationsPreview: FC = () => {
           </div>
         </Link>
       </button>
-      {allInvitations && allInvitations.length > 0 ? (
+      {loading ? (
+        <div className="mt-10 flex w-full justify-center">
+          <Loader />
+        </div>
+      ) : invitations && invitations.length > 0 ? (
         <div className="scrollbar-hide mt-10 flex max-w-[326px] gap-10 overflow-x-scroll">
-          {allInvitations.map((invitation) => (
+          {invitations.map((invitation: InvitationDetailsResponse) => (
             <InvitationCard
               key={invitation.id}
               id={invitation.id}

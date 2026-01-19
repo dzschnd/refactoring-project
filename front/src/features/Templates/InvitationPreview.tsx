@@ -26,15 +26,15 @@ const InvitationPreview: FC<PreviewProps> = ({
   const displayedFirstPartnerName = firstPartnerName ? firstPartnerName : "";
   const displayedSecondPartnerName = secondPartnerName ? secondPartnerName : "";
   const displayedDate = eventDate ? eventDate : "";
-  const displayedCoupleImage =
-    coupleImage &&
-    "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
-      coupleImage.split(".com")[1];
+  const displayedCoupleImage = coupleImage
+    ? "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
+      coupleImage.split(".com")[1]
+    : undefined;
   const displayedPlaceImage =
-    place &&
-    place.placeImage &&
-    "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
-      place.placeImage.split(".com")[1];
+    place && place.placeImage
+      ? "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
+        place.placeImage.split(".com")[1]
+      : undefined;
   const displayedAddress = place && place.address ? place.address : "";
   const displayedLink =
     place && place.link ? place.link : "https://yandex.ru/maps";
@@ -63,6 +63,7 @@ const InvitationPreview: FC<PreviewProps> = ({
     templateHeight: height,
     isMobile,
     isPreview: true,
+    guestFormDisabled: true,
     block: block ? block : "date",
   });
 };

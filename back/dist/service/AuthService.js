@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import * as dotenv from "dotenv";
 import prisma from "../config/prisma.js";
-import { createOtpQuery, createRefreshTokenQuery, createUserQuery, deleteOtpQuery, getOtpQuery, getRefreshTokenQuery, getUserByEmailQuery, getUserQuery, updateRefreshTokenQuery, updateUserByEmailQuery, updateUserByPasswordQuery, activateUserQuery, updateUserByNameQuery } from "../queries/AuthQueries.js";
+import { createOtpQuery, createRefreshTokenQuery, createUserQuery, deleteOtpQuery, getOtpQuery, getRefreshTokenQuery, getUserByEmailQuery, getUserQuery, updateRefreshTokenQuery, updateUserByEmailQuery, updateUserByPasswordQuery, activateUserQuery, updateUserByNameQuery, } from "../queries/AuthQueries.js";
 import { signAccessToken, signRefreshToken } from "../utils/TokenUtils.js";
 import { getCurrentTime, getExpirationTimeMinutes } from "../utils/TimeUtils.js";
 import { errorResponse } from "../utils/errorUtils.js";
@@ -10,6 +10,9 @@ import * as fs from "fs";
 import * as path from "path";
 import { EMAIL_NOT_AVAILABLE } from "../messages/messages.js";
 dotenv.config();
+const getErrorMessage = (error) => {
+    return error instanceof Error ? error.message : "Unknown error";
+};
 export const generateOTP = () => Math.floor(100000 + Math.random() * 900000).toString();
 export const sendVerificationEmail = async (email, otp) => {
     const __dirname = path.resolve();
@@ -26,7 +29,7 @@ export const sendVerificationEmail = async (email, otp) => {
         auth: {
             user: emailUser,
             pass: emailPass,
-        }
+        },
     });
     const mailOptions = {
         from: emailFrom,
@@ -57,7 +60,7 @@ export const requestOtp = async (email) => {
         });
     }
     catch (error) {
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message = getErrorMessage(error);
         return errorResponse("Failed to send otp: " + message);
     }
 };
@@ -88,7 +91,7 @@ export const register = async (email, password) => {
         });
     }
     catch (error) {
-        const message = error instanceof Error ? error.message : "Unknown error";
+        const message = getErrorMessage(error);
         return errorResponse("Failed to register user: " + message);
     }
 };
@@ -110,7 +113,7 @@ export const refreshTokens = async (refreshToken, user) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to refresh tokens");
+        return errorResponse("Failed to refresh tokens: " + getErrorMessage(error));
     }
 };
 export const requestResetPassword = async (email) => {
@@ -124,7 +127,7 @@ export const requestResetPassword = async (email) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to request password reset");
+        return errorResponse("Failed to request password reset: " + getErrorMessage(error));
     }
 };
 export const requestChangeEmail = async (email, newEmail) => {
@@ -141,7 +144,7 @@ export const requestChangeEmail = async (email, newEmail) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to request email change");
+        return errorResponse("Failed to request email change: " + getErrorMessage(error));
     }
 };
 export const verifyEmail = async (email, otp) => {
@@ -162,7 +165,7 @@ export const verifyEmail = async (email, otp) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to verify email");
+        return errorResponse("Failed to verify email: " + getErrorMessage(error));
     }
 };
 export const activateUser = async (user) => {
@@ -179,7 +182,7 @@ export const activateUser = async (user) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to activate user");
+        return errorResponse("Failed to activate user: " + getErrorMessage(error));
     }
 };
 export const checkPassword = async (user, password, client = prisma) => {
@@ -199,7 +202,7 @@ export const checkPassword = async (user, password, client = prisma) => {
         return { message: "Password valid" };
     }
     catch (error) {
-        return errorResponse("Failed to check Password");
+        return errorResponse("Failed to check Password: " + getErrorMessage(error));
     }
 };
 export const login = async (email, password) => {
@@ -225,7 +228,7 @@ export const login = async (email, password) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to log in");
+        return errorResponse("Failed to log in: " + getErrorMessage(error));
     }
 };
 export const getProfile = async (user) => {
@@ -238,7 +241,7 @@ export const getProfile = async (user) => {
         return { ...userWithoutPassword };
     }
     catch (error) {
-        return errorResponse("Failed to fetch profile");
+        return errorResponse("Failed to fetch profile: " + getErrorMessage(error));
     }
 };
 export const logout = async (user) => {
@@ -248,7 +251,7 @@ export const logout = async (user) => {
         return { message: "Logged out successfully" };
     }
     catch (error) {
-        return errorResponse("Failed to log out");
+        return errorResponse("Failed to log out: " + getErrorMessage(error));
     }
 };
 export const updateProfile = async (newEmail, newPassword, email) => {
@@ -276,7 +279,7 @@ export const updateProfile = async (newEmail, newPassword, email) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to update profile");
+        return errorResponse("Failed to update profile: " + getErrorMessage(error));
     }
 };
 export const changeEmail = async (oldEmail, newEmail) => {
@@ -293,7 +296,7 @@ export const changeEmail = async (oldEmail, newEmail) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to update profile");
+        return errorResponse("Failed to update profile: " + getErrorMessage(error));
     }
 };
 export const changePassword = async (newPassword, email) => {
@@ -309,7 +312,7 @@ export const changePassword = async (newPassword, email) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to update profile");
+        return errorResponse("Failed to update profile: " + getErrorMessage(error));
     }
 };
 export const changeName = async (newName, email) => {
@@ -323,6 +326,6 @@ export const changeName = async (newName, email) => {
         });
     }
     catch (error) {
-        return errorResponse("Failed to update profile");
+        return errorResponse("Failed to update profile: " + getErrorMessage(error));
     }
 };

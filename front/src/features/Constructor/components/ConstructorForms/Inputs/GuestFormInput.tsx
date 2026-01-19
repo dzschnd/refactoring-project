@@ -3,7 +3,7 @@ import type { ChangeEvent, FC } from "react";
 import TextInput from "./TextInput";
 import questionIcon from "../../../../../assetsOld/formIcons/question-circle.png";
 import trashIcon from "../../../../../assetsOld/buttonIcons/trash.png";
-import type { QuestionType } from "../../../../../types";
+import { QuestionType, type QuestionTypeValue } from "../../../../../types";
 import QuestionTypeSelect from "./QuestionTypeSelect";
 import GuestFormAnswerInput from "./GuestFormAnswerInput";
 import plusIcon from "../../../../../assetsOld/buttonIcons/plus.png";
@@ -23,7 +23,7 @@ interface GuestFormAnswerValue {
 
 interface GuestFormQuestionValue {
   question: string;
-  type: QuestionType;
+  type: QuestionTypeValue;
   position: number;
   answers: GuestFormAnswerValue[] | null;
 }
@@ -75,7 +75,7 @@ const GuestFormInput: FC<GuestFormInputProps> = ({
 
           <QuestionTypeSelect
             value={safeValue.type}
-            onChange={(newType: QuestionType) => {
+            onChange={(newType: QuestionTypeValue) => {
               const updatedValue: GuestFormQuestionValue = {
                 ...safeValue,
                 type: newType,

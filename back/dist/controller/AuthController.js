@@ -33,7 +33,7 @@ export const refresh = async (req, res) => {
 };
 export const verifyEmail = async (req, res) => {
     const { email, otp } = req.body;
-    const user = unwrapService(await AuthService.verifyEmail(email, otp), {
+    void unwrapService(await AuthService.verifyEmail(email, otp), {
         "User not found": () => new NotFoundError("User not found"),
         "OTP not found": () => new NotFoundError("OTP not found"),
         "OTP has expired": () => new BadRequestError("OTP has expired"),

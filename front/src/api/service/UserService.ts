@@ -1,5 +1,4 @@
-import axios from "axios";
-import type { AxiosError, AxiosRequestConfig } from "axios";
+import { api } from "./config";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { parseServiceError } from "../../utils/parseServiceError";
 import { axiosAuthorized, baseURL } from "./config";
@@ -23,17 +22,21 @@ import {
   changeNameResponseSchema,
 } from "../../shared/schemas/responses";
 
-const BASE_URL = `${baseURL}/auth`;
+const BASE_URL = "auth";
 
 // register: send email + password -> create new user, get otp sent to email
 export const registerUser = createAsyncThunk(
   `user/register`,
   async (payload: RegisterRequest, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/register`, {
-        email: payload.email,
-        password: payload.password,
-      });
+      const response = await api.post(
+        `${BASE_URL}/register`,
+        {
+          email: payload.email,
+          password: payload.password,
+        },
+        { suppressErrorToast: true },
+      );
       return userResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
@@ -46,9 +49,13 @@ export const requestOtp = createAsyncThunk(
   `user/requestOtp`,
   async (payload: RequestOtpRequest, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/requestOtp`, {
-        email: payload.email,
-      });
+      const response = await api.post(
+        `${BASE_URL}/requestOtp`,
+        {
+          email: payload.email,
+        },
+        { suppressErrorToast: true },
+      );
       return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
@@ -61,7 +68,7 @@ export const loginUser = createAsyncThunk(
   `user/login`,
   async (payload: LoginRequest, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `${BASE_URL}/login`,
         {
           email: payload.email,
@@ -69,40 +76,13 @@ export const loginUser = createAsyncThunk(
         },
         {
           withCredentials: true,
+          suppressErrorToast: true,
         },
       );
       return userResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
     }
-  },
-);
-
-// refresh tokens: send refresh token -> get new refresh-access pair
-axiosAuthorized.interceptors.response.use(
-  (response) => response,
-  async (error: AxiosError) => {
-    const originalRequest = error.config as
-      | (AxiosRequestConfig & { _retry?: boolean })
-      | undefined;
-    const status = error.response?.status ?? null;
-
-    if (status === 403 && originalRequest && !originalRequest._retry) {
-      originalRequest._retry = true;
-      try {
-        await axios.post(`${BASE_URL}/refresh`, {}, { withCredentials: true });
-
-        return axiosAuthorized(originalRequest);
-      } catch (refreshError) {
-        return Promise.reject(
-          refreshError instanceof Error
-            ? refreshError
-            : new Error("Failed to refresh session"),
-        );
-      }
-    }
-
-    return Promise.reject(error);
   },
 );
 
@@ -137,10 +117,14 @@ export const verifyEmail = createAsyncThunk(
   `user/verify-email`,
   async (payload: VerifyEmailRequest, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/verify-email`, {
-        email: payload.email,
-        otp: payload.otp,
-      });
+      const response = await api.post(
+        `${BASE_URL}/verify-email`,
+        {
+          email: payload.email,
+          otp: payload.otp,
+        },
+        { suppressErrorToast: true },
+      );
       return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
@@ -153,7 +137,7 @@ export const activateUser = createAsyncThunk(
   `user/activate`,
   async (payload: VerifyEmailRequest, { rejectWithValue }) => {
     try {
-      const response = await axios.post(
+      const response = await api.post(
         `${BASE_URL}/activate`,
         {
           email: payload.email,
@@ -161,6 +145,7 @@ export const activateUser = createAsyncThunk(
         },
         {
           withCredentials: true,
+          suppressErrorToast: true,
         },
       );
       return messageResponseSchema.parse(response.data);
@@ -175,9 +160,13 @@ export const requestPasswordReset = createAsyncThunk(
   "user/requestPasswordReset",
   async (payload: RequestResetPasswordRequest, { rejectWithValue }) => {
     try {
-      const response = await axios.post(`${BASE_URL}/password/reset`, {
-        email: payload.email,
-      });
+      const response = await api.post(
+        `${BASE_URL}/password/reset`,
+        {
+          email: payload.email,
+        },
+        { suppressErrorToast: true },
+      );
       return requestPasswordResetResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
@@ -190,10 +179,14 @@ export const resetPassword = createAsyncThunk(
   "user/resetPassword",
   async (payload: ResetPasswordRequest, { rejectWithValue }) => {
     try {
-      const response = await axios.patch(`${BASE_URL}/password/reset`, {
-        email: payload.email,
-        password: payload.password,
-      });
+      const response = await api.patch(
+        `${BASE_URL}/password/reset`,
+        {
+          email: payload.email,
+          password: payload.password,
+        },
+        { suppressErrorToast: true },
+      );
       return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
@@ -206,10 +199,14 @@ export const changePassword = createAsyncThunk(
   "user/changePassword",
   async (payload: ChangePasswordRequest, { rejectWithValue }) => {
     try {
-      const response = await axiosAuthorized.patch(`${BASE_URL}/me/password`, {
-        oldPassword: payload.oldPassword,
-        newPassword: payload.newPassword,
-      });
+      const response = await axiosAuthorized.patch(
+        `${BASE_URL}/me/password`,
+        {
+          oldPassword: payload.oldPassword,
+          newPassword: payload.newPassword,
+        },
+        { suppressErrorToast: true },
+      );
       return messageResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
@@ -225,6 +222,7 @@ export const requestEmailChange = createAsyncThunk(
       const response = await axiosAuthorized.post(
         `${BASE_URL}/me/email/change-request`,
         { currentEmail: payload.currentEmail, newEmail: payload.newEmail },
+        { suppressErrorToast: true },
       );
       return messageResponseSchema.parse(response.data);
     } catch (error) {
@@ -238,10 +236,14 @@ export const changeEmail = createAsyncThunk(
   "user/changeEmail",
   async (payload: ChangeEmailRequest, { rejectWithValue }) => {
     try {
-      const response = await axiosAuthorized.patch(`${BASE_URL}/me/email`, {
-        otp: payload.otp,
-        newEmail: payload.newEmail,
-      });
+      const response = await axiosAuthorized.patch(
+        `${BASE_URL}/me/email`,
+        {
+          otp: payload.otp,
+          newEmail: payload.newEmail,
+        },
+        { suppressErrorToast: true },
+      );
       return changeEmailResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));
@@ -253,9 +255,13 @@ export const changeName = createAsyncThunk(
   "user/changeName",
   async (payload: ChangeNameRequest, { rejectWithValue }) => {
     try {
-      const response = await axiosAuthorized.patch(`${BASE_URL}/me/name`, {
-        newName: payload.newName,
-      });
+      const response = await axiosAuthorized.patch(
+        `${BASE_URL}/me/name`,
+        {
+          newName: payload.newName,
+        },
+        { suppressErrorToast: true },
+      );
       return changeNameResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));

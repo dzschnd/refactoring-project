@@ -5,6 +5,7 @@ export type {
   WishDTO,
   QuestionDTO,
   AnswerDTO,
+  CreateDraftRequest,
   DraftUpdateRequest as DraftUpdateDTO,
   GuestAnswerDTO,
   InvitationDetailsDTO,

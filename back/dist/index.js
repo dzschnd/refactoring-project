@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-import authRoutes from './routes/AuthRoutes.js';
-import draftRoutes from './routes/DraftRoutes.js';
-import publishedInvitationRoutes from './routes/PublishedInvitationRoutes.js';
-import uploadRoutes from './routes/UploadRoutes.js';
+import authRoutes from "./routes/AuthRoutes.js";
+import draftRoutes from "./routes/DraftRoutes.js";
+import publishedInvitationRoutes from "./routes/PublishedInvitationRoutes.js";
+import uploadRoutes from "./routes/UploadRoutes.js";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import requestLogger from "./middleware/requestLogger.js";
@@ -23,8 +23,8 @@ app.use(session({
     saveUninitialized: true,
     cookie: {
         secure: process.env.COOKIE_SECURE === "true",
-        maxAge: 24 * 60 * 60 * 1000 * 365 * 100
-    }
+        maxAge: 24 * 60 * 60 * 1000 * 365 * 100,
+    },
 }));
 app.use(express.json());
 app.use(cookieParser());

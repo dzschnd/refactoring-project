@@ -14,11 +14,11 @@ import checkboxIcon from "../../../../../assetsOld/formIcons/check-square.png";
 import arrowRightIcon from "../../../../../assetsOld/buttonIcons/arrowRight.png";
 import radioIcon from "../../../../../assetsOld/formIcons/radio-circle.png";
 import textIcon from "../../../../../assetsOld/formIcons/text-input.png";
-import type { QuestionType } from "../../../../../types";
+import { QuestionType, type QuestionTypeValue } from "../../../../../types";
 
 interface QuestionTypeSelectProps {
-  value: QuestionType;
-  onChange: (newType: QuestionType) => void;
+  value: QuestionTypeValue;
+  onChange: (newType: QuestionTypeValue) => void;
 }
 
 const QuestionTypeSelect: FC<QuestionTypeSelectProps> = ({

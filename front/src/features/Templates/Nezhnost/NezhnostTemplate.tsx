@@ -1,6 +1,6 @@
 import type { FC } from "react";
 
-import type { QuestionType } from "../../../types";
+import { QuestionType } from "../../../types";
 
 import useIsMobile from "../../../hooks/useIsMobile";
 import { NezhnostInvitation } from "./NezhnostInvitation";

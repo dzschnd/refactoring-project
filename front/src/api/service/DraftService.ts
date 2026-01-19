@@ -8,7 +8,7 @@ import type {
 import { responseSchemas } from "../../shared/schemas/responses";
 import { axiosAuthorized, baseURL } from "./config";
 
-const BASE_URL = `${baseURL}/drafts`;
+const BASE_URL = "drafts";
 
 // router.put('/:id/publish',
 //   verifyAccessToken, verifyUser,

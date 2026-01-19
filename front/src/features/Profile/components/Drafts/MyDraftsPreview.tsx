@@ -1,30 +1,19 @@
-import { useEffect, useState } from "react";
 import type { FC } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import goToIcon from "../../../../assetsOld/buttonIcons/arrowRight.png";
 import DraftCard from "./DraftCard";
-import {
-  deleteDraft,
-  getAllDrafts,
-} from "../../../../api/service/DraftService";
+import { deleteDraft } from "../../../../api/service/DraftService";
 import type { CardInfo } from "../../../../types";
+import { useDrafts } from "../../../../hooks/useDrafts";
+import Loader from "../../../../components/Loader";
 
 const MyDraftsPreview: FC = () => {
-  const [allDrafts, setAllDrafts] = useState<CardInfo[]>([]);
+  const { drafts, loading, refresh } = useDrafts();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    void fetchDrafts();
-  }, []);
-
-  const fetchDrafts = async () => {
-    const result = await getAllDrafts();
-    setAllDrafts(Array.isArray(result) ? result : []);
-  };
 
   const handleDelete = async (id: number) => {
     if (window.confirm("УВЕРЕН?")) await deleteDraft(id);
-    void fetchDrafts();
+    void refresh();
   };
 
   return (
@@ -39,9 +28,13 @@ const MyDraftsPreview: FC = () => {
           </div>
         </Link>
       </button>
-      {allDrafts && allDrafts.length > 0 ? (
+      {loading ? (
+        <div className="mt-10 flex w-full justify-center">
+          <Loader />
+        </div>
+      ) : drafts && drafts.length > 0 ? (
         <div className="scrollbar-hide mt-10 flex max-w-[326px] gap-10 overflow-x-scroll">
-          {allDrafts.map((draft: CardInfo) => (
+          {drafts.map((draft: CardInfo) => (
             <DraftCard
               key={draft.id}
               id={draft.id}

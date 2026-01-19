@@ -80,7 +80,6 @@ export const AuthLayout: FC<AuthLayoutProps> = ({
             setCurrentPage={setCurrentPage}
             setInputValues={setForgotPasswordInputValues}
             inputValues={forgotPasswordInputValues}
-            setIsWidePopup={setIsWidePopup}
           />
         );
       default:

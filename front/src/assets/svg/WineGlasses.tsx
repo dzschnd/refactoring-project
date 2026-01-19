@@ -3,7 +3,7 @@ import type { FC, SVGProps } from "react";
 export const WineGlasses: FC<SVGProps<SVGSVGElement>> = (_props) => {
   return (
     <svg
-      {...props}
+      {..._props}
       viewBox="0 0 252 300"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"

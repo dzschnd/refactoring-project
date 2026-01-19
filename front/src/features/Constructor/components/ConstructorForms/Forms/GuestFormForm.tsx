@@ -1,7 +1,7 @@
 import type { FC } from "react";
 import FormLayout from "../../../layouts/FormLayout";
 import plusIcon from "../../../../../assetsOld/buttonIcons/plus.png";
-import type { QuestionType } from "../../../../../types";
+import { QuestionType, type QuestionTypeValue } from "../../../../../types";
 import type { AppDispatch, RootState } from "../../../../../api/redux/store";
 import { useDispatch, useSelector } from "react-redux";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
@@ -15,7 +15,7 @@ interface FormInput {
   questions:
     | {
         question: string;
-        type: QuestionType;
+        type: QuestionTypeValue;
         position: number;
       }[]
     | null;

@@ -1,5 +1,5 @@
 import type { FC } from "react";
-import type { QuestionType } from "../../../types";
+import { QuestionType } from "../../../types";
 import useIsMobile from "../../../hooks/useIsMobile";
 import { PinkVibeInvitation } from "./PinkVibeInvitation";
 import useCurrentDimensions from "../../../hooks/useCurrentDimensions";

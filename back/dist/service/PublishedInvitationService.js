@@ -1,5 +1,5 @@
 import prisma from "../config/prisma.js";
-import { getAllInvitationsQuery, getInvitationQuery, createGuestAnswerQuery, getAllGuestAnswersQuery, deleteGuestAnswersQuery, getAllFormQuestionsQuery } from "../queries/InvitationQueries.js";
+import { getAllInvitationsQuery, getInvitationQuery, createGuestAnswerQuery, getAllGuestAnswersQuery, deleteGuestAnswersQuery, getAllFormQuestionsQuery, } from "../queries/InvitationQueries.js";
 import { getInvitationDetails } from "../utils/InvitationUtils.js";
 import { errorResponse } from "../utils/errorUtils.js";
 import logger from "../logger.js";
@@ -18,10 +18,11 @@ export const getInvitation = async (invitationId) => {
 export const getAllInvitations = async (userId) => {
     try {
         const existingInvitations = await getAllInvitationsQuery(userId, true);
-        const details = await Promise.all(existingInvitations.map(invitation => getInvitationDetails(invitation.id, true)));
+        const details = await Promise.all(existingInvitations.map((invitation) => getInvitationDetails(invitation.id, true)));
         return details.filter((invitation) => invitation !== null);
     }
     catch (error) {
+        logger.error({ err: error }, "Failed to retrieve invitations");
         return errorResponse("Failed to retrieve invitations");
     }
 };
@@ -36,13 +37,17 @@ export const submitGuestAnswers = async (invitationId, answers, guestName, isCom
             if (existingQuestions.length === 0) {
                 return errorResponse("No questions found for invitation");
             }
-            const answeredQuestionsPositions = new Set(answers.sort((a, b) => a.questionPosition - b.questionPosition).map((answer) => answer.questionPosition));
-            const existingQuestionsPositions = new Set(existingQuestions.sort((a, b) => a.position - b.position).map((question) => question.position));
+            const answeredQuestionsPositions = new Set(answers
+                .sort((a, b) => a.questionPosition - b.questionPosition)
+                .map((answer) => answer.questionPosition));
+            const existingQuestionsPositions = new Set(existingQuestions
+                .sort((a, b) => a.position - b.position)
+                .map((question) => question.position));
             if (existingQuestionsPositions.size !== answeredQuestionsPositions.size)
                 return errorResponse("Not all questions are answered");
             await deleteGuestAnswersQuery(invitationId, guestId, tx);
             for (const answer of answers) {
-                const answeredQuestion = existingQuestions.filter(question => question.position === answer.questionPosition);
+                const answeredQuestion = existingQuestions.filter((question) => question.position === answer.questionPosition);
                 if (answeredQuestion.length === 0) {
                     return errorResponse("Question not found");
                 }

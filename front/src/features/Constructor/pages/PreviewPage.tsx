@@ -79,20 +79,20 @@ const PreviewPage: FC = () => {
   }, []);
 
   if (!templateName) {
-    navigate("/");
+    return null;
   }
 
   const isMobile = useIsMobile();
   const displayedDate = eventDate ? eventDate : "";
-  const displayedCoupleImage =
-    coupleImage &&
-    "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
-      coupleImage.split(".com")[1];
+  const displayedCoupleImage = coupleImage
+    ? "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
+      coupleImage.split(".com")[1]
+    : "";
   const displayedPlaceImage =
-    place &&
-    place.placeImage &&
-    "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
-      place.placeImage.split(".com")[1];
+    place && place.placeImage
+      ? "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
+        place.placeImage.split(".com")[1]
+      : "";
 
   const templateWidth =
     isMobilePreview && !isMobileScreen && !loadingDimensions
@@ -177,24 +177,25 @@ const PreviewPage: FC = () => {
           />
         ) : (
           getTemplatePreview(templateName, {
-            firstPartnerName,
-            secondPartnerName,
+            firstPartnerName: firstPartnerName ?? "",
+            secondPartnerName: secondPartnerName ?? "",
             coupleImage: displayedCoupleImage,
             eventDate: displayedDate,
             place: {
-              address: place.address,
+              address: place.address ?? "",
               placeImage: displayedPlaceImage,
-              link: place.link,
+              link: place.link ?? "",
             },
             colors,
-            planItems,
+            planItems: planItems ?? [],
             wishes,
-            questions,
-            answers,
+            questions: questions ?? [],
+            answers: answers ?? [],
             templateWidth,
             templateHeight,
             isMobile,
             isPreview: isMobilePreview && !isMobileScreen && !loadingDimensions,
+            guestFormDisabled: true,
             block: "names",
           })
         )}

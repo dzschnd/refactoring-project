@@ -27,6 +27,8 @@ import { Blog } from "./features/Blog/Blog";
 import { PinkVibeTemplate } from "./features/Templates/PinkVibe/PinkVibeTemplate";
 import { MinimalismTemplate } from "./features/Templates/Minimalism/MinimalismTemplate";
 import { PrivacyPolicy } from "./features/Legal/PrivacyPolicy";
+import GlobalSpinner from "./components/GlobalSpinner";
+import ErrorToast from "./components/ErrorToast";
 
 const App = () => {
   const dispatch = useAppDispatch();
@@ -38,6 +40,8 @@ const App = () => {
   return (
     <I18nProvider locale={"ru-RU"}>
       <BrowserRouter>
+        <GlobalSpinner />
+        <ErrorToast />
         <ScrollToTop>
           <Routes>
             <Route path={"/"} element={<Home />} />

@@ -6,7 +6,7 @@ export const getInvitation = async (req, res) => {
     const { id: invitationId } = req.params;
     const invitationInfo = await PublishedInvitationService.getInvitation(invitationId);
     if (isServiceError(invitationInfo)) {
-        if (invitationInfo.error === 'Invitation not found') {
+        if (invitationInfo.error === "Invitation not found") {
             throw new NotFoundError("Invitation not found");
         }
         throw new InternalServerError(SERVER_ERROR);
@@ -29,16 +29,16 @@ export const submitGuestAnswers = async (req, res) => {
     const guestId = req.session.id;
     const guestAnswer = await PublishedInvitationService.submitGuestAnswers(invitationId, answers, guestName, isComing, String(guestId));
     if (isServiceError(guestAnswer)) {
-        if (guestAnswer.error === 'Invitation not found') {
+        if (guestAnswer.error === "Invitation not found") {
             throw new NotFoundError("Invitation not found");
         }
-        if (guestAnswer.error === 'Question not found') {
+        if (guestAnswer.error === "Question not found") {
             throw new NotFoundError("Question not found");
         }
-        if (guestAnswer.error === 'No questions found for invitation') {
+        if (guestAnswer.error === "No questions found for invitation") {
             throw new NotFoundError("No questions found for invitation");
         }
-        if (guestAnswer.error === 'Not all questions are answered') {
+        if (guestAnswer.error === "Not all questions are answered") {
             throw new UnprocessableEntityError("Not all questions are answered");
         }
         throw new InternalServerError(SERVER_ERROR);
@@ -51,7 +51,7 @@ export const getAllGuestAnswers = async (req, res) => {
     }
     const allGuestAnswers = await PublishedInvitationService.getAllGuestAnswers(req.user.id);
     if (isServiceError(allGuestAnswers)) {
-        if (allGuestAnswers.error === 'No guest answers found') {
+        if (allGuestAnswers.error === "No guest answers found") {
             throw new NotFoundError("No guest answers found");
         }
         throw new InternalServerError(SERVER_ERROR);
