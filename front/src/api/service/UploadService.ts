@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { parseServiceError } from "../../utils/parseServiceError";
-import { axiosAuthorized, baseURL } from "./config";
+import { axiosAuthorized } from "./config";
 import type { UploadImageType } from "../../shared/types";
 import { responseSchemas } from "../../shared/schemas/responses";
 

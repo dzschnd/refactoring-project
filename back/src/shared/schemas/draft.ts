@@ -15,13 +15,16 @@ const futureDateSchema = z
 export const colorSchema = z.object({
   colorCode: z
     .string()
-    .regex(/^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/, "Each color code must be a valid RGBA hex value"),
-  position: z.number().int("Color position must be an integer"),
+    .regex(
+      /^#[0-9A-Fa-f]{6}([0-9A-Fa-f]{2})?$/,
+      "Цвет должен быть в формате HEX (#RRGGBB или #RRGGBBAA)",
+    ),
+  position: z.number().int("Позиция цвета должна быть целым числом"),
 });
 
 export const placeSchema = z.object({
   address: z.string().nullable(),
-  placeImage: z.string().url("Place image must be a valid URL").nullable(),
+  placeImage: z.string().url("Ссылка на изображение места некорректна").nullable(),
   link: z
     .string()
     .nullable()
@@ -31,32 +34,32 @@ export const placeSchema = z.object({
       const validGoogle = value.startsWith("https://www.google.com/maps/");
       if (!validYandex && !validGoogle) return false;
       return true;
-    }, 'Ссылка на место проведения должна начинаться с "https://yandex.com/maps/" или "https://www.google.com/maps/"'),
+    }, 'Ссылка на место проведения должна начинаться с "https://yandex.ru/maps/" или "https://www.google.com/maps/"'),
 });
 
 export const planItemSchema = z.object({
   eventTime: z
     .string()
-    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Plan item's event time must be in HH:MM format"),
-  description: z.string(),
-  position: z.number().int(),
+    .regex(/^([01]\d|2[0-3]):([0-5]\d)$/, "Время события должно быть в формате ЧЧ:ММ"),
+  description: z.string().min(1, "Описание события не указано"),
+  position: z.number().int("Позиция события должна быть целым числом"),
 });
 
 export const wishSchema = z.object({
-  wish: z.string(),
+  wish: z.string().min(1, "Пожелание не указано"),
   position: z.number().int(),
 });
 
 export const questionSchema = z.object({
-  question: z.string(),
+  question: z.string().min(1, "Вопрос не указан"),
   type: QuestionTypeSchema,
-  position: z.number().int(),
+  position: z.number().int("Позиция вопроса должна быть целым числом"),
 });
 
 export const answerSchema = z.object({
-  answer: z.string(),
-  questionPosition: z.number().int(),
-  position: z.number().int(),
+  answer: z.string().min(1, "Ответ не указан"),
+  questionPosition: z.number().int("Позиция вопроса должна быть целым числом"),
+  position: z.number().int("Позиция ответа должна быть целым числом"),
 });
 
 const createUniquePositionsValidator = <T extends { position: number }>(
@@ -73,7 +76,7 @@ const createUniquePositionsValidator = <T extends { position: number }>(
     if (positionSet.has(item.position)) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: "Items must have unique positions",
+        message: "Позиции в списке должны быть уникальными",
         path: [path],
       });
       return;
@@ -103,7 +106,7 @@ const enforceQuestionAnswerConstraints = (
     if ((question.type === "SELECT" || question.type === "CHECKBOX") && !answer) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `Question at position ${question.position} is of type ${question.type} and must have an associated answer.`,
+        message: `Вопрос №${question.position} (${question.type}) требует вариант ответа.`,
         path: ["answers"],
       });
       return;
@@ -111,7 +114,7 @@ const enforceQuestionAnswerConstraints = (
     if (question.type === "TEXT" && answer) {
       ctx.addIssue({
         code: z.ZodIssueCode.custom,
-        message: `Question at position ${question.position} is of type ${question.type} and must not have an associated answer.`,
+        message: `Вопрос №${question.position} (TEXT) не должен иметь вариантов ответа.`,
         path: ["answers"],
       });
       return;
@@ -161,11 +164,17 @@ export const draftUpdateSchema = draftUpdateBaseSchema.superRefine(
 );
 
 const draftPublishBaseSchema = z.object({
-  firstPartnerName: z.string().max(50, "Имя невесты не должно превышать 50 символов"),
-  secondPartnerName: z.string().max(50, "Имя жениха не должно превышать 50 символов"),
+  firstPartnerName: z
+    .string()
+    .min(1, "Имя невесты не указано")
+    .max(50, "Имя невесты не должно превышать 50 символов"),
+  secondPartnerName: z
+    .string()
+    .min(1, "Имя жениха не указано")
+    .max(50, "Имя жениха не должно превышать 50 символов"),
   coupleImage: z.string().url("Couple image must be a valid URL").nullable().optional(),
   eventDate: futureDateSchema,
-  templateName: z.string(),
+  templateName: z.string().min(1, "Шаблон не выбран"),
   place: placeSchema.extend({
     address: z.string().min(1, "Адрес проведения не указан"),
     link: z
@@ -174,11 +183,11 @@ const draftPublishBaseSchema = z.object({
         (value) =>
           value.startsWith("https://yandex.ru/maps/") ||
           value.startsWith("https://www.google.com/maps/"),
-        'Ссылка на место проведения должна начинаться с "https://yandex.com/maps/" или "https://www.google.com/maps/"',
+        'Ссылка на место проведения должна начинаться с "https://yandex.ru/maps/" или "https://www.google.com/maps/"',
       ),
   }),
   colors: z.array(colorSchema).nullable().optional(),
-  planItems: z.array(planItemSchema),
+  planItems: z.array(planItemSchema).min(1, "Программа не заполнена"),
   wishes: z.array(wishSchema).nullable().optional(),
   questions: z.array(questionSchema).nullable().optional(),
   answers: z.array(answerSchema).nullable().optional(),
@@ -195,7 +204,7 @@ export const draftPublishSchema = draftPublishBaseSchema.superRefine(
 );
 
 export const createDraftSchema = z.object({
-  templateName: z.string(),
+  templateName: z.string().min(1, "Шаблон не выбран"),
 });
 
 export const draftSchemas = {

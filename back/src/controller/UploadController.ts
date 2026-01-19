@@ -1,8 +1,7 @@
 import type { Request, Response } from "express";
 import { resetDraftImage, uploadImageToDraft } from "../service/DraftService.js";
-import { SERVER_ERROR } from "../messages/messages.js";
 import { isServiceError } from "../types/service.js";
-import { BadRequestError, ForbiddenError, InternalServerError } from "../errors/index.js";
+import { BadRequestError, ForbiddenError } from "../errors/index.js";
 
 export const uploadImage = async (req: Request, res: Response): Promise<Response> => {
   const { file } = req;
@@ -19,7 +18,7 @@ export const uploadImage = async (req: Request, res: Response): Promise<Response
   const result = await uploadImageToDraft(req.params.id, file, type, req.user.id);
 
   if (isServiceError(result)) {
-    throw new InternalServerError(SERVER_ERROR);
+    throw new BadRequestError(result.error);
   }
 
   return res.status(200).json(result);
@@ -35,7 +34,7 @@ export const resetImage = async (req: Request, res: Response): Promise<Response>
   const result = await resetDraftImage(req.params.id, type, req.user.id);
 
   if (isServiceError(result)) {
-    throw new InternalServerError(SERVER_ERROR);
+    throw new BadRequestError(result.error);
   }
 
   return res.status(200).json(result);

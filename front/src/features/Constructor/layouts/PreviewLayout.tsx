@@ -26,7 +26,7 @@ const PreviewLayout: FC<PreviewLayoutProps> = ({
       {isMobile ? (
         <div
           className={
-            "relative flex items-center justify-center overflow-y-hidden border border-amber-600"
+            "relative flex items-center justify-center overflow-y-hidden"
           }
           style={{
             maxHeight: `${calculatedWidth && calculatedHeight ? Math.min(calculatedWidth * (1677 / 823), calculatedHeight) + "px" : "1677px"}`,

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { FC } from "react";
 import DraftCard from "../components/Drafts/DraftCard";
 import goBackIcon from "../../../assetsOld/buttonIcons/arrowLeft.png";
@@ -9,18 +10,35 @@ import { deleteDraft } from "../../../api/service/DraftService";
 import type { CardInfo } from "../../../types";
 import DraftCardSkeleton from "../components/Drafts/DraftCardSkeleton";
 import { useDrafts } from "../../../hooks/useDrafts";
+import ConfirmationModal from "../../../components/ConfirmationModal";
 
 const MyDraftsPage: FC = () => {
   const { drafts, loading, refresh } = useDrafts();
   const navigate = useNavigate();
+  const [draftToDelete, setDraftToDelete] = useState<number | null>(null);
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm("УВЕРЕН?")) await deleteDraft(id);
+  const handleDelete = (id: number) => {
+    setDraftToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (draftToDelete === null) return;
+    await deleteDraft(draftToDelete);
+    setDraftToDelete(null);
     void refresh();
   };
 
   return (
     <div className="flex min-h-screen flex-col">
+      <ConfirmationModal
+        isOpen={draftToDelete !== null}
+        title="Удалить черновик?"
+        message="Черновик будет удалён, это действие нельзя отменить."
+        confirmLabel="Удалить"
+        cancelLabel="Отмена"
+        onConfirm={confirmDelete}
+        onCancel={() => setDraftToDelete(null)}
+      />
       <div className="flex flex-grow flex-col items-center justify-between">
         <Header />
         <div className="max-w-[100vw] justify-center px-4 pb-[160px] pt-[60px] sm:flex sm:gap-[64px] md:w-full md:gap-[117px] md:px-[60px] md:pb-[120px] md:pt-[120px]">
@@ -46,9 +64,7 @@ const MyDraftsPage: FC = () => {
                   <DraftCardSkeleton />
                   <DraftCardSkeleton />
                 </>
-              ) : drafts &&
-                Array.isArray(drafts) &&
-                drafts.length > 0 ? (
+              ) : drafts && Array.isArray(drafts) && drafts.length > 0 ? (
                 drafts.map((draft: CardInfo) => (
                   <DraftCard
                     key={draft.id}
@@ -84,7 +100,9 @@ const MyDraftsPage: FC = () => {
             </div>
           </div>
         </div>
-        <Footer />
+        <div className="w-full">
+          <Footer />
+        </div>
       </div>
     </div>
   );

@@ -17,11 +17,7 @@ export const parseServiceError = (error: unknown): ServiceError => {
 
   if (castedError.response) {
     const errorData = castedError.response.data as unknown;
-    if (
-      errorData &&
-      typeof errorData === "object" &&
-      "error" in errorData
-    ) {
+    if (errorData && typeof errorData === "object" && "error" in errorData) {
       const typedErrorData = errorData as ErrorResponse;
       if (typeof typedErrorData.error === "string") {
         return {

@@ -26,6 +26,7 @@ export interface Color {
 export interface StateError {
   message: string;
   status: number;
+  details?: Array<{ field?: string; message: string }>;
 }
 
 export interface DraftState {

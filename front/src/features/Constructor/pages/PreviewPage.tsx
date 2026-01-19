@@ -1,13 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import type { FC } from "react";
-import { useAppSelector } from "../../../api/redux/hooks";
+import { useAppDispatch, useAppSelector } from "../../../api/redux/hooks";
 import { Link, useNavigate } from "react-router-dom";
 import cross from "../../../assetsOld/buttonIcons/cross.png";
+import goBackIcon from "../../../assetsOld/buttonIcons/arrowLeft.png";
 import PreviewToggle from "../components/ConstructorPreview/PreviewToggle";
 import profile from "../../../assetsOld/navIcons/profile.png";
 import PreviewLayout from "../layouts/PreviewLayout";
 import { getScrollbarWidth } from "../../../utils/getScrollbarWidth";
 import useIsMobile from "../../../hooks/useIsMobile";
+import Button from "../../../components/Button";
+import { publishDraft } from "../../../api/service/DraftService";
+import ConfirmationModal from "../../../components/ConfirmationModal";
 
 import {
   calculatePreviewHeight,
@@ -32,13 +36,17 @@ const PreviewPage: FC = () => {
     questions,
     answers,
     colors,
+    id,
   } = useAppSelector((state) => state.draft);
+  const dispatch = useAppDispatch();
   const [isMobilePreview, setIsMobilePreview] = useState(false);
   const [isMobileScreen, setIsMobileScreen] = useState(false);
   const [isPopupOpen, setIsPopupOpen] = useState(true);
   const [calculatedHeight, setCalculatedHeight] = useState<number | null>(null);
   const [calculatedWidth, setCalculatedWidth] = useState<number | null>(null);
   const [loadingDimensions, setLoadingDimensions] = useState(true);
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
+  const isMobile = useIsMobile();
 
   const previewContainerRef = useRef<HTMLDivElement | null>(null);
 
@@ -82,7 +90,19 @@ const PreviewPage: FC = () => {
     return null;
   }
 
-  const isMobile = useIsMobile();
+  const handlePublish = () => {
+    if (!id) return;
+    setShowPublishConfirm(true);
+  };
+  const confirmPublish = async () => {
+    setShowPublishConfirm(false);
+    if (!id) return;
+    const response = await dispatch(publishDraft({ id }));
+    if (response.meta.requestStatus === "fulfilled") {
+      navigate(`/invitations/${id}`);
+    }
+  };
+
   const displayedDate = eventDate ? eventDate : "";
   const displayedCoupleImage = coupleImage
     ? "https://pub-6a9646833fc24b188cbc779464f80132.r2.dev" +
@@ -141,14 +161,26 @@ const PreviewPage: FC = () => {
           </p>
         </div>
       )}
+      <ConfirmationModal
+        isOpen={showPublishConfirm}
+        title="Публикация приглашения"
+        message="Оплата пока не подключена — это заглушка. Нажимая «Опубликовать», вы разместите приглашение в демо-режиме."
+        confirmLabel="Опубликовать"
+        cancelLabel="Отмена"
+        onConfirm={confirmPublish}
+        onCancel={() => setShowPublishConfirm(false)}
+      />
 
       <div className="fixed left-0 right-0 top-0 z-40 flex h-[84px] items-center justify-center bg-white px-[16px] shadow-header sm:px-[30px] sm:py-[22px]">
-        {/*<button onClick={handleGoBack} className="flex items-center gap-[10px]">*/}
-        {/*    <img src={goBackIcon} alt="" className="h-[24px] w-[24px]" />*/}
-        {/*    <span className="font-primary font-normal text-300 text-grey-400">*/}
-        {/*        Вернуться в конструктор*/}
-        {/*    </span>*/}
-        {/*</button>*/}
+        <button
+          onClick={() => navigate("/constructor/guest-form")}
+          className="absolute left-4 flex items-center gap-[10px]"
+        >
+          <img src={goBackIcon} alt="Back" className="h-[24px] w-[24px]" />
+          <span className="font-primary text-300 font-normal text-grey-400">
+            Вернуться в конструктор
+          </span>
+        </button>
         <div
           className={`hidden sm:block ${isMobilePreview ? `mr-[${scrollbarWidth}px]` : ""}`}
         >
@@ -158,6 +190,13 @@ const PreviewPage: FC = () => {
           />
         </div>
         <div className="absolute right-4 flex items-center justify-end gap-[15px]">
+          <Button
+            borderRadius={42}
+            onClick={handlePublish}
+            message={"Опубликовать"}
+            inverted
+            className={"hidden h-[36px] px-4 text-300 sm:block"}
+          />
           <Link to={"/profile"}>
             <img src={profile} alt="Profile" className="h-[24px] w-[24px]" />
           </Link>

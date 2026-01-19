@@ -1,7 +1,7 @@
 import { api } from "./config";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { parseServiceError } from "../../utils/parseServiceError";
-import { axiosAuthorized, baseURL } from "./config";
+import { axiosAuthorized } from "./config";
 import type {
   RegisterRequest,
   RequestOtpRequest,
@@ -91,7 +91,9 @@ export const getUser = createAsyncThunk(
   `user/me`,
   async (_, { rejectWithValue }) => {
     try {
-      const response = await axiosAuthorized.get(`${BASE_URL}/me`);
+      const response = await axiosAuthorized.get(`${BASE_URL}/me`, {
+        suppressErrorToastOn403: true,
+      });
       return userResponseSchema.parse(response.data);
     } catch (error) {
       return rejectWithValue(parseServiceError(error));

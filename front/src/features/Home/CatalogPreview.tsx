@@ -7,6 +7,9 @@ import { LinkArrowIcon } from "../../assets/svg/LinkArrowIcon";
 import clsx from "clsx";
 const CatalogPreview: FC = () => {
   const [isLinkHovered, setIsLinkHovered] = useState<boolean>(false);
+  const visibleTemplates = templates.filter(
+    (template) => template.name === "nezhnost",
+  );
 
   return (
     <section>
@@ -22,7 +25,7 @@ const CatalogPreview: FC = () => {
           "grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4"
         }
       >
-        {templates.map((template, index) => (
+        {visibleTemplates.map((template, index) => (
           <div
             key={index}
             className={clsx(

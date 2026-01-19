@@ -62,9 +62,9 @@ const MyGuestAnswersPreview: FC = () => {
           <Loader />
         </div>
       ) : guestAnswers &&
-      invitations &&
-      guestAnswers.length > 0 &&
-      invitations.length > 0 ? (
+        invitations &&
+        guestAnswers.length > 0 &&
+        invitations.length > 0 ? (
         <div className="mt-10 max-w-[326px]">
           {invitations.map((invitation: InvitationDetailsResponse) => (
             <div key={invitation.id} className="mb-10">

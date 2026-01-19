@@ -77,7 +77,9 @@ const MyInvitationsPage: FC = () => {
             </div>
           </div>
         </div>
-        <Footer />
+        <div className="w-full">
+          <Footer />
+        </div>
       </div>
     </div>
   );

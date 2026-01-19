@@ -16,7 +16,7 @@ const ErrorToast: FC = () => {
   if (!error) return null;
 
   return (
-    <div className="fixed left-1/2 top-6 z-50 w-[min(90vw,420px)] -translate-x-1/2 rounded-16 bg-red-100 px-4 py-3 shadow-header">
+    <div className="rounded-16 fixed left-1/2 top-6 z-50 w-[min(90vw,420px)] -translate-x-1/2 bg-red-100 px-4 py-3 shadow-header">
       <div className="flex items-start justify-between gap-3">
         <div className="text-300 text-red-700">
           {error.message || "Произошла ошибка"}

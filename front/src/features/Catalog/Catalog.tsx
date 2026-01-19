@@ -5,6 +5,10 @@ import { templates } from "../../constants";
 import TemplateCard from "../Templates/TemplateCard";
 
 const Catalog: FC = () => {
+  const visibleTemplates = templates.filter(
+    (template) => template.name === "nezhnost",
+  );
+
   return (
     <PageLayout
       className={
@@ -24,7 +28,7 @@ const Catalog: FC = () => {
             "grid grid-cols-2 gap-x-3 gap-y-8 sm:grid-cols-3 sm:gap-x-5 md:grid-cols-4"
           }
         >
-          {templates.map((template, index) => (
+          {visibleTemplates.map((template, index) => (
             <div key={index}>
               <TemplateCard
                 name={template.name}

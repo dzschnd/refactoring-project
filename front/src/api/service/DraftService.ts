@@ -6,7 +6,7 @@ import type {
   DraftUpdateRequest,
 } from "../../shared/types";
 import { responseSchemas } from "../../shared/schemas/responses";
-import { axiosAuthorized, baseURL } from "./config";
+import { axiosAuthorized } from "./config";
 
 const BASE_URL = "drafts";
 
@@ -36,7 +36,7 @@ export const validateDraft = async (payload: { id: number }) => {
     const response = await axiosAuthorized.put(
       `${BASE_URL}/${payload.id}/validate`,
       {},
-      { withCredentials: true },
+      { withCredentials: true, suppressErrorToast: true },
     );
     return responseSchemas.message.parse(response.data);
   } catch (error) {
@@ -55,7 +55,11 @@ export const createDraft = createAsyncThunk(
       const response = await axiosAuthorized.post(
         `${BASE_URL}`,
         { templateName: payload.templateName },
-        { withCredentials: true },
+        {
+          withCredentials: true,
+          suppressErrorToast: true,
+          suppressErrorToastOn403: true,
+        },
       );
       return responseSchemas.invitationDetails.parse(response.data);
     } catch (error) {
@@ -96,6 +100,7 @@ export const updateDraft = createAsyncThunk(
       const response = await axiosAuthorized.patch(
         `${BASE_URL}/${payload.id}`,
         updateFields,
+        { suppressGlobalLoading: true },
       );
 
       return responseSchemas.invitationDetails.parse(response.data);
@@ -125,7 +130,9 @@ export const getDraft = createAsyncThunk(
 //   DraftController.getAllDrafts);
 export const getAllDrafts = async () => {
   try {
-    const response = await axiosAuthorized.get(`${BASE_URL}`);
+    const response = await axiosAuthorized.get(`${BASE_URL}`, {
+      suppressErrorToastOn404: true,
+    });
     return responseSchemas.invitationDetailsList.parse(response.data);
   } catch (error) {
     return parseServiceError(error);

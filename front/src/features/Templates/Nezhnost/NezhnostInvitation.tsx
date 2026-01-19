@@ -71,7 +71,7 @@ export const NezhnostInvitation: FC<TemplateProps> = ({
       ref={parentRef}
       className={clsx(
         isPreview &&
-          "scrollbar-hide absolute h-full w-full overflow-y-auto overflow-x-hidden",
+          "scrollbar-hide absolute h-full w-full overflow-y-auto overflow-x-hidden border-[3px] border-black",
       )}
       style={{
         borderRadius: scale(40),

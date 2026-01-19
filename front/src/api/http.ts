@@ -1,7 +1,15 @@
 import axios from "axios";
-import type { AxiosError, AxiosRequestConfig, InternalAxiosRequestConfig } from "axios";
+import type {
+  AxiosError,
+  AxiosRequestConfig,
+  InternalAxiosRequestConfig,
+} from "axios";
 import type { AppDispatch } from "./redux/store";
-import { requestStarted, requestFinished, setError } from "./redux/slices/uiSlice";
+import {
+  requestStarted,
+  requestFinished,
+  setError,
+} from "./redux/slices/uiSlice";
 import { parseServiceError } from "./errors";
 
 export const baseURL = `${process.env.REACT_APP_SERVER_DOMAIN}`;
@@ -34,17 +42,54 @@ const shouldIgnoreError = (error: unknown) => {
   return axiosError?.code === "ERR_CANCELED";
 };
 
-type RequestConfigWithToast = AxiosRequestConfig & { suppressErrorToast?: boolean };
-type InternalConfigWithToast = InternalAxiosRequestConfig & { suppressErrorToast?: boolean };
+type RequestConfigWithToast = AxiosRequestConfig & {
+  suppressErrorToast?: boolean;
+  suppressErrorToastOn404?: boolean;
+  suppressErrorToastOn403?: boolean;
+  suppressGlobalLoading?: boolean;
+  __skipGlobalLoading?: boolean;
+};
+type InternalConfigWithToast = InternalAxiosRequestConfig & {
+  suppressErrorToast?: boolean;
+  suppressErrorToastOn404?: boolean;
+  suppressErrorToastOn403?: boolean;
+  suppressGlobalLoading?: boolean;
+  __skipGlobalLoading?: boolean;
+};
+
+const shouldShowToast = (
+  error: unknown,
+  config?: RequestConfigWithToast,
+): boolean => {
+  if (config?.suppressErrorToast) return false;
+  if (config?.suppressErrorToastOn403) {
+    const status = (error as AxiosError | undefined)?.response?.status;
+    if (status === 403) return false;
+  }
+  if (config?.suppressErrorToastOn404) {
+    const status = (error as AxiosError | undefined)?.response?.status;
+    if (status === 404) return false;
+  }
+  return true;
+};
 
 const attachInterceptors = (instance: typeof api) => {
   instance.interceptors.request.use(
     (config: InternalConfigWithToast) => {
-      start();
+      if (config.suppressGlobalLoading) {
+        config.__skipGlobalLoading = true;
+      } else {
+        start();
+      }
       return config;
     },
     (error) => {
-      finish();
+      const config = axios.isAxiosError(error)
+        ? (error.config as RequestConfigWithToast | undefined)
+        : undefined;
+      if (!config?.__skipGlobalLoading) {
+        finish();
+      }
       return Promise.reject(
         error instanceof Error ? error : new Error("Request failed"),
       );
@@ -53,13 +98,24 @@ const attachInterceptors = (instance: typeof api) => {
 
   instance.interceptors.response.use(
     (response) => {
-      finish();
+      const config = response?.config as RequestConfigWithToast | undefined;
+      if (!config?.__skipGlobalLoading) {
+        finish();
+      }
       return response;
     },
     (error) => {
-      finish();
-      const config = error?.config as RequestConfigWithToast | undefined;
-      if (!config?.suppressErrorToast && !shouldIgnoreError(error) && apiDispatch) {
+      const config = axios.isAxiosError(error)
+        ? (error.config as RequestConfigWithToast | undefined)
+        : undefined;
+      if (!config?.__skipGlobalLoading) {
+        finish();
+      }
+      if (
+        shouldShowToast(error, config) &&
+        !shouldIgnoreError(error) &&
+        apiDispatch
+      ) {
         apiDispatch(setError(parseServiceError(error)));
       }
       return Promise.reject(
@@ -73,11 +129,20 @@ attachInterceptors(api);
 
 apiAuth.interceptors.request.use(
   (config: InternalConfigWithToast) => {
-    start();
+    if (config.suppressGlobalLoading) {
+      config.__skipGlobalLoading = true;
+    } else {
+      start();
+    }
     return config;
   },
   (error) => {
-    finish();
+    const config = axios.isAxiosError(error)
+      ? (error.config as RequestConfigWithToast | undefined)
+      : undefined;
+    if (!config?.__skipGlobalLoading) {
+      finish();
+    }
     return Promise.reject(
       error instanceof Error ? error : new Error("Request failed"),
     );
@@ -86,24 +151,37 @@ apiAuth.interceptors.request.use(
 
 apiAuth.interceptors.response.use(
   (response) => {
-    finish();
+    const config = response?.config as RequestConfigWithToast | undefined;
+    if (!config?.__skipGlobalLoading) {
+      finish();
+    }
     return response;
   },
   async (error: AxiosError) => {
-    finish();
     const originalRequest = error.config as
       | (RequestConfigWithToast & { _retry?: boolean })
       | undefined;
+    if (!originalRequest?.__skipGlobalLoading) {
+      finish();
+    }
     const status = error.response?.status ?? null;
 
     if (status === 403 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        await api.post(`/auth/refresh`, {}, { withCredentials: true });
+        await api.post(
+          `/auth/refresh`,
+          {},
+          {
+            withCredentials: true,
+            suppressErrorToast: true,
+            suppressErrorToastOn403: true,
+          },
+        );
         return apiAuth(originalRequest);
       } catch (refreshError) {
         if (
-          !originalRequest?.suppressErrorToast &&
+          shouldShowToast(refreshError, originalRequest) &&
           !shouldIgnoreError(refreshError) &&
           apiDispatch
         ) {
@@ -118,7 +196,7 @@ apiAuth.interceptors.response.use(
     }
 
     if (
-      !originalRequest?.suppressErrorToast &&
+      shouldShowToast(error, originalRequest) &&
       !shouldIgnoreError(error) &&
       apiDispatch
     ) {

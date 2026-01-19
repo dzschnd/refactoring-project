@@ -30,7 +30,13 @@ import { deleteGuestAnswersByInvitationQuery } from "../queries/InvitationQuerie
 import { getInvitationDetails } from "../utils/InvitationUtils.js";
 import { errorResponse } from "../utils/errorUtils.js";
 import logger from "../logger.js";
-import { cleanupAllImages, cleanupOldImages, getParams, r2 } from "../utils/R2Utils.js";
+import {
+  cleanupAllImages,
+  cleanupOldImages,
+  getParams,
+  isR2Configured,
+  r2,
+} from "../utils/R2Utils.js";
 import type { DraftUpdateDTO, InvitationDetailsDTO, QuestionDTO } from "../types/dto.js";
 import type { ServiceResponse } from "../types/service.js";
 
@@ -114,6 +120,10 @@ export const uploadImageToDraft = async (
   let draft;
   let currentPlace;
 
+  if (!isR2Configured()) {
+    return errorResponse("R2 is not configured");
+  }
+
   const params = getParams(file, type, draftId);
   const data = await r2.upload(params).promise();
   const imageUrl = data.Location;
@@ -160,8 +170,10 @@ export const resetDraftImage = async (
   );
   if ("error" in updateResult) {
     return errorResponse("Failed to upload image");
-  } else {
+  } else if (isR2Configured()) {
     await cleanupAllImages(draftId, type);
+    return updateResult;
+  } else {
     return updateResult;
   }
 };

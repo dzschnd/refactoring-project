@@ -12,7 +12,9 @@ const GlobalSpinner: FC = () => {
       <div className="rounded-20 bg-white px-6 py-4 shadow-header">
         <div className="flex items-center gap-3">
           <Loader />
-          <span className="text-300 font-medium text-grey-500">Загрузка...</span>
+          <span className="text-300 font-medium text-grey-500">
+            Загрузка...
+          </span>
         </div>
       </div>
     </div>

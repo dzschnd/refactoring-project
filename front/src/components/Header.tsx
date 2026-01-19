@@ -47,6 +47,15 @@ const Header: FC = () => {
     };
   }, [isMenuOpen, isAuthOpen]);
 
+  useEffect(() => {
+    const handleAuthOpen = () => {
+      setCurrentAuthPage("LOGIN");
+      setIsAuthOpen(true);
+    };
+    window.addEventListener("auth:open", handleAuthOpen);
+    return () => window.removeEventListener("auth:open", handleAuthOpen);
+  }, []);
+
   return (
     <>
       {isMenuOpen && (

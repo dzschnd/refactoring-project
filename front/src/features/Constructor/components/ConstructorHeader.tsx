@@ -12,6 +12,7 @@ import { publishDraft, validateDraft } from "../../../api/service/DraftService";
 import cross from "../../../assetsOld/buttonIcons/cross.png";
 import { useCloseOnClickOutside } from "../../../hooks/useCloseOnClickOutside";
 import type { StateError } from "../../../types";
+import ConfirmationModal from "../../../components/ConfirmationModal";
 
 interface ConstructorHeaderProps {
   isMobile: boolean;
@@ -27,6 +28,7 @@ const ConstructorHeader: FC<ConstructorHeaderProps> = ({
   const dispatch: AppDispatch = useDispatch();
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showOverlay, setShowOverlay] = useState(false);
+  const [showPublishConfirm, setShowPublishConfirm] = useState(false);
   const overlayRef = useRef<HTMLDivElement>(null);
   useCloseOnClickOutside({
     popupRef: overlayRef,
@@ -37,14 +39,23 @@ const ConstructorHeader: FC<ConstructorHeaderProps> = ({
     const response = await validateDraft({ id });
     const error = response as StateError | undefined;
     if (error?.status === 400) {
-      setValidationErrors([error.message]);
+      const details = error.details
+        ?.map((detail) => detail.message)
+        .filter(Boolean);
+      setValidationErrors(
+        details && details.length > 0 ? details : [error.message],
+      );
       setShowOverlay(true);
     } else {
-      if (window.confirm("ДЕНЕГ ХВАТИЛО?")) {
-        const response = await dispatch(publishDraft({ id: id }));
-        if (response.meta.requestStatus === "fulfilled")
-          navigate(`../../invitations/${id}`);
-      }
+      setShowPublishConfirm(true);
+    }
+  };
+
+  const confirmPublish = async () => {
+    setShowPublishConfirm(false);
+    const response = await dispatch(publishDraft({ id }));
+    if (response.meta.requestStatus === "fulfilled") {
+      navigate(`../../invitations/${id}`);
     }
   };
 
@@ -81,6 +92,15 @@ const ConstructorHeader: FC<ConstructorHeaderProps> = ({
           </div>
         </div>
       )}
+      <ConfirmationModal
+        isOpen={showPublishConfirm}
+        title="Публикация приглашения"
+        message="Оплата пока не подключена — это заглушка. Нажимая «Опубликовать», вы разместите приглашение в демо-режиме."
+        confirmLabel="Опубликовать"
+        cancelLabel="Отмена"
+        onConfirm={confirmPublish}
+        onCancel={() => setShowPublishConfirm(false)}
+      />
 
       <div className="relative flex h-full max-h-[84px] items-center justify-center bg-white px-[16px] shadow-header sm:px-[30px] sm:py-[22px]">
         <div className="absolute left-[16px] flex gap-[15px] sm:left-[30px]">

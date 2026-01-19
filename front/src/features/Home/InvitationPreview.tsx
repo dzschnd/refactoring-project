@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FC } from "react";
 import names from "../../assets/images/home/invitationPreview/names.avif";
 import place from "../../assets/images/home/invitationPreview/place.avif";
@@ -21,20 +21,27 @@ import {
 import useIsMobile from "../../hooks/useIsMobile";
 import useCreateDefaultDraft from "../../utils/useCreateDefaultDraft";
 
+const blocks = [
+  { image: names, name: "Главная" },
+  { image: place, name: "Место" },
+  { image: program, name: "Программа" },
+  { image: dresscode, name: "Дресскод" },
+  { image: wishes, name: "Пожелания" },
+  { image: guestForm, name: "Анкета гостя" },
+  { image: timer, name: "Таймер" },
+];
+
 const Features: FC = () => {
   const [currentBlock, setCurrentBlock] = useState<number>(0);
-  const blocks = [
-    { image: names, name: "Главная" },
-    { image: place, name: "Место" },
-    { image: program, name: "Программа" },
-    { image: dresscode, name: "Дресскод" },
-    { image: wishes, name: "Пожелания" },
-    { image: guestForm, name: "Анкета гостя" },
-    { image: timer, name: "Таймер" },
-  ];
 
   const createDefaultDraft = useCreateDefaultDraft();
   const isMobile = useIsMobile();
+  useEffect(() => {
+    blocks.forEach((block) => {
+      const image = new Image();
+      image.src = block.image;
+    });
+  }, []);
 
   return (
     <section

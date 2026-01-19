@@ -6,18 +6,36 @@ import { deleteDraft } from "../../../../api/service/DraftService";
 import type { CardInfo } from "../../../../types";
 import { useDrafts } from "../../../../hooks/useDrafts";
 import Loader from "../../../../components/Loader";
+import ConfirmationModal from "../../../../components/ConfirmationModal";
+import { useState } from "react";
 
 const MyDraftsPreview: FC = () => {
   const { drafts, loading, refresh } = useDrafts();
   const navigate = useNavigate();
+  const [draftToDelete, setDraftToDelete] = useState<number | null>(null);
 
-  const handleDelete = async (id: number) => {
-    if (window.confirm("УВЕРЕН?")) await deleteDraft(id);
+  const handleDelete = (id: number) => {
+    setDraftToDelete(id);
+  };
+
+  const confirmDelete = async () => {
+    if (draftToDelete === null) return;
+    await deleteDraft(draftToDelete);
+    setDraftToDelete(null);
     void refresh();
   };
 
   return (
     <div className="sm:hidden">
+      <ConfirmationModal
+        isOpen={draftToDelete !== null}
+        title="Удалить черновик?"
+        message="Черновик будет удалён, это действие нельзя отменить."
+        confirmLabel="Удалить"
+        cancelLabel="Отмена"
+        onConfirm={confirmDelete}
+        onCancel={() => setDraftToDelete(null)}
+      />
       <button>
         <Link to="./drafts">
           <div className="flex items-center gap-[5px]">
