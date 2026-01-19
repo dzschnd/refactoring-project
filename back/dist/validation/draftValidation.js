@@ -5,19 +5,44 @@ const throwValidation = (message, field) => {
     const details = [{ field: field ?? "body", message }];
     throw new ValidationError(details);
 };
+const fieldLabels = {
+    firstPartnerName: "Имя невесты",
+    secondPartnerName: "Имя жениха",
+    eventDate: "Дата свадьбы",
+    templateName: "Шаблон",
+    coupleImage: "Фото пары",
+    colors: "Цветовая палитра",
+    place: "Место проведения",
+    "place.address": "Адрес проведения",
+    "place.link": "Ссылка на место",
+    "place.placeImage": "Фото места",
+    planItems: "Программа",
+    wishes: "Пожелания",
+    questions: "Вопросы",
+    answers: "Ответы",
+};
+const formatIssue = (issue) => {
+    const path = issue.path.filter((segment) => typeof segment === "string").join(".");
+    const field = path.length ? path : "body";
+    const label = fieldLabels[field] ?? fieldLabels[path.split(".")[0]] ?? "Данные";
+    if (issue.code === "invalid_type") {
+        if (issue.received === "null" || issue.received === "undefined") {
+            return { field, message: `${label}: значение не заполнено` };
+        }
+        return { field, message: `${label}: неверный тип значения` };
+    }
+    return { field, message: `${label}: ${issue.message}` };
+};
 export const validateDraftUpdate = async (req, _res, next) => {
     const result = await draftUpdateSchema.safeParseAsync(req.body);
     if (!result.success) {
-        const details = result.error.issues.map((issue) => ({
-            field: issue.path.length ? issue.path.join(".") : "body",
-            message: issue.message,
-        }));
+        const details = result.error.issues.map(formatIssue);
         return next(new ValidationError(details));
     }
     try {
         const invitationId = Number(req.params.id);
         if (Number.isNaN(invitationId)) {
-            throwValidation("Invalid invitation id", "id");
+            throwValidation("Некорректный идентификатор черновика", "id");
         }
         const existingQuestions = await getAllFormQuestionsQuery(invitationId);
         const questionPositionById = new Map();
@@ -40,7 +65,7 @@ export const validateDraftUpdate = async (req, _res, next) => {
         if (result.data.questions) {
             result.data.questions.forEach((question) => {
                 if (question.type === "TEXT" && answerMap.has(question.position)) {
-                    throwValidation(`Question at position ${question.position} is of type TEXT and must not have an associated answer.`, "answers");
+                    throwValidation(`Вопрос №${question.position} (TEXT) не должен иметь вариантов ответа.`, "answers");
                 }
             });
         }
@@ -54,10 +79,7 @@ export const validateDraftUpdate = async (req, _res, next) => {
 export const validateDraftPublish = async (req, _res, next) => {
     const result = await draftPublishSchema.safeParseAsync(req.body);
     if (!result.success) {
-        const details = result.error.issues.map((issue) => ({
-            field: issue.path.length ? issue.path.join(".") : "body",
-            message: issue.message,
-        }));
+        const details = result.error.issues.map(formatIssue);
         return next(new ValidationError(details));
     }
     req.body = result.data;

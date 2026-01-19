@@ -4,7 +4,7 @@ import { deleteGuestAnswersByInvitationQuery } from "../queries/InvitationQuerie
 import { getInvitationDetails } from "../utils/InvitationUtils.js";
 import { errorResponse } from "../utils/errorUtils.js";
 import logger from "../logger.js";
-import { cleanupAllImages, cleanupOldImages, getParams, r2 } from "../utils/R2Utils.js";
+import { cleanupAllImages, cleanupOldImages, getParams, isR2Configured, r2, } from "../utils/R2Utils.js";
 export const createDraft = async (userId, templateName) => {
     try {
         return await prisma.$transaction(async (tx) => {
@@ -74,6 +74,9 @@ export const createDraft = async (userId, templateName) => {
 export const uploadImageToDraft = async (draftId, file, type, userId) => {
     let draft;
     let currentPlace;
+    if (!isR2Configured()) {
+        return errorResponse("R2 is not configured");
+    }
     const params = getParams(file, type, draftId);
     const data = await r2.upload(params).promise();
     const imageUrl = data.Location;
@@ -108,8 +111,11 @@ export const resetDraftImage = async (draftId, type, userId) => {
     if ("error" in updateResult) {
         return errorResponse("Failed to upload image");
     }
-    else {
+    else if (isR2Configured()) {
         await cleanupAllImages(draftId, type);
+        return updateResult;
+    }
+    else {
         return updateResult;
     }
 };

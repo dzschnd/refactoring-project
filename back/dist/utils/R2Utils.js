@@ -8,6 +8,12 @@ export const r2 = new AWS.S3({
     signatureVersion: "v4",
 });
 const bucket = process.env.R2_BUCKET ?? "";
+export const isR2Configured = () => {
+    return Boolean(process.env.R2_ENDPOINT &&
+        process.env.R2_ACCESS_KEY_ID &&
+        process.env.R2_SECRET_ACCESS_KEY &&
+        process.env.R2_BUCKET);
+};
 export const getParams = (file, type, invitationId) => {
     const { originalname, buffer, mimetype } = file;
     const ext = path.extname(originalname);
