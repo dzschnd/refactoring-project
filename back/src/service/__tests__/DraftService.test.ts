@@ -95,6 +95,10 @@ type DeleteInvitation = (
   client?: object,
 ) => Promise<number>;
 type GetAllInvitationsQuery = (...args: unknown[]) => Promise<unknown>;
+type DeleteGuestAnswersByInvitationQuery = (
+  invitationId: number | string,
+  client?: object,
+) => Promise<[]>;
 
 const mockGetTemplateIdQuery: jest.MockedFunction<GetTemplateIdQuery> = jest.fn();
 const mockCreateDraftQuery: jest.MockedFunction<CreateDraftQuery> = jest.fn();
@@ -121,6 +125,8 @@ const mockGetFormQuestionByPositionQuery: jest.MockedFunction<GetFormQuestionByP
 const mockCreateFormAnswerQuery: jest.MockedFunction<CreateFormAnswerQuery> = jest.fn();
 const mockDeleteInvitation: jest.MockedFunction<DeleteInvitation> = jest.fn();
 const mockGetAllInvitationsQuery: jest.MockedFunction<GetAllInvitationsQuery> = jest.fn();
+const mockDeleteGuestAnswersByInvitationQuery: jest.MockedFunction<DeleteGuestAnswersByInvitationQuery> =
+  jest.fn();
 
 jest.unstable_mockModule("../../config/prisma.js", () => ({
   default: mockPrisma,
@@ -150,6 +156,7 @@ jest.unstable_mockModule("../../queries/InvitationQueries.js", () => ({
   createFormAnswerQuery: mockCreateFormAnswerQuery,
   deleteInvitation: mockDeleteInvitation,
   getAllInvitationsQuery: mockGetAllInvitationsQuery,
+  deleteGuestAnswersByInvitationQuery: mockDeleteGuestAnswersByInvitationQuery,
 }));
 
 type GetInvitationDetails = (
@@ -165,6 +172,7 @@ jest.unstable_mockModule("../../utils/InvitationUtils.js", () => ({
 jest.unstable_mockModule("../../utils/R2Utils.js", () => ({
   r2: {},
   getParams: () => ({}),
+  isR2Configured: () => false,
   cleanupOldImages: async () => {},
   cleanupAllImages: async () => {},
 }));
